@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		48272D3C1FA7EFD700E45E44 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48272D3B1FA7EFD700E45E44 /* Extension.swift */; };
 		48920B251FA299D40097986C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48920B241FA299D40097986C /* AppDelegate.swift */; };
 		48920B271FA299D40097986C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48920B261FA299D40097986C /* ViewController.swift */; };
 		48920B2A1FA299D40097986C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48920B281FA299D40097986C /* Main.storyboard */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		48272D3B1FA7EFD700E45E44 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		48920B211FA299D40097986C /* Instagram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Instagram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48920B241FA299D40097986C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		48920B261FA299D40097986C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -76,6 +78,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		48272D3A1FA7EFC700E45E44 /* extension */ = {
+			isa = PBXGroup;
+			children = (
+				48272D3B1FA7EFD700E45E44 /* Extension.swift */,
+			);
+			path = extension;
+			sourceTree = "<group>";
+		};
 		48920B181FA299D40097986C = {
 			isa = PBXGroup;
 			children = (
@@ -99,6 +109,7 @@
 		48920B231FA299D40097986C /* Instagram */ = {
 			isa = PBXGroup;
 			children = (
+				48272D3A1FA7EFC700E45E44 /* extension */,
 				48920B241FA299D40097986C /* AppDelegate.swift */,
 				48920B261FA299D40097986C /* ViewController.swift */,
 				48920B281FA299D40097986C /* Main.storyboard */,
@@ -265,6 +276,7 @@
 				48920B271FA299D40097986C /* ViewController.swift in Sources */,
 				48920B2D1FA299D40097986C /* Instagram.xcdatamodeld in Sources */,
 				48920B251FA299D40097986C /* AppDelegate.swift in Sources */,
+				48272D3C1FA7EFD700E45E44 /* Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
