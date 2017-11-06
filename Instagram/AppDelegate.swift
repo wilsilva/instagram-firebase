@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         rootViewController.view.backgroundColor = UIColor.white
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
+        FirebaseApp.configure()
         return true
     }
 
