@@ -11,15 +11,18 @@ import Firebase
 
 class UserProfileController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
+    var user: User?{
+        didSet{
+            navigationItem.title = user?.name
+            collectionView?.reloadData()
+        }
+    }
+    
     enum FetchUserError: Error{
         case notLoggedIn
     }
     
-    var userProfileTitle: String = ""{
-        didSet{
-            navigationItem.title = userProfileTitle
-        }
-    }
+    var userProfilePictureURL: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,12 +41,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     fileprivate func fetchUser() throws{
         guard let userUID = Auth.auth().currentUser?.uid else { throw FetchUserError.notLoggedIn }
         Database.database().reference().child("users").child(userUID).observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
-            if let userData = snapshot.value as? [String:Any]{
-                if let userName = userData["username"] as? String{
-                    self?.userProfileTitle = userName
-                }
-            }
-            
+            self?.user = User(snapshot: snapshot)
         }) { (error) in
             Alert.showBasic("Get user info error", message: error.localizedDescription, viewController: self)
         }
@@ -54,7 +52,10 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: UserProfileHeader.ID, for: indexPath) 
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: UserProfileHeader.ID, for: indexPath)
+        if let userProfileHeader = header as? UserProfileHeader{
+            userProfileHeader.user = self.user
+        }
         return header
     }
     

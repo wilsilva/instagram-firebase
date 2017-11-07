@@ -10,6 +10,11 @@ import UIKit
 
 class UserProfileHeader: UICollectionViewCell {
     static var ID = "headerId"
+    var user: User?{
+        didSet{
+            updateUI()
+        }
+    }
     
     let userProfileImageDimensions: CGSize = {
         return CGSize(width: 80, height: 80)
@@ -19,7 +24,6 @@ class UserProfileHeader: UICollectionViewCell {
         let iv = UIImageView()
         iv.layer.masksToBounds = true
         iv.translatesAutoresizingMaskIntoConstraints = false
-        iv.backgroundColor = UIColor.gray
         return iv
     }()
     
@@ -33,5 +37,14 @@ class UserProfileHeader: UICollectionViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented.")
+    }
+    
+    func updateUI(){
+        if let url = user?.profilePictureURL{
+            do{
+                let data = try Data(contentsOf: url)
+                userProfileImage.image = UIImage(data: data)
+            }catch{}
+        }
     }
 }
