@@ -24,6 +24,7 @@
 		4A8A78AE2B6566ABA4E260B9 /* Pods_InstagramTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A3FC3D073EDD32D4F0FEA4 /* Pods_InstagramTests.framework */; };
 		6BD70AE516C403D602CB7C36 /* Pods_InstagramUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 944C9E5B9F3C1892F00F7044 /* Pods_InstagramUITests.framework */; };
 		7D1FC7017931A0BE0EE334D6 /* Pods_Instagram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70A4F601699D38F6B1D09E23 /* Pods_Instagram.framework */; };
+		8C3699AC1FB20D59005CAA2D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3699AB1FB20D59005CAA2D /* User.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,7 @@
 		48AAB3941FB11C1E0072771F /* UserProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileHeader.swift; sourceTree = "<group>"; };
 		6660DEC7FCCF6CA0A46FA358 /* Pods-InstagramUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstagramUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-InstagramUITests/Pods-InstagramUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		70A4F601699D38F6B1D09E23 /* Pods_Instagram.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Instagram.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C3699AB1FB20D59005CAA2D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		944C9E5B9F3C1892F00F7044 /* Pods_InstagramUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InstagramUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EE753E6DE72200C78035040 /* Pods-Instagram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Instagram/Pods-Instagram.debug.xcconfig"; sourceTree = "<group>"; };
 		B800594F1F3B05E2F160D273 /* Pods-InstagramTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstagramTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-InstagramTests/Pods-InstagramTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -145,18 +147,17 @@
 		48920B231FA299D40097986C /* Instagram */ = {
 			isa = PBXGroup;
 			children = (
+				8C3699AD1FB22462005CAA2D /* controller */,
+				8C3699AA1FB20D4A005CAA2D /* model */,
 				482017EF1FABCDF60080B18B /* view */,
 				48272D3A1FA7EFC700E45E44 /* extension */,
 				48920B241FA299D40097986C /* AppDelegate.swift */,
-				48920B261FA299D40097986C /* ViewController.swift */,
 				48920B281FA299D40097986C /* Main.storyboard */,
 				48920B2E1FA299D40097986C /* Assets.xcassets */,
 				48920B301FA299D40097986C /* LaunchScreen.storyboard */,
 				48920B331FA299D40097986C /* Info.plist */,
 				488C439A1FAB4C3D00B667FC /* GoogleService-Info.plist */,
 				48920B2B1FA299D40097986C /* Instagram.xcdatamodeld */,
-				483DA76E1FB1119300702266 /* MainTabController.swift */,
-				483DA7701FB1133900702266 /* UserProfileController.swift */,
 			);
 			path = Instagram;
 			sourceTree = "<group>";
@@ -200,6 +201,24 @@
 				BD017BF39F65F3B91C3697FD /* Pods-InstagramUITests.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		8C3699AA1FB20D4A005CAA2D /* model */ = {
+			isa = PBXGroup;
+			children = (
+				8C3699AB1FB20D59005CAA2D /* User.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		8C3699AD1FB22462005CAA2D /* controller */ = {
+			isa = PBXGroup;
+			children = (
+				483DA76E1FB1119300702266 /* MainTabController.swift */,
+				483DA7701FB1133900702266 /* UserProfileController.swift */,
+				48920B261FA299D40097986C /* ViewController.swift */,
+			);
+			path = controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -507,6 +526,7 @@
 				483DA76F1FB1119300702266 /* MainTabController.swift in Sources */,
 				48AAB3951FB11C1E0072771F /* UserProfileHeader.swift in Sources */,
 				48920B251FA299D40097986C /* AppDelegate.swift in Sources */,
+				8C3699AC1FB20D59005CAA2D /* User.swift in Sources */,
 				483DA7711FB1133900702266 /* UserProfileController.swift in Sources */,
 				482017F11FABCE050080B18B /* Alert.swift in Sources */,
 				48272D3C1FA7EFD700E45E44 /* Extension.swift in Sources */,
