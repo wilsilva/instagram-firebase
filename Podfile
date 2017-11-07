@@ -6,14 +6,7 @@ target 'Instagram' do
   use_frameworks!
 
   # Pods for Instagram
-<<<<<<< HEAD
 
-=======
-  pod 'Firebase/Auth'
-  pod 'Firebase/Database'
-  pod 'Firebase/Storage'
-  
->>>>>>> 61554768077739a41823faf903ea5f206dc05ab0
   target 'InstagramTests' do
     inherit! :search_paths
     # Pods for testing
@@ -24,12 +17,8 @@ target 'Instagram' do
     # Pods for testing
   end
 
-<<<<<<< HEAD
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
   pod 'Firebase/Storage'
 
-
-=======
->>>>>>> 61554768077739a41823faf903ea5f206dc05ab0
 end
