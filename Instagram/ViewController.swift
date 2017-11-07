@@ -11,7 +11,7 @@ import Firebase
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
-    enum LoginErro: Error{
+    enum LoginError: Error{
         case emptyUsername
         case invalidEmail
         case invalidPassword
@@ -113,13 +113,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             let username = usernameTextField.text!
             let password = passwordTextField.text!
             try signUp(email, username: username, password: password)
-        }catch LoginErro.emptyUsername{
+        }catch LoginError.emptyUsername{
             usernameTextField.shake()
             usernameTextField.becomeFirstResponder()
-        }catch LoginErro.invalidEmail{
+        }catch LoginError.invalidEmail{
             emailTextField.shake()
             emailTextField.becomeFirstResponder()
-        }catch LoginErro.invalidPassword{
+        }catch LoginError.invalidPassword{
             passwordTextField.shake()
             passwordTextField.becomeFirstResponder()
         }catch{
@@ -145,15 +145,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     private func signUp(_ email: String, username: String, password: String) throws{
         
         if !email.isValidEmail(){
-            throw LoginErro.invalidEmail
+            throw LoginError.invalidEmail
         }
         
         if username.count <= 0{
-            throw LoginErro.emptyUsername
+            throw LoginError.emptyUsername
         }
         
         if password.count < 6{
-            throw LoginErro.invalidPassword
+            throw LoginError.invalidPassword
         }
         
         Auth.auth().createUser(withEmail: emailTextField.text!, password: passwordTextField.text!) { [weak self] (user, error) in
@@ -200,16 +200,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         inputFieldsStackView.insertArrangedSubview(signUpButton, at: 3)
         
         view.addSubview(addPhotoButton)
-        view.addSubview(inputFieldsStackView) 
+        view.addSubview(inputFieldsStackView)
         
-        addPhotoButton.anchors(top: view.topAnchor, topConstant: 40, right: nil, rightConstant: 0, bottom: nil, bottomConstant: 0, left: nil, leftConstant: 0, width: 140, height: 140)
+        addPhotoButton.anchors(top: view.topAnchor, right: nil, bottom: nil, left: nil, paddingTop: 40, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 140, height: 140)
         
         addPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
-        inputFieldsStackView.anchors(top: addPhotoButton.bottomAnchor, topConstant: 20, right: view.rightAnchor, rightConstant: -40, bottom: nil, bottomConstant: 0, left: view.leftAnchor, leftConstant: 40, width: nil, height: 200)
+        inputFieldsStackView.anchors(top: addPhotoButton.bottomAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 20, paddingRight: -40, paddingBottom: 0, paddingLeft: 40, width: nil, height: 200)
         
         validateSignUpForm()
-        
     }
 }
 

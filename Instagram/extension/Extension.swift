@@ -16,22 +16,22 @@ extension UIColor{
 }
 
 extension UIView{
-    func anchors( top: NSLayoutYAxisAnchor?, topConstant: CGFloat, right: NSLayoutXAxisAnchor?, rightConstant: CGFloat, bottom: NSLayoutYAxisAnchor?, bottomConstant: CGFloat, left: NSLayoutXAxisAnchor?, leftConstant: CGFloat, width: CGFloat?, height: CGFloat?){
+    func anchors( top: NSLayoutYAxisAnchor?, right: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?,paddingTop: CGFloat, paddingRight: CGFloat, paddingBottom: CGFloat, paddingLeft: CGFloat, width: CGFloat?, height: CGFloat?){
         
         if let top = top {
-            self.topAnchor.constraint(equalTo: top, constant: topConstant).isActive = true
+            self.topAnchor.constraint(equalTo: top, constant: paddingTop).isActive = true
         }
         
         if let right = right{
-         self.rightAnchor.constraint(equalTo: right, constant: rightConstant).isActive = true
+         self.rightAnchor.constraint(equalTo: right, constant: paddingRight).isActive = true
         }
         
         if let bottom = bottom{
-            self.bottomAnchor.constraint(equalTo: bottom, constant: bottomConstant).isActive = true
+            self.bottomAnchor.constraint(equalTo: bottom, constant: paddingBottom).isActive = true
         }
         
         if let left = left{
-            self.leftAnchor.constraint(equalTo: left, constant: leftConstant).isActive = true
+            self.leftAnchor.constraint(equalTo: left, constant: paddingLeft).isActive = true
         }
         
         if let width = width{

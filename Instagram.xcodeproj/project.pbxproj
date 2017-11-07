@@ -10,6 +10,7 @@
 		482017F11FABCE050080B18B /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482017F01FABCE050080B18B /* Alert.swift */; };
 		48272D3C1FA7EFD700E45E44 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48272D3B1FA7EFD700E45E44 /* Extension.swift */; };
 		483DA76F1FB1119300702266 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483DA76E1FB1119300702266 /* MainTabController.swift */; };
+		483DA7711FB1133900702266 /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483DA7701FB1133900702266 /* UserProfileController.swift */; };
 		488C439B1FAB4C3E00B667FC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 488C439A1FAB4C3D00B667FC /* GoogleService-Info.plist */; };
 		48920B251FA299D40097986C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48920B241FA299D40097986C /* AppDelegate.swift */; };
 		48920B271FA299D40097986C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48920B261FA299D40097986C /* ViewController.swift */; };
@@ -19,6 +20,7 @@
 		48920B321FA299D40097986C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48920B301FA299D40097986C /* LaunchScreen.storyboard */; };
 		48920B3D1FA299D40097986C /* InstagramTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48920B3C1FA299D40097986C /* InstagramTests.swift */; };
 		48920B481FA299D40097986C /* InstagramUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48920B471FA299D40097986C /* InstagramUITests.swift */; };
+		48AAB3951FB11C1E0072771F /* UserProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AAB3941FB11C1E0072771F /* UserProfileHeader.swift */; };
 		4A8A78AE2B6566ABA4E260B9 /* Pods_InstagramTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A3FC3D073EDD32D4F0FEA4 /* Pods_InstagramTests.framework */; };
 		6BD70AE516C403D602CB7C36 /* Pods_InstagramUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 944C9E5B9F3C1892F00F7044 /* Pods_InstagramUITests.framework */; };
 		7D1FC7017931A0BE0EE334D6 /* Pods_Instagram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70A4F601699D38F6B1D09E23 /* Pods_Instagram.framework */; };
@@ -47,6 +49,7 @@
 		482017F01FABCE050080B18B /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		48272D3B1FA7EFD700E45E44 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		483DA76E1FB1119300702266 /* MainTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabController.swift; sourceTree = "<group>"; };
+		483DA7701FB1133900702266 /* UserProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileController.swift; sourceTree = "<group>"; };
 		488C439A1FAB4C3D00B667FC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		48920B211FA299D40097986C /* Instagram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Instagram.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48920B241FA299D40097986C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -62,6 +65,7 @@
 		48920B431FA299D40097986C /* InstagramUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InstagramUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		48920B471FA299D40097986C /* InstagramUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramUITests.swift; sourceTree = "<group>"; };
 		48920B491FA299D40097986C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		48AAB3941FB11C1E0072771F /* UserProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileHeader.swift; sourceTree = "<group>"; };
 		6660DEC7FCCF6CA0A46FA358 /* Pods-InstagramUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstagramUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-InstagramUITests/Pods-InstagramUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		70A4F601699D38F6B1D09E23 /* Pods_Instagram.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Instagram.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		944C9E5B9F3C1892F00F7044 /* Pods_InstagramUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InstagramUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				482017F01FABCE050080B18B /* Alert.swift */,
+				48AAB3941FB11C1E0072771F /* UserProfileHeader.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -151,6 +156,7 @@
 				488C439A1FAB4C3D00B667FC /* GoogleService-Info.plist */,
 				48920B2B1FA299D40097986C /* Instagram.xcdatamodeld */,
 				483DA76E1FB1119300702266 /* MainTabController.swift */,
+				483DA7701FB1133900702266 /* UserProfileController.swift */,
 			);
 			path = Instagram;
 			sourceTree = "<group>";
@@ -499,7 +505,9 @@
 				48920B271FA299D40097986C /* ViewController.swift in Sources */,
 				48920B2D1FA299D40097986C /* Instagram.xcdatamodeld in Sources */,
 				483DA76F1FB1119300702266 /* MainTabController.swift in Sources */,
+				48AAB3951FB11C1E0072771F /* UserProfileHeader.swift in Sources */,
 				48920B251FA299D40097986C /* AppDelegate.swift in Sources */,
+				483DA7711FB1133900702266 /* UserProfileController.swift in Sources */,
 				482017F11FABCE050080B18B /* Alert.swift in Sources */,
 				48272D3C1FA7EFD700E45E44 /* Extension.swift in Sources */,
 			);

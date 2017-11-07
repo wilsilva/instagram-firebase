@@ -12,24 +12,12 @@ class MainTabController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        self.view.backgroundColor = UIColor.white
+        let userProfileController = UserProfileController(collectionViewLayout: UICollectionViewFlowLayout())
+        let navigationController = UINavigationController(rootViewController: userProfileController)
+        navigationController.tabBarItem.image = #imageLiteral(resourceName: "profile_unselected")
+        navigationController.tabBarItem.selectedImage = #imageLiteral(resourceName: "profile_selected")
+        tabBar.tintColor = UIColor.black
+        viewControllers = [navigationController,UIViewController()]
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
