@@ -14,7 +14,6 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     var user: User?{
         didSet{
             navigationItem.title = user?.name
-            collectionView?.reloadData()
         }
     }
     
@@ -42,6 +41,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         guard let userUID = Auth.auth().currentUser?.uid else { throw FetchUserError.notLoggedIn }
         Database.database().reference().child("users").child(userUID).observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
             self?.user = User(snapshot: snapshot)
+            self?.collectionView?.reloadData()
         }) { (error) in
             Alert.showBasic("Get user info error", message: error.localizedDescription, viewController: self)
         }
