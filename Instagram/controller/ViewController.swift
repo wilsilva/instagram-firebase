@@ -90,7 +90,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         var profileImage: UIImage?
         
-        if let editedImage = info["UIImagePickerControllerEdited Image"] as? UIImage{
+        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage{
             profileImage = editedImage
         }else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage{
             profileImage = originalImage
