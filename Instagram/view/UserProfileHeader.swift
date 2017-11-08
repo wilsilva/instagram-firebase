@@ -12,7 +12,7 @@ class UserProfileHeader: UICollectionViewCell {
     static var ID = "headerId"
     var user: User?{
         didSet{
-//            updateUI()
+            updateUI()
         }
     }
     
@@ -87,14 +87,12 @@ class UserProfileHeader: UICollectionViewCell {
     let userProfileImage: UIImageView = {
         let iv = UIImageView()
         iv.layer.masksToBounds = true
-        iv.backgroundColor = UIColor.black
         iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
     }()
     
     let userNameLabel: UILabel = {
         let lb = UILabel()
-        lb.text = "tiago henrique"
         lb.translatesAutoresizingMaskIntoConstraints = false
         lb.font = UIFont.boldSystemFont(ofSize: 14)
         lb.numberOfLines = 0
@@ -208,7 +206,7 @@ class UserProfileHeader: UICollectionViewCell {
         userNameLabel.anchors(top: userProfileImage.bottomAnchor, right: nil, bottom: nil, left: nil, paddingTop: 20, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
         userNameLabel.centerXAnchor.constraint(equalTo: userProfileImage.centerXAnchor).isActive = true
     
-        listButtonsStackView.anchors(top: headerStackView.bottomAnchor, right: nil, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: self.frame.width, height: 50)
+        listButtonsStackView.anchors(top: headerStackView.bottomAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: self.frame.width, height: 50)
         listButtonsStackView.insertArrangedSubview(gridButton, at: 0)
         listButtonsStackView.insertArrangedSubview(listButton, at: 1)
         listButtonsStackView.insertArrangedSubview(ribbonButton, at: 2)
