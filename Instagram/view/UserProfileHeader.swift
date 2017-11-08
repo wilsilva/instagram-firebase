@@ -58,7 +58,6 @@ class UserProfileHeader: UICollectionViewCell {
         sv.alignment = .fill
         sv.axis = .vertical
         sv.distribution = .fill
-        sv.spacing = 20
         return sv
     }()
     
@@ -87,6 +86,7 @@ class UserProfileHeader: UICollectionViewCell {
     let userProfileImage: UIImageView = {
         let iv = UIImageView()
         iv.layer.masksToBounds = true
+        iv.backgroundColor = UIColor.blue
         iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
     }()
@@ -186,7 +186,7 @@ class UserProfileHeader: UICollectionViewCell {
         
         headerStackView.insertArrangedSubview(userProfileImage, at: 0)
         headerStackView.insertArrangedSubview(postsInfoStackView, at: 1)
-        headerStackView.anchors(top: topAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 25, paddingRight: 0, paddingBottom: 0, paddingLeft: 25, width: 0, height: 150)
+        headerStackView.anchors(top: topAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 15, paddingRight: 0, paddingBottom: 0, paddingLeft: 15, width: 0, height: 150)
         
         postsInfoStackView.insertArrangedSubview(postsStackView, at: 0)
         postsInfoStackView.insertArrangedSubview(followersStackView, at: 1)
@@ -194,7 +194,6 @@ class UserProfileHeader: UICollectionViewCell {
         
         postsStackView.insertArrangedSubview(numberOfPosts, at: 0)
         postsStackView.insertArrangedSubview(postsLabel, at: 1)
-        
         followersStackView.insertArrangedSubview(numberOfFollowers, at: 0)
         followersStackView.insertArrangedSubview(followersLabel, at: 1)
         followsStackView.insertArrangedSubview(numberOfFollows, at: 0)
