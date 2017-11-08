@@ -34,11 +34,11 @@ extension UIView{
             self.leftAnchor.constraint(equalTo: left, constant: paddingLeft).isActive = true
         }
         
-        if let width = width{
+        if let width = width, width > 0{
             self.widthAnchor.constraint(equalToConstant: width).isActive = true
         }
         
-        if let height = height{
+        if let height = height, height > 0{
             self.heightAnchor.constraint(equalToConstant: height).isActive = true
         }
     }
