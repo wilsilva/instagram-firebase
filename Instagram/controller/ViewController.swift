@@ -112,6 +112,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             let email = emailTextField.text!
             let username = usernameTextField.text!
             let password = passwordTextField.text!
+            signUpButton.setAsEnabled(false)
             try signUp(email, username: username, password: password)
         }catch LoginError.emptyUsername{
             usernameTextField.shake()
@@ -184,6 +185,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                     })
                 })
             }
+            self?.signUpButton.setAsEnabled(true)
         }
     }
     
