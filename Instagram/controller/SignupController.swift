@@ -9,9 +9,9 @@
 import UIKit
 import Firebase
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+class SignupController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
-    enum LoginError: Error{
+    enum SignUpError: Error{
         case emptyUsername
         case invalidEmail
         case invalidPassword
@@ -61,24 +61,42 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }()
     
     let inputFieldsStackView: UIStackView = {
-        let sv = UIStackView()
-        sv.alignment = .fill
-        sv.axis = .vertical
-        sv.distribution = .fillEqually
-        sv.spacing = 10
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        return sv
+        let stackView = UIStackView()
+        stackView.alignment = .fill
+        stackView.axis = .vertical
+        stackView.distribution = .fillEqually
+        stackView.spacing = 10
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
     }()
     
     let signUpButton: UIButton = {
-        let bt = UIButton(type: .system)
-        bt.setTitle("Sign Up", for: .normal)
-        bt.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 237)
-        bt.setTitleColor(UIColor.white, for: .normal)
-        bt.layer.cornerRadius = 5
-        bt.addTarget(self, action: #selector(signUpAction), for: .touchUpInside)
-        return bt
+        let button = UIButton(type: .system)
+        button.setTitle("Sign Up", for: .normal)
+        button.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 237)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(signUpAction), for: .touchUpInside)
+        return button
     }()
+    
+    let loginButton: UIButton = {
+        let button = UIButton(type: .system)
+        let normalText = "I already have an account. "
+        let boldText = "Login"
+        let buttonText = NSMutableAttributedString(string:normalText, attributes: [.foregroundColor: UIColor.black])
+        let attributedString = NSMutableAttributedString(string: boldText, attributes: [.font : UIFont.boldSystemFont(ofSize: 15), .foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 237)])
+        
+        buttonText.append(attributedString)
+        button.setAttributedTitle(buttonText, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func handleLogin(){
+        self.navigationController?.popViewController(animated: true)
+    }
     
     @objc func addPhoto(){
         let imagePicker = UIImagePickerController()
@@ -114,17 +132,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             let password = passwordTextField.text!
             signUpButton.setAsEnabled(false)
             try signUp(email, username: username, password: password)
-        }catch LoginError.emptyUsername{
+        }catch SignUpError.emptyUsername{
             usernameTextField.shake()
             usernameTextField.becomeFirstResponder()
-        }catch LoginError.invalidEmail{
+        }catch SignUpError.invalidEmail{
             emailTextField.shake()
             emailTextField.becomeFirstResponder()
-        }catch LoginError.invalidPassword{
+        }catch SignUpError.invalidPassword{
             passwordTextField.shake()
             passwordTextField.becomeFirstResponder()
         }catch{
-            Alert.showBasic("Login Error", message: "Sorry, there was an error processing your signup proccess", viewController: self)
+            Alert.showBasic("Login Error", message: "Sorry, there was an error processing your signup proccess", viewController: self, handler: nil)
         }
     }
     
@@ -146,20 +164,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     private func signUp(_ email: String, username: String, password: String) throws{
         
         if !email.isValidEmail(){
-            throw LoginError.invalidEmail
+            throw SignUpError.invalidEmail
         }
         
         if username.count <= 0{
-            throw LoginError.emptyUsername
+            throw SignUpError.emptyUsername
         }
         
         if password.count < 6{
-            throw LoginError.invalidPassword
+            throw SignUpError.invalidPassword
         }
         
         Auth.auth().createUser(withEmail: emailTextField.text!, password: passwordTextField.text!) { [weak self] (user, error) in
             if let error = error{
-                Alert.showBasic("Login Error", message: error.localizedDescription, viewController: self!)
+                Alert.showBasic("Login Error", message: error.localizedDescription, viewController: self!, handler: nil)
+                self?.signUpButton.setAsEnabled(true)
             }else{
                 
                 guard let image = self?.getProfileImage() else{ return }
@@ -169,7 +188,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 
                 Storage.storage().reference().child("profile_images").child(filename).putData(uploadData, metadata: nil, completion: { (storageMetadata, error) in
                     if let error = error{
-                        Alert.showBasic("Firabase storage error", message: error.localizedDescription, viewController: self!)
+                        Alert.showBasic("Firabase storage error", message: error.localizedDescription, viewController: self!, handler: nil)
+                        self?.signUpButton.setAsEnabled(true)
                         return
                     }
                     
@@ -179,13 +199,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                     
                     Database.database().reference().child("users").updateChildValues(values, withCompletionBlock: { (error, databaseReference) in
                         if let error = error{
-                            Alert.showBasic("Firabase storage error", message: error.localizedDescription, viewController: self!)
+                            Alert.showBasic("Firabase storage error", message: error.localizedDescription, viewController: self!, handler: nil)
                             return
                         }
+                        
+                        self?.present(MainTabController(), animated: true, completion: nil)
                     })
                 })
             }
-            self?.signUpButton.setAsEnabled(true)
         }
     }
     
@@ -195,7 +216,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.backgroundColor = UIColor.white
         inputFieldsStackView.insertArrangedSubview(emailTextField, at: 0)
         inputFieldsStackView.insertArrangedSubview(usernameTextField, at: 1)
         inputFieldsStackView.insertArrangedSubview(passwordTextField, at: 2)
@@ -203,12 +224,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         view.addSubview(addPhotoButton)
         view.addSubview(inputFieldsStackView)
+        view.addSubview(loginButton)
         
         addPhotoButton.anchors(top: view.topAnchor, right: nil, bottom: nil, left: nil, paddingTop: 40, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 140, height: 140)
         
         addPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         inputFieldsStackView.anchors(top: addPhotoButton.bottomAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 20, paddingRight: -40, paddingBottom: 0, paddingLeft: 40, width: nil, height: 200)
+        
+        loginButton.anchors(top: nil, right: nil, bottom: self.view.bottomAnchor, left: nil, paddingTop: 0, paddingRight: 0, paddingBottom: -10, paddingLeft: 0, width: 0, height: 0)
+        
+        loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         validateSignUpForm()
     }

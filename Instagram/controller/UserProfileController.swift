@@ -34,9 +34,12 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         do {
            try fetchUser()
         }catch FetchUserError.notLoggedIn{
-            Alert.showBasic("User Info Error", message: "Sorry, but looks like you're not logged in. Please try logging in to continue.", viewController: self)
+            Alert.showBasic("User Info Error", message: "Sorry, but looks like you're not logged in. Please try logging in to continue.", viewController: self, handler: { [weak self] (alertAction) in
+                self?.dismiss(animated: true, completion:nil)
+                self?.present(SignupController(), animated: true, completion: nil)
+            })
         }catch{
-            Alert.showBasic("User Info Error", message: error.localizedDescription, viewController: self)
+            Alert.showBasic("User Info Error", message: error.localizedDescription, viewController: self, handler: nil)
         }
     }
     
@@ -46,7 +49,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
             self?.user = User(snapshot: snapshot)
             self?.collectionView?.reloadData()
         }) { (error) in
-            Alert.showBasic("Get user info error", message: error.localizedDescription, viewController: self)
+            Alert.showBasic("Get user info error", message: error.localizedDescription, viewController: self, handler: nil)
         }
     }
     
@@ -56,8 +59,13 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     
     @objc func handleLogout(){
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { (_) in
-            
+        alertController.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { [weak self] (_) in
+            do{
+                try Auth.auth().signOut()
+                self?.present(LoginNavigationController(), animated: true, completion: nil)
+            }catch let signOutError as NSError{
+                Alert.showBasic("Sign Out error", message: signOutError.localizedDescription, viewController: self!, handler: nil)
+            }
         }))
         
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (_) in

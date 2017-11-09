@@ -17,66 +17,66 @@ class UserProfileHeader: UICollectionViewCell {
     }
     
     let postsStackView: UIStackView = {
-        let sv = UIStackView()
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.alignment = .center
-        sv.axis = .vertical
-        sv.distribution = .fill
-        return sv
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.alignment = .center
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        return stackView
     }()
     
     let followersStackView: UIStackView = {
-        let sv = UIStackView()
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.alignment = .center
-        sv.axis = .vertical
-        sv.distribution = .fill
-        return sv
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.alignment = .center
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        return stackView
     }()
     
     let followsStackView: UIStackView = {
-        let sv = UIStackView()
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.alignment = .center
-        sv.axis = .vertical
-        sv.distribution = .fill
-        return sv
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.alignment = .center
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        return stackView
     }()
     
     let headerStackView: UIStackView = {
-        let sv = UIStackView()
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.alignment = .top
-        sv.axis = .horizontal
-        sv.distribution = .fill
-        return sv
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.alignment = .top
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        return stackView
     }()
     
     let userInfoStackView: UIStackView = {
-        let sv = UIStackView()
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.alignment = .fill
-        sv.axis = .vertical
-        sv.distribution = .fill
-        return sv
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.alignment = .fill
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        return stackView
     }()
     
     let listButtonsStackView: UIStackView = {
-        let sv = UIStackView()
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.alignment = .fill
-        sv.axis = .horizontal
-        sv.distribution = .fillEqually
-        return sv
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.alignment = .fill
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        return stackView
     }()
     
     let postsInfoStackView: UIStackView = {
-        let sv = UIStackView()
-        sv.translatesAutoresizingMaskIntoConstraints = false
-        sv.alignment = .fill
-        sv.axis = .horizontal
-        sv.distribution = .fillEqually
-        return sv
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.alignment = .fill
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        return stackView
     }()
     
     let userProfileImageDimensions: CGSize = {
@@ -84,101 +84,99 @@ class UserProfileHeader: UICollectionViewCell {
     }()
     
     let userProfileImage: UIImageView = {
-        let iv = UIImageView()
-        iv.layer.masksToBounds = true
-        iv.backgroundColor = UIColor.blue
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        return iv
+        let iamgeView = UIImageView()
+        iamgeView.layer.masksToBounds = true
+        iamgeView.translatesAutoresizingMaskIntoConstraints = false
+        return iamgeView
     }()
     
     let userNameLabel: UILabel = {
-        let lb = UILabel()
-        lb.translatesAutoresizingMaskIntoConstraints = false
-        lb.font = UIFont.boldSystemFont(ofSize: 14)
-        lb.numberOfLines = 0
-        return lb
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 14)
+        return label
     }()
     
     let numberOfPosts: UILabel = {
-        let lb = UILabel()
-        lb.text = "100"
-        lb.font = UIFont.boldSystemFont(ofSize: 14)
-        lb.translatesAutoresizingMaskIntoConstraints = false
-        return lb
+        let label = UILabel()
+        label.text = "100"
+        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     let postsLabel: UILabel = {
-        let lb = UILabel()
-        lb.text = "posts"
-        lb.textColor = UIColor(white: 0, alpha: 0.3)
-        lb.translatesAutoresizingMaskIntoConstraints = false
-        return lb
+        let label = UILabel()
+        label.text = "posts"
+        label.textColor = UIColor(white: 0, alpha: 0.3)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     let numberOfFollowers: UILabel = {
-        let lb = UILabel()
-        lb.text = "200"
-        lb.font = UIFont.boldSystemFont(ofSize: 14)
-        lb.translatesAutoresizingMaskIntoConstraints = false
-        return lb
+        let label = UILabel()
+        label.text = "200"
+        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     let followersLabel: UILabel = {
-        let lb = UILabel()
-        lb.text = "followers"
-        lb.textColor = UIColor(white: 0, alpha: 0.3)
-        lb.translatesAutoresizingMaskIntoConstraints = false
-        return lb
+        let label = UILabel()
+        label.text = "followers"
+        label.textColor = UIColor(white: 0, alpha: 0.3)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     let numberOfFollows: UILabel = {
-        let lb = UILabel()
-        lb.text = "300"
-        lb.font = UIFont.boldSystemFont(ofSize: 14)
-        lb.translatesAutoresizingMaskIntoConstraints = false
-        return lb
+        let label = UILabel()
+        label.text = "300"
+        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     let followsLabel: UILabel = {
-        let lb = UILabel()
-        lb.text = "follows"
-        lb.textColor = UIColor(white: 0, alpha: 0.3)
-        lb.translatesAutoresizingMaskIntoConstraints = false
-        return lb
+        let label = UILabel()
+        label.text = "follows"
+        label.textColor = UIColor(white: 0, alpha: 0.3)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     let editProfileButton: UIButton = {
-        let bt = UIButton(type: .system)
-        bt.translatesAutoresizingMaskIntoConstraints = false
-        bt.tintColor = UIColor.black
-        bt.layer.borderColor = UIColor.lightGray.cgColor
-        bt.layer.borderWidth = 0.5
-        bt.setTitle("Edit Profile", for: .normal)
-        bt.layer.cornerRadius = 3
-        return bt
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = UIColor.black
+        button.layer.borderColor = UIColor.lightGray.cgColor
+        button.layer.borderWidth = 0.5
+        button.setTitle("Edit Profile", for: .normal)
+        button.layer.cornerRadius = 3
+        return button
     }()
     
     let gridButton: UIButton = {
-        let bt = UIButton(type: .system)
-        bt.translatesAutoresizingMaskIntoConstraints = false
-        bt.setImage(#imageLiteral(resourceName: "grid"), for: .normal)
-        return bt
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(#imageLiteral(resourceName: "grid"), for: .normal)
+        return button
     }()
     
     let listButton: UIButton = {
-        let bt = UIButton(type: .system)
-        bt.translatesAutoresizingMaskIntoConstraints = false
-        bt.setImage(#imageLiteral(resourceName: "list"), for: .normal)
-        bt.tintColor = UIColor(white: 0, alpha: 0.2)
-        return bt
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(#imageLiteral(resourceName: "list"), for: .normal)
+        button.tintColor = UIColor(white: 0, alpha: 0.2)
+        return button
     }()
     
     let ribbonButton: UIButton = {
-        let bt = UIButton(type: .system)
-        bt.translatesAutoresizingMaskIntoConstraints = false
-        bt.tintColor = UIColor(white: 0, alpha: 0.2)
-        bt.setImage(#imageLiteral(resourceName: "ribbon"), for: .normal)
-        return bt
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = UIColor(white: 0, alpha: 0.2)
+        button.setImage(#imageLiteral(resourceName: "ribbon"), for: .normal)
+        return button
     }()
     
     override init(frame: CGRect) {
@@ -219,7 +217,6 @@ class UserProfileHeader: UICollectionViewCell {
         listButtonsStackView.insertArrangedSubview(ribbonButton, at: 2)
         
         insertDivider(with: UIColor.lightGray, top: listButtonsStackView.topAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 1)
-        
         insertDivider(with: UIColor.lightGray, top: listButtonsStackView.bottomAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 1)
     }
     
