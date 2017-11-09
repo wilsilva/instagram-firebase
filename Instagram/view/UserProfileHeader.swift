@@ -84,10 +84,12 @@ class UserProfileHeader: UICollectionViewCell {
     }()
     
     let userProfileImage: UIImageView = {
-        let iamgeView = UIImageView()
-        iamgeView.layer.masksToBounds = true
-        iamgeView.translatesAutoresizingMaskIntoConstraints = false
-        return iamgeView
+        let imageView = UIImageView()
+        imageView.layer.masksToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.borderColor = UIColor.lightGray.cgColor
+        imageView.layer.borderWidth = 0.5
+        return imageView
     }()
     
     let userNameLabel: UILabel = {
