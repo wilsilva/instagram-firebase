@@ -17,6 +17,8 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         }
     }
     
+    var photoCellId = "photoCellId"
+    
     enum FetchUserError: Error{
         case notLoggedIn
     }
@@ -27,7 +29,8 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: UserProfileHeader.ID)
-        
+        collectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: photoCellId)
+        setupNavigationItem(navigationItem)
         do {
            try fetchUser()
         }catch FetchUserError.notLoggedIn{
@@ -47,6 +50,23 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         }
     }
     
+    fileprivate func setupNavigationItem(_ navigationItem: UINavigationItem){
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "gear").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleLogout))
+    }
+    
+    @objc func handleLogout(){
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { (_) in
+            
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (_) in
+            
+        }))
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
     func setTitle(_ title: String){
         navigationItem.title = title
     }
@@ -63,4 +83,27 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         return CGSize(width: view.frame.width, height: 200)
     }
     
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoCellId, for: indexPath)
+        cell.backgroundColor = UIColor.yellow
+        return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 7
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        //Horizontal and vertical spacing between cells is 1 pixel each
+        let size = (self.view.frame.width - 2) / 3
+        return CGSize(width: size , height: size)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 1
+    }
 }

@@ -148,8 +148,13 @@ class UserProfileHeader: UICollectionViewCell {
     }()
     
     let editProfileButton: UIButton = {
-        let bt = UIButton()
+        let bt = UIButton(type: .system)
         bt.translatesAutoresizingMaskIntoConstraints = false
+        bt.tintColor = UIColor.black
+        bt.layer.borderColor = UIColor.lightGray.cgColor
+        bt.layer.borderWidth = 0.5
+        bt.setTitle("Edit Profile", for: .normal)
+        bt.layer.cornerRadius = 3
         return bt
     }()
     
@@ -183,10 +188,11 @@ class UserProfileHeader: UICollectionViewCell {
         addSubview(listButtonsStackView)
         addSubview(postsInfoStackView)
         addSubview(userNameLabel)
+        addSubview(editProfileButton)
         
         headerStackView.insertArrangedSubview(userProfileImage, at: 0)
         headerStackView.insertArrangedSubview(postsInfoStackView, at: 1)
-        headerStackView.anchors(top: topAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 15, paddingRight: 0, paddingBottom: 0, paddingLeft: 15, width: 0, height: 150)
+        headerStackView.anchors(top: topAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 20, paddingRight: 0, paddingBottom: 0, paddingLeft: 20, width: 0, height: 0)
         
         postsInfoStackView.insertArrangedSubview(postsStackView, at: 0)
         postsInfoStackView.insertArrangedSubview(followersStackView, at: 1)
@@ -202,13 +208,19 @@ class UserProfileHeader: UICollectionViewCell {
         userProfileImage.anchors(top: headerStackView.topAnchor, right: nil, bottom: nil, left: headerStackView.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: userProfileImageDimensions.width, height: userProfileImageDimensions.height)
         userProfileImage.layer.cornerRadius = userProfileImageDimensions.height / 2
         
-        userNameLabel.anchors(top: userProfileImage.bottomAnchor, right: nil, bottom: nil, left: nil, paddingTop: 20, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
+        userNameLabel.anchors(top: userProfileImage.bottomAnchor, right: nil, bottom: nil, left: nil, paddingTop: 15, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
         userNameLabel.centerXAnchor.constraint(equalTo: userProfileImage.centerXAnchor).isActive = true
+        
+        editProfileButton.anchors(top: postsInfoStackView.bottomAnchor, right: postsInfoStackView.rightAnchor, bottom: nil, left: postsInfoStackView.leftAnchor, paddingTop: 10, paddingRight: -20, paddingBottom: 0, paddingLeft: 20, width: 0, height: 0)
     
-        listButtonsStackView.anchors(top: headerStackView.bottomAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: self.frame.width, height: 50)
+        listButtonsStackView.anchors(top: nil, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: self.frame.width, height: 50)
         listButtonsStackView.insertArrangedSubview(gridButton, at: 0)
         listButtonsStackView.insertArrangedSubview(listButton, at: 1)
         listButtonsStackView.insertArrangedSubview(ribbonButton, at: 2)
+        
+        insertDivider(with: UIColor.lightGray, top: listButtonsStackView.topAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 1)
+        
+        insertDivider(with: UIColor.lightGray, top: listButtonsStackView.bottomAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 1)
     }
     
     required init?(coder aDecoder: NSCoder) {

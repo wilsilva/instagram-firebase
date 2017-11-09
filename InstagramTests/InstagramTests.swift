@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import Instagram
+import FirebaseCore
 
 class InstagramTests: XCTestCase {
     
