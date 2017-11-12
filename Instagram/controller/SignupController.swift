@@ -34,6 +34,7 @@ class SignupController: UIViewController, UIImagePickerControllerDelegate, UINav
         textField.backgroundColor = UIColor(white: 0, alpha: 0.03)
         textField.font = UIFont.systemFont(ofSize: 15)
         textField.addTarget(self, action: #selector(validateSignUpForm), for: .editingChanged)
+        textField.keyboardType = .emailAddress
         return textField
     }()
     
@@ -82,9 +83,11 @@ class SignupController: UIViewController, UIImagePickerControllerDelegate, UINav
     
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
-        let normalText = "I already have an account. "
+        
+        let normalText = "Already have an account? "
+        let buttonText = NSMutableAttributedString(string:normalText, attributes: [.foregroundColor: UIColor.lightGray])
+        
         let boldText = "Login"
-        let buttonText = NSMutableAttributedString(string:normalText, attributes: [.foregroundColor: UIColor.black])
         let attributedString = NSMutableAttributedString(string: boldText, attributes: [.font : UIFont.boldSystemFont(ofSize: 15), .foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 237)])
         
         buttonText.append(attributedString)
@@ -232,7 +235,7 @@ class SignupController: UIViewController, UIImagePickerControllerDelegate, UINav
         
         inputFieldsStackView.anchors(top: addPhotoButton.bottomAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 20, paddingRight: -40, paddingBottom: 0, paddingLeft: 40, width: nil, height: 200)
         
-        loginButton.anchors(top: nil, right: nil, bottom: self.view.bottomAnchor, left: nil, paddingTop: 0, paddingRight: 0, paddingBottom: -10, paddingLeft: 0, width: 0, height: 0)
+        loginButton.anchors(top: nil, right: nil, bottom: self.view.bottomAnchor, left: nil, paddingTop: 0, paddingRight: 0, paddingBottom: -20, paddingLeft: 0, width: 0, height: 0)
         
         loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         

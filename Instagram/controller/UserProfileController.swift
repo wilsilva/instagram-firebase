@@ -34,10 +34,10 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         do {
            try fetchUser()
         }catch FetchUserError.notLoggedIn{
-            Alert.showBasic("User Info Error", message: "Sorry, but looks like you're not logged in. Please try logging in to continue.", viewController: self, handler: { [weak self] (alertAction) in
-                self?.dismiss(animated: true, completion:nil)
-                self?.present(SignupController(), animated: true, completion: nil)
-            })
+//            Alert.showBasic("User Info Error", message: "Sorry, but looks like you're not logged in. Please try logging in to continue.", viewController: self, handler: { [weak self] (alertAction) in
+//                self?.dismiss(animated: true, completion:nil)
+//                self?.present(SignupController(), animated: true, completion: nil)
+//            })
         }catch{
             Alert.showBasic("User Info Error", message: error.localizedDescription, viewController: self, handler: nil)
         }

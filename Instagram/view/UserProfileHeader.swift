@@ -10,6 +10,7 @@ import UIKit
 
 class UserProfileHeader: UICollectionViewCell {
     static var ID = "headerId"
+    
     var user: User?{
         didSet{
             updateUI()
@@ -228,12 +229,18 @@ class UserProfileHeader: UICollectionViewCell {
     
     func updateUI(){
         if let url = user?.profilePictureURL{
-            do{
-                let data = try Data(contentsOf: url)
-                DispatchQueue.main.async { [weak self] in
-                    self?.userProfileImage.image = UIImage(data: data)
+            let session = URLSession(configuration: .default)
+            session.dataTask(with: url, completionHandler: { (data, response, error) in
+                if let error = error{
+                    print(error)
+                    return
                 }
-            }catch{}
+                if let data = data{
+                    DispatchQueue.main.async { [weak self] in
+                        self?.userProfileImage.image = UIImage(data: data)
+                    }
+                }
+            }).resume()
         }
         
         if let name = user?.name{
