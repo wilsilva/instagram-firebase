@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		482017F11FABCE050080B18B /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482017F01FABCE050080B18B /* Alert.swift */; };
 		4821C9C11FB3D2AE00AF5D2F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4821C9C01FB3D2AE00AF5D2F /* Assets.xcassets */; };
+		482340EB1FBA54BC00C2B333 /* MainMenuNavigationProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482340EA1FBA54BC00C2B333 /* MainMenuNavigationProtocol.swift */; };
+		482340ED1FBA55E700C2B333 /* MainMenuNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482340EC1FBA55E700C2B333 /* MainMenuNavigationController.swift */; };
+		482340EF1FBA6C7100C2B333 /* ImageSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482340EE1FBA6C7100C2B333 /* ImageSelectorController.swift */; };
+		482340F11FBA6DBC00C2B333 /* ImageSelectorNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482340F01FBA6DBC00C2B333 /* ImageSelectorNavigationController.swift */; };
 		48272D3C1FA7EFD700E45E44 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48272D3B1FA7EFD700E45E44 /* Extension.swift */; };
 		482F4E3A1FB6521900D821F5 /* UserProfileNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482F4E391FB6521900D821F5 /* UserProfileNavigationController.swift */; };
 		482F4E3C1FB6532600D821F5 /* HomeNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482F4E3B1FB6532600D821F5 /* HomeNavigationController.swift */; };
@@ -58,6 +62,10 @@
 		24A3FC3D073EDD32D4F0FEA4 /* Pods_InstagramTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InstagramTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		482017F01FABCE050080B18B /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		4821C9C01FB3D2AE00AF5D2F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		482340EA1FBA54BC00C2B333 /* MainMenuNavigationProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuNavigationProtocol.swift; sourceTree = "<group>"; };
+		482340EC1FBA55E700C2B333 /* MainMenuNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuNavigationController.swift; sourceTree = "<group>"; };
+		482340EE1FBA6C7100C2B333 /* ImageSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSelectorController.swift; sourceTree = "<group>"; };
+		482340F01FBA6DBC00C2B333 /* ImageSelectorNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSelectorNavigationController.swift; sourceTree = "<group>"; };
 		48272D3B1FA7EFD700E45E44 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		482F4E391FB6521900D821F5 /* UserProfileNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileNavigationController.swift; sourceTree = "<group>"; };
 		482F4E3B1FB6532600D821F5 /* HomeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNavigationController.swift; sourceTree = "<group>"; };
@@ -133,10 +141,58 @@
 			path = view;
 			sourceTree = "<group>";
 		};
+		482340F41FBA6FD100C2B333 /* login */ = {
+			isa = PBXGroup;
+			children = (
+				8CBE5F681FB46B4C00F227A2 /* LoginController.swift */,
+				8CBE5F6A1FB4B68400F227A2 /* LoginNavigationController.swift */,
+			);
+			path = login;
+			sourceTree = "<group>";
+		};
+		482340F51FBA6FEE00C2B333 /* navigationTab */ = {
+			isa = PBXGroup;
+			children = (
+				483DA76E1FB1119300702266 /* MainTabController.swift */,
+				482F4E3B1FB6532600D821F5 /* HomeNavigationController.swift */,
+				482F4E391FB6521900D821F5 /* UserProfileNavigationController.swift */,
+				482F4E3D1FB6537B00D821F5 /* SearchNavigationController.swift */,
+				482F4E3F1FB653B100D821F5 /* AddPhotosNavigationController.swift */,
+				482F4E411FB6541200D821F5 /* FavouritesNavigationController.swift */,
+			);
+			path = navigationTab;
+			sourceTree = "<group>";
+		};
+		482340F61FBA700F00C2B333 /* imageSelector */ = {
+			isa = PBXGroup;
+			children = (
+				482340EE1FBA6C7100C2B333 /* ImageSelectorController.swift */,
+				482340F01FBA6DBC00C2B333 /* ImageSelectorNavigationController.swift */,
+			);
+			path = imageSelector;
+			sourceTree = "<group>";
+		};
+		482340F71FBA701900C2B333 /* signUp */ = {
+			isa = PBXGroup;
+			children = (
+				48920B261FA299D40097986C /* SignupController.swift */,
+			);
+			path = signUp;
+			sourceTree = "<group>";
+		};
+		482340F81FBA701F00C2B333 /* userProfile */ = {
+			isa = PBXGroup;
+			children = (
+				483DA7701FB1133900702266 /* UserProfileController.swift */,
+			);
+			path = userProfile;
+			sourceTree = "<group>";
+		};
 		48272D3A1FA7EFC700E45E44 /* extension */ = {
 			isa = PBXGroup;
 			children = (
 				48272D3B1FA7EFD700E45E44 /* Extension.swift */,
+				482340EC1FBA55E700C2B333 /* MainMenuNavigationController.swift */,
 			);
 			path = extension;
 			sourceTree = "<group>";
@@ -145,6 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				486298391FB7B042005EFF69 /* LoginProtocol.swift */,
+				482340EA1FBA54BC00C2B333 /* MainMenuNavigationProtocol.swift */,
 			);
 			path = protocol;
 			sourceTree = "<group>";
@@ -242,16 +299,11 @@
 		8C3699AD1FB22462005CAA2D /* controller */ = {
 			isa = PBXGroup;
 			children = (
-				483DA76E1FB1119300702266 /* MainTabController.swift */,
-				482F4E3B1FB6532600D821F5 /* HomeNavigationController.swift */,
-				483DA7701FB1133900702266 /* UserProfileController.swift */,
-				48920B261FA299D40097986C /* SignupController.swift */,
-				8CBE5F681FB46B4C00F227A2 /* LoginController.swift */,
-				8CBE5F6A1FB4B68400F227A2 /* LoginNavigationController.swift */,
-				482F4E391FB6521900D821F5 /* UserProfileNavigationController.swift */,
-				482F4E3D1FB6537B00D821F5 /* SearchNavigationController.swift */,
-				482F4E3F1FB653B100D821F5 /* AddPhotosNavigationController.swift */,
-				482F4E411FB6541200D821F5 /* FavouritesNavigationController.swift */,
+				482340F51FBA6FEE00C2B333 /* navigationTab */,
+				482340F81FBA701F00C2B333 /* userProfile */,
+				482340F71FBA701900C2B333 /* signUp */,
+				482340F41FBA6FD100C2B333 /* login */,
+				482340F61FBA700F00C2B333 /* imageSelector */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -557,12 +609,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				48920B271FA299D40097986C /* SignupController.swift in Sources */,
+				482340EF1FBA6C7100C2B333 /* ImageSelectorController.swift in Sources */,
 				48920B2D1FA299D40097986C /* Instagram.xcdatamodeld in Sources */,
 				483DA76F1FB1119300702266 /* MainTabController.swift in Sources */,
+				482340F11FBA6DBC00C2B333 /* ImageSelectorNavigationController.swift in Sources */,
+				482340ED1FBA55E700C2B333 /* MainMenuNavigationController.swift in Sources */,
 				4862983A1FB7B042005EFF69 /* LoginProtocol.swift in Sources */,
 				48AAB3951FB11C1E0072771F /* UserProfileHeader.swift in Sources */,
 				482F4E3C1FB6532600D821F5 /* HomeNavigationController.swift in Sources */,
 				482F4E3A1FB6521900D821F5 /* UserProfileNavigationController.swift in Sources */,
+				482340EB1FBA54BC00C2B333 /* MainMenuNavigationProtocol.swift in Sources */,
 				48920B251FA299D40097986C /* AppDelegate.swift in Sources */,
 				8C3699AC1FB20D59005CAA2D /* User.swift in Sources */,
 				483DA7711FB1133900702266 /* UserProfileController.swift in Sources */,
@@ -741,7 +797,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = WZA5VVFPHP;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Instagram/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tgzoom.Instagram;
@@ -757,7 +813,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = WZA5VVFPHP;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Instagram/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tgzoom.Instagram;

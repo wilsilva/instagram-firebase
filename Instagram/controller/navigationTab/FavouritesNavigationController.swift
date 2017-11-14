@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FavouritesNavigationController: UINavigationController {
+class FavouritesNavigationController: MainMenuNavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tabBarItem.image = #imageLiteral(resourceName: "like_unselected")

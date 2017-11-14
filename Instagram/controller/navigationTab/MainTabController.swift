@@ -9,11 +9,18 @@
 import UIKit
 import Firebase
 
-class MainTabController: UITabBarController {
-
+class MainTabController: UITabBarController,UITabBarControllerDelegate {
+    
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        if let mainMenuNavigationController = viewController as? MainMenuNavigationController{
+            return mainMenuNavigationController.executeBeforeShowing()
+        }
+        return true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.delegate = self
         tabBar.tintColor = UIColor.black
         self.view.backgroundColor = UIColor.white
         
@@ -32,17 +39,18 @@ class MainTabController: UITabBarController {
         }
     }
     
-    func getControllersList() -> [UIViewController]{
+    func getControllersList() -> [MainMenuNavigationController]{
         let userProfileController = UserProfileController(collectionViewLayout: UICollectionViewFlowLayout())
-        let userProfileNavigationController = UserProfileNavigationController(rootViewController: userProfileController)
-        let homeNavigationController = HomeNavigationController(rootViewController: UIViewController())
-        let searchNavigationController = SearchNavigationController(rootViewController: UIViewController())
-        let addPhotosNavigationController = AddPhotosNavigationController(rootViewController: UIViewController())
-        let favouritesNavigationController = FavouritesNavigationController(rootViewController: UIViewController())
-        return [userProfileNavigationController,homeNavigationController,searchNavigationController,addPhotosNavigationController,favouritesNavigationController]
+        return [
+            UserProfileNavigationController(rootViewController: userProfileController),
+            HomeNavigationController(rootViewController: UIViewController()),
+            SearchNavigationController(rootViewController: UIViewController()),
+            AddPhotosNavigationController(rootViewController: UIViewController()),
+            FavouritesNavigationController(rootViewController: UIViewController())
+        ]
     }
     
-    func addViewControllers(_ controllers: [UIViewController]){
+    func addViewControllers(_ controllers: [MainMenuNavigationController]){
         self.viewControllers = controllers
     }
     

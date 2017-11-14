@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UserProfileNavigationController: UINavigationController {
+class UserProfileNavigationController: MainMenuNavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tabBarItem.image = #imageLiteral(resourceName: "profile_unselected")

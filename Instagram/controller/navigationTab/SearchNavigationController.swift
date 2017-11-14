@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SearchNavigationController: UINavigationController {
+class SearchNavigationController: MainMenuNavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tabBarItem.image = #imageLiteral(resourceName: "search_unselected")

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HomeNavigationController: UINavigationController {
+class HomeNavigationController: MainMenuNavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tabBarItem.image = #imageLiteral(resourceName: "home_unselected")

@@ -93,7 +93,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoCellId, for: indexPath)
-        cell.backgroundColor = UIColor.yellow
+        cell.backgroundColor = UIColor.blue
         return cell
     }
     

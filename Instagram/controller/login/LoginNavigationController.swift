@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LoginNavigationController: UINavigationController {
+class LoginNavigationController: MainMenuNavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
