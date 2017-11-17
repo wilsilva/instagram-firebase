@@ -18,20 +18,20 @@ class UserPhotoCell: UICollectionViewCell {
     
     static var ID = "userPhotoCellId"
     
-    let userImage: UIImageView = {
+    private let userImageView: UIImageView = {
         let iv = UIImageView()
         iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
     }()
     
     func updateUI(){
-        userImage.image = photo
+        userImageView.image = photo
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.addSubview(userImage)
-        userImage.anchors(top: topAnchor, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
+        self.addSubview(userImageView)
+        userImageView.anchors(top: topAnchor, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
     }
     
     required init?(coder aDecoder: NSCoder) {

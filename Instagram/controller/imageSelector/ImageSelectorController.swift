@@ -10,6 +10,8 @@ import UIKit
 import Photos
 
 class ImageSelectorController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+    let imageSize = CGSize(width: 350, height: 350)
+    var images = [UIImage]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,10 +20,33 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         self.collectionView?.register(UserPhotoCell.self, forCellWithReuseIdentifier: UserPhotoCell.ID)
         self.navigationController?.navigationBar.tintColor = .black
         setupNavigationItems()
-        fetchUserPhotos()
+        fetchUserPhotos(withImageSize: imageSize,completion: loadImages)
     }
     
-    func fetchUserPhotos(){
+    func fetchUserPhotos(withImageSize imageSize: CGSize, completion: (([UIImage]) -> Void)?){
+        var images = [UIImage]()
+        let result = PHAsset.fetchAssets(with: .image, options: PHFetchOptions())
+        result.enumerateObjects { (asset, count, stop) in
+            let imageManager = PHImageManager.default()
+            let options = PHImageRequestOptions()
+            options.isSynchronous = true
+            imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: options, resultHandler: { (image, info) in
+                if let image = image{
+                    images.append(image)
+                }
+                
+                if count == result.count - 1{
+                    if let completion = completion{
+                        completion(images)
+                    }
+                }
+            })
+        }
+    }
+    
+    func loadImages(images: [UIImage]){
+        self.images = images
+        self.collectionView?.reloadData()
     }
     
     func setupNavigationItems(){
@@ -38,7 +63,8 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: view.frame.width, height: 200)
+        let size = view.frame.width
+        return CGSize(width: size, height: size)
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -49,7 +75,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserPhotoCell.ID, for: indexPath)
         if let userPhotoCell = cell as? UserPhotoCell{
-            userPhotoCell.photo = #imageLiteral(resourceName: "profile_selected")
+            userPhotoCell.photo = self.images[indexPath.row]
         }
         return cell
     }
@@ -72,7 +98,8 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
+        print(self.images.count)
+        return self.images.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
