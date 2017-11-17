@@ -27,26 +27,18 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         return view
     }()
     
-    let divider: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .red
-        view.isUserInteractionEnabled = true
-        return view
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView?.backgroundColor = .white
         self.view.backgroundColor = .white
-        //        self.collectionView?.register(ImageSelectorHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: ImageSelectorHeader.ID)
+        self.collectionView?.bounces = false
         self.collectionView?.translatesAutoresizingMaskIntoConstraints = false
         self.collectionView?.register(UserPhotoCell.self, forCellWithReuseIdentifier: UserPhotoCell.ID)
         self.navigationController?.navigationBar.tintColor = .black
         setupViews()
         setupNavigationItems()
         fetchUserPhotos()
-        setupEdgeGesture(views: view)
+        setupEdgeGesture(views: collectionView!)
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -62,38 +54,28 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     
     @objc func edgeGestureRecognizer(_ panGestureRecognizer: UIPanGestureRecognizer){
-        let targetView = panGestureRecognizer.view!
-//        let translation = panGestureRecognizer.translation(in: targetView)
-        let currentLocation = panGestureRecognizer.location(in: targetView)
-        let currentView = targetView.hitTest(currentLocation, with: nil)
-        
-        switch panGestureRecognizer.state {
-        case .began,.changed:
-            if let currentView = currentView{
-                switch currentView{
-                case imageActions:
-                    print("actions")
-                case collectionView!:
-                    print("collection")
-                case view:
-                    print("view")
+        if let targetView = panGestureRecognizer.view{
+            let translation = panGestureRecognizer.translation(in: targetView.superview)
+            let currentLocation = panGestureRecognizer.location(in: targetView.superview)
+            if currentLocation.y + 2 <= targetView.frame.origin.y{
+                switch panGestureRecognizer.state {
+                case .began, .changed:
+                    targetView.center = CGPoint(x: targetView.center.x, y: targetView.center.y + translation.y)
+                    selectedImage.center = CGPoint(x: selectedImage.center.x, y: selectedImage.center.y + translation.y)
+                case .ended:
+                    break
                 default:
-                    return
+                    break
                 }
             }
-        case .ended:
-            return
-        default:
-            return
+            panGestureRecognizer.setTranslation(CGPoint.zero, in: targetView.superview)
         }
     }
     
     func setupViews(){
         view.addSubview(selectedImage)
-        view.addSubview(divider)
         selectedImage.addSubview(imageActions)
         selectedImage.anchors(top: view.topAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width)
-        divider.anchors(top: selectedImage.bottomAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 2)
         imageActions.anchors(top: nil, right: selectedImage.rightAnchor, bottom: selectedImage.bottomAnchor, left: selectedImage.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width / 6)
         
         collectionView?.anchors(top: selectedImage.bottomAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor, paddingTop: 1, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
