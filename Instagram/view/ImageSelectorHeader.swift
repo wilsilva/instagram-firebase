@@ -11,21 +11,11 @@ import UIKit
 class ImageSelectorHeader: UICollectionViewCell {
     static var ID = "imageSelectorHeaderId"
     
-    var selectedPhoto: UIImage?{
-        didSet{
-            updateUI()
-        }
-    }
-    
     let userImage: UIImageView = {
-        let iv = UIImageView()
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        return iv
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
-    
-    func updateUI(){
-        userImage.image = selectedPhoto
-    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)

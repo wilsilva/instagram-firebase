@@ -16,10 +16,10 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView?.backgroundColor = .white
+        self.navigationController?.navigationBar.tintColor = .black
         self.collectionView?.register(ImageSelectorHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: ImageSelectorHeader.ID)
         self.collectionView?.register(UserPhotoCell.self, forCellWithReuseIdentifier: UserPhotoCell.ID)
-        self.navigationController?.navigationBar.tintColor = .black
-        setupNavigationItems()
+        setupNavigationItems(navigationItem: self.navigationItem)
         fetchUserPhotos(withImageSize: imageSize,completion: loadImages)
     }
     
@@ -49,9 +49,9 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         self.collectionView?.reloadData()
     }
     
-    func setupNavigationItems(){
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(handleNext))
+    func setupNavigationItems(navigationItem: UINavigationItem){
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(handleNext))
     }
     
     @objc func handleCancel(){
@@ -98,17 +98,22 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(self.images.count)
         return self.images.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("selected")
+        let cell = collectionView.cellForItem(at: indexPath)
+        if let userPhotoCell = cell as? UserPhotoCell, let photo = userPhotoCell.photo{
+            updateHeaderImage(collectionView, image: photo, indexPath: indexPath)
+        }
+    }
+    
+    func updateHeaderImage(_ collectionView: UICollectionView, image: UIImage, indexPath: IndexPath){
         let indexPathForHeader = IndexPath(row: 0, section: indexPath.section)
         let header = collectionView.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at: indexPathForHeader)
-        let cell = collectionView.cellForItem(at: indexPath)
-        
-        if let userPhotoCell = cell as? UserPhotoCell, let imageSelectorHeader = header as? ImageSelectorHeader{
-            imageSelectorHeader.selectedPhoto = userPhotoCell.photo
+        if let imageSelectorHeader = header as? ImageSelectorHeader{
+            imageSelectorHeader.userImage.image = image
         }
     }
 }
