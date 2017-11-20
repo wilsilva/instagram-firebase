@@ -23,7 +23,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         fetchUserPhotos(withImageSize: imageSize,completion: loadImages)
     }
     
-    func fetchUserPhotos(withImageSize imageSize: CGSize, completion: (([UIImage]) -> Void)?){
+    fileprivate func fetchUserPhotos(withImageSize imageSize: CGSize, completion: (([UIImage]) -> Void)?){
         var images = [UIImage]()
         let result = PHAsset.fetchAssets(with: .image, options: PHFetchOptions())
         result.enumerateObjects { (asset, count, stop) in
@@ -49,7 +49,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         self.collectionView?.reloadData()
     }
     
-    func setupNavigationItems(navigationItem: UINavigationItem){
+    fileprivate func setupNavigationItems(navigationItem: UINavigationItem){
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(handleNext))
     }
@@ -102,7 +102,6 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("selected")
         let cell = collectionView.cellForItem(at: indexPath)
         if let userPhotoCell = cell as? UserPhotoCell, let photo = userPhotoCell.photo{
             updateHeaderImage(collectionView, image: photo, indexPath: indexPath)

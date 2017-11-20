@@ -19,9 +19,9 @@ class UserPhotoCell: UICollectionViewCell {
     static var ID = "userPhotoCellId"
     
     private let userImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        return iv
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
     func updateUI(){
