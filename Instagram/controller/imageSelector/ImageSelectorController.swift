@@ -11,7 +11,21 @@ import Photos
 
 class ImageSelectorController: UICollectionViewController, UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate {
     
-    let selectedImage: UIImageView = {
+    enum ScrollDirection {
+        case Up
+        case Down
+    }
+    
+    enum ScrollState {
+        case enabled
+        case disabled
+    }
+    
+    var scrollDirection: ScrollDirection = .Up
+    var scrollState: ScrollState = .enabled
+    var headerTopAnchor: NSLayoutConstraint?
+    
+    let header: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.isUserInteractionEnabled = true
@@ -19,26 +33,26 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         return imageView
     }()
     
-    let imageActions: UIView = {
+    let scrollableHeaderPiece: UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .lightGray
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = true
         return view
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.isTranslucent = false
         self.collectionView?.backgroundColor = .white
         self.view.backgroundColor = .white
-        self.collectionView?.bounces = false
         self.collectionView?.translatesAutoresizingMaskIntoConstraints = false
         self.collectionView?.register(UserPhotoCell.self, forCellWithReuseIdentifier: UserPhotoCell.ID)
         self.navigationController?.navigationBar.tintColor = .black
         setupViews()
         setupNavigationItems()
         fetchUserPhotos()
-        setupEdgeGesture(views: collectionView!)
+        setupEdgeGesture(views: self.view)
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -54,31 +68,75 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     
     @objc func edgeGestureRecognizer(_ panGestureRecognizer: UIPanGestureRecognizer){
-        if let targetView = panGestureRecognizer.view{
-            let translation = panGestureRecognizer.translation(in: targetView.superview)
-            let currentLocation = panGestureRecognizer.location(in: targetView.superview)
-            if currentLocation.y + 2 <= targetView.frame.origin.y{
-                switch panGestureRecognizer.state {
-                case .began, .changed:
-                    targetView.center = CGPoint(x: targetView.center.x, y: targetView.center.y + translation.y)
-                    selectedImage.center = CGPoint(x: selectedImage.center.x, y: selectedImage.center.y + translation.y)
+        if let view = panGestureRecognizer.view{
+            let currentLocation = panGestureRecognizer.location(in: view)
+            let pinnedView = view.hitTest(currentLocation, with: nil)
+            let translation = panGestureRecognizer.translation(in: view)
+            let velocity = panGestureRecognizer.velocity(in: view)
+            
+            if let pinnedView = pinnedView{
+                switch(panGestureRecognizer.state){
+                case .began:
+                    
+                    if pinnedView == self.header && scrollDirection == .Up{
+                        scrollState = .disabled
+                        return
+                    }
+                    
+                    scrollState = .enabled
+                    
+                case .changed:
+                    print(scrollState)
+                    if scrollState == .enabled{
+                        if velocity.y <= 0{
+                            scrollDirection = .Up
+                        }else{
+                            scrollDirection = .Down
+                        }
+                        
+                        switch(scrollDirection){
+                        case .Up:
+                            if currentLocation.y <= (header.frame.maxY - scrollableHeaderPiece.frame.height){
+                                headerTopAnchor?.constant += translation.y
+                            }
+                        case .Down:
+                            if currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height{
+                                headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
+                            }
+                        }
+                        
+                    }
                 case .ended:
-                    break
+                    if scrollDirection == .Up{
+                        let center = header.frame.height / 2
+                        if header.frame.maxY - scrollableHeaderPiece.frame.height < center{
+                            headerTopAnchor?.constant = scrollableHeaderPiece.frame.height - header.frame.height
+                            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: { [weak self] in
+                                self?.view.layoutIfNeeded()
+                                }, completion: nil)
+                        }else{
+                            headerTopAnchor?.constant = 0
+                            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: { [weak self] in
+                                self?.view.layoutIfNeeded()
+                                }, completion: nil)
+                        }
+                    }
                 default:
-                    break
+                    return
                 }
             }
-            panGestureRecognizer.setTranslation(CGPoint.zero, in: targetView.superview)
+            panGestureRecognizer.setTranslation(CGPoint.zero, in: view.superview)
         }
     }
     
     func setupViews(){
-        view.addSubview(selectedImage)
-        selectedImage.addSubview(imageActions)
-        selectedImage.anchors(top: view.topAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width)
-        imageActions.anchors(top: nil, right: selectedImage.rightAnchor, bottom: selectedImage.bottomAnchor, left: selectedImage.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width / 6)
-        
-        collectionView?.anchors(top: selectedImage.bottomAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor, paddingTop: 1, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
+        view.addSubview(header)
+        header.addSubview(scrollableHeaderPiece)
+        header.anchors(top: nil, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width)
+        scrollableHeaderPiece.anchors(top: nil, right: header.rightAnchor, bottom: header.bottomAnchor, left: header.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 44)
+        headerTopAnchor = header.topAnchor.constraint(equalTo: view.topAnchor)
+        headerTopAnchor!.isActive = true
+        collectionView?.anchors(top: header.bottomAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
     }
     
     func fetchUserPhotos(){
@@ -96,15 +154,6 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     @objc func handleNext(){
         print("Next")
     }
-    
-    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-    //        return CGSize(width: view.frame.width, height: 200)
-    //    }
-    
-    //    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-    //        let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ImageSelectorHeader.ID, for: indexPath)
-    //        return cell
-    //    }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserPhotoCell.ID, for: indexPath)
