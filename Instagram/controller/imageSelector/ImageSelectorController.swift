@@ -95,6 +95,8 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
             let velocity = panGestureRecognizer.velocity(in: view)
             scrollDirection = velocity.y <= 0 ? .Up : .Down
             
+            self.collectionView?.isScrollEnabled = true
+            
             if let pinnedView = pinnedView{
                 switch(panGestureRecognizer.state){
                 case .began:
@@ -110,16 +112,19 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
                     if scrollState == .enabled{
                         if scrollDirection == .Up{
                             if currentLocation.y <= (header.frame.maxY - scrollableHeaderPieceHeight){
+                                self.collectionView?.isScrollEnabled = false
                                 headerTopAnchor?.constant += translation.y
                             }
                         }
                         else{
                             if headerState == .opened{
                                 if currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height{
+                                    self.collectionView?.isScrollEnabled = false
                                     headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
                                 }
                             }else{
                                 if (currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height) || self.collectionView!.contentOffset.y <= 0.0 {
+                                    self.collectionView?.isScrollEnabled = false
                                     headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
                                 }
                             }
