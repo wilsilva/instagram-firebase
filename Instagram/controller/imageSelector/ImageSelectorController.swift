@@ -21,9 +21,17 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         case disabled
     }
     
+    enum HeaderState {
+        case opened
+        case closed
+    }
+    
     var scrollDirection: ScrollDirection = .Up
     var scrollState: ScrollState = .enabled
+    var headerState: HeaderState = .opened
     var headerTopAnchor: NSLayoutConstraint?
+    let scrollableHeaderPieceHeight: CGFloat = 44
+    let navigationBarHeight: CGFloat = 60
     
     let header: UIImageView = {
         let imageView = UIImageView()
@@ -41,11 +49,19 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         return view
     }()
     
+    let navigationBar: UIView = {
+        let view = UIView()
+        view.backgroundColor = .purple
+        view.isUserInteractionEnabled = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.isTranslucent = false
         self.collectionView?.backgroundColor = .white
         self.view.backgroundColor = .white
+        self.navigationController?.navigationBar.isHidden = true
         self.collectionView?.translatesAutoresizingMaskIntoConstraints = false
         self.collectionView?.register(UserPhotoCell.self, forCellWithReuseIdentifier: UserPhotoCell.ID)
         self.navigationController?.navigationBar.tintColor = .black
@@ -53,6 +69,10 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         setupNavigationItems()
         fetchUserPhotos()
         setupEdgeGesture(views: self.view)
+    }
+    
+    override var prefersStatusBarHidden: Bool{
+        return true
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -73,12 +93,13 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
             let pinnedView = view.hitTest(currentLocation, with: nil)
             let translation = panGestureRecognizer.translation(in: view)
             let velocity = panGestureRecognizer.velocity(in: view)
+            scrollDirection = velocity.y <= 0 ? .Up : .Down
             
             if let pinnedView = pinnedView{
                 switch(panGestureRecognizer.state){
                 case .began:
                     
-                    if pinnedView == self.header && scrollDirection == .Up{
+                    if pinnedView == self.header{
                         scrollState = .disabled
                         return
                     }
@@ -86,40 +107,35 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
                     scrollState = .enabled
                     
                 case .changed:
-                    print(scrollState)
                     if scrollState == .enabled{
-                        if velocity.y <= 0{
-                            scrollDirection = .Up
-                        }else{
-                            scrollDirection = .Down
-                        }
-                        
-                        switch(scrollDirection){
-                        case .Up:
-                            if currentLocation.y <= (header.frame.maxY - scrollableHeaderPiece.frame.height){
+                        if scrollDirection == .Up{
+                            if currentLocation.y <= (header.frame.maxY - scrollableHeaderPieceHeight){
                                 headerTopAnchor?.constant += translation.y
                             }
-                        case .Down:
-                            if currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height{
-                                headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
+                        }
+                        else{
+                            if headerState == .opened{
+                                if currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height{
+                                    headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
+                                }
+                            }else{
+                                if (currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height) || self.collectionView!.contentOffset.y <= 0.0 {
+                                    headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
+                                }
                             }
                         }
-                        
                     }
+                    
                 case .ended:
-                    if scrollDirection == .Up{
-                        let center = header.frame.height / 2
-                        if header.frame.maxY - scrollableHeaderPiece.frame.height < center{
-                            headerTopAnchor?.constant = scrollableHeaderPiece.frame.height - header.frame.height
-                            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: { [weak self] in
-                                self?.view.layoutIfNeeded()
-                                }, completion: nil)
-                        }else{
-                            headerTopAnchor?.constant = 0
-                            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: { [weak self] in
-                                self?.view.layoutIfNeeded()
-                                }, completion: nil)
-                        }
+                    let headerYcenter = header.frame.height / 2
+                    let currentHeaderPosition = header.frame.maxY - (scrollableHeaderPieceHeight + navigationBarHeight)
+                    
+                    if currentHeaderPosition < headerYcenter{
+                        headerState = .closed
+                        pushHeaderUp()
+                    }else{
+                        pullHeaderDown()
+                        headerState = .opened
                     }
                 default:
                     return
@@ -129,13 +145,34 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         }
     }
     
+    fileprivate func pushHeaderUp(){
+        headerTopAnchor?.constant = (scrollableHeaderPieceHeight - navigationBarHeight) - header.frame.height
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: { [weak self] in
+            self?.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
+    fileprivate func pullHeaderDown(){
+        headerTopAnchor?.constant = 0
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: { [weak self] in
+            self?.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
     func setupViews(){
         view.addSubview(header)
+        view.addSubview(navigationBar)
         header.addSubview(scrollableHeaderPiece)
-        header.anchors(top: nil, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width)
-        scrollableHeaderPiece.anchors(top: nil, right: header.rightAnchor, bottom: header.bottomAnchor, left: header.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 44)
-        headerTopAnchor = header.topAnchor.constraint(equalTo: view.topAnchor)
+        
+        navigationBar.anchors(top: nil, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: navigationBarHeight)
+        
+        header.anchors(top: navigationBar.bottomAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width)
+        
+        headerTopAnchor = navigationBar.topAnchor.constraint(equalTo: view.topAnchor)
         headerTopAnchor!.isActive = true
+        
+        scrollableHeaderPiece.anchors(top: nil, right: header.rightAnchor, bottom: header.bottomAnchor, left: header.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: scrollableHeaderPieceHeight)
+        
         collectionView?.anchors(top: header.bottomAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
     }
     
