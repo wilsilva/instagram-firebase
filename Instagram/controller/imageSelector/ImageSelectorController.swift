@@ -10,7 +10,7 @@ import UIKit
 import Photos
 
 class ImageSelectorController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    let imageSize = CGSize(width: 350, height: 350)
+    let imageSize = CGSize(width: 600, height: 600)
     var images = [UIImage]()
     
     override func viewDidLoad() {
@@ -23,30 +23,34 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         fetchUserPhotos(withImageSize: imageSize,completion: loadImages)
     }
     
-    fileprivate func fetchUserPhotos(withImageSize imageSize: CGSize, completion: (([UIImage]) -> Void)?){
-        var images = [UIImage]()
-        let result = PHAsset.fetchAssets(with: .image, options: PHFetchOptions())
-        result.enumerateObjects { (asset, count, stop) in
-            let imageManager = PHImageManager.default()
-            let options = PHImageRequestOptions()
-            options.isSynchronous = true
-            imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: options, resultHandler: { (image, info) in
-                if let image = image{
-                    images.append(image)
-                }
-                
-                if count == result.count - 1{
-                    if let completion = completion{
-                        completion(images)
+    fileprivate func getFetchOptions() -> PHFetchOptions{
+        let options = PHFetchOptions()
+        let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
+        options.sortDescriptors = [sortDescriptor]
+        return options
+    }
+    
+    fileprivate func fetchUserPhotos(withImageSize imageSize: CGSize, completion: @escaping ((UIImage) -> Void)){
+        let result = PHAsset.fetchAssets(with: .image, options: getFetchOptions())
+        DispatchQueue.global(qos: .background).async {
+            result.enumerateObjects { (asset, count, stop) in
+                let imageManager = PHImageManager.default()
+                let options = PHImageRequestOptions()
+                options.isSynchronous = true
+                imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: options, resultHandler: { (image, info) in
+                    if let image = image{
+                        completion(image)
                     }
-                }
-            })
+                })
+            }
         }
     }
     
-    func loadImages(images: [UIImage]){
-        self.images = images
-        self.collectionView?.reloadData()
+    func loadImages(image: UIImage){
+        self.images.append(image)
+        DispatchQueue.main.sync {
+            self.collectionView?.insertItems(at: [IndexPath(item: images.endIndex - 1, section: 0)])
+        }
     }
     
     fileprivate func setupNavigationItems(navigationItem: UINavigationItem){
