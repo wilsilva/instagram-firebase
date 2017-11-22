@@ -29,31 +29,30 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     var scrollDirection: ScrollDirection = .Up
     var scrollState: ScrollState = .enabled
     var headerState: HeaderState = .opened
+    
     var headerTopAnchor: NSLayoutConstraint?
     let scrollableHeaderPieceHeight: CGFloat = 44
-    let navigationBarHeight: CGFloat = 60
+    let navigationBarHeight: CGFloat = 50
+    var navigationBar = ImageSelectorNavigationBar()
     
     let header: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.isUserInteractionEnabled = true
-        imageView.backgroundColor = .red
         return imageView
+    }()
+    
+    let headerBlackForeground: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(white: 0, alpha: 0.5)
+        return view
     }()
     
     let scrollableHeaderPiece: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = true
-        return view
-    }()
-    
-    let navigationBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .purple
-        view.isUserInteractionEnabled = true
-        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -64,11 +63,11 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         self.navigationController?.navigationBar.isHidden = true
         self.collectionView?.translatesAutoresizingMaskIntoConstraints = false
         self.collectionView?.register(UserPhotoCell.self, forCellWithReuseIdentifier: UserPhotoCell.ID)
-        self.navigationController?.navigationBar.tintColor = .black
         setupViews()
         setupNavigationItems()
         fetchUserPhotos()
-        setupEdgeGesture(views: self.view)
+        setupEdgeGestureRecognizer(views: view)
+        setupTapGestureRecognizer(views: scrollableHeaderPiece)
     }
     
     override var prefersStatusBarHidden: Bool{
@@ -79,11 +78,25 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         return true
     }
     
-    func setupEdgeGesture(views: UIView...){
+    func setupEdgeGestureRecognizer(views: UIView...){
         for view in views {
             let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(edgeGestureRecognizer))
             panGestureRecognizer.delegate = self
             view.addGestureRecognizer(panGestureRecognizer)
+        }
+    }
+    
+    func setupTapGestureRecognizer(views: UIView...){
+        for view in views {
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGestureRecognizer))
+            view.addGestureRecognizer(tapGesture)
+        }
+    }
+    
+    @objc func tapGestureRecognizer(){
+        if headerState == .closed{
+            pullHeaderDown()
+            headerState = .opened
         }
     }
     
@@ -100,30 +113,42 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
             if let pinnedView = pinnedView{
                 switch(panGestureRecognizer.state){
                 case .began:
-                    
-                    if pinnedView == self.header{
-                        scrollState = .disabled
-                        return
+                    if headerState == .opened{
+                        if pinnedView == self.header{
+                            scrollState = .disabled
+                            return
+                        }
+                        scrollState = .enabled
+                    }else{
+                        if self.collectionView!.contentOffset.y > 0.0 || scrollDirection == .Up{
+                            scrollState = .disabled
+                            return
+                        }
+                        scrollState = .enabled
                     }
-                    
-                    scrollState = .enabled
-                    
                 case .changed:
                     if scrollState == .enabled{
                         if scrollDirection == .Up{
-                            if currentLocation.y <= (header.frame.maxY - scrollableHeaderPieceHeight){
-                                self.collectionView?.isScrollEnabled = false
-                                headerTopAnchor?.constant += translation.y
+                            if headerState == .opened{
+                                if currentLocation.y <= (header.frame.maxY - scrollableHeaderPieceHeight){
+                                    self.collectionView?.isScrollEnabled = false
+                                    headerTopAnchor?.constant += translation.y
+                                }
+                            }else{
+                                if self.collectionView!.contentOffset.y <= 0.0 {
+                                    self.collectionView?.isScrollEnabled = false
+                                    headerTopAnchor?.constant += translation.y
+                                }
                             }
                         }
                         else{
                             if headerState == .opened{
-                                if currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height{
+                                if currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height + scrollableHeaderPieceHeight{
                                     self.collectionView?.isScrollEnabled = false
                                     headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
                                 }
                             }else{
-                                if (currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height) || self.collectionView!.contentOffset.y <= 0.0 {
+                                if self.collectionView!.contentOffset.y <= 0.0 {
                                     self.collectionView?.isScrollEnabled = false
                                     headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
                                 }
@@ -132,15 +157,22 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
                     }
                     
                 case .ended:
-                    let headerYcenter = header.frame.height / 2
-                    let currentHeaderPosition = header.frame.maxY - (scrollableHeaderPieceHeight + navigationBarHeight)
-                    
-                    if currentHeaderPosition < headerYcenter{
-                        headerState = .closed
-                        pushHeaderUp()
-                    }else{
-                        pullHeaderDown()
-                        headerState = .opened
+                    if scrollState == .enabled{
+                        if headerState == .opened{
+                            let headerYcenter = header.frame.height / 2
+                            let currentHeaderPosition = header.frame.maxY - (scrollableHeaderPieceHeight + navigationBarHeight)
+                            
+                            if currentHeaderPosition < headerYcenter{
+                                headerState = .closed
+                                pushHeaderUp()
+                            }else{
+                                pullHeaderDown()
+                                headerState = .opened
+                            }
+                        }else{
+                            pullHeaderDown()
+                            headerState = .opened
+                        }
                     }
                 default:
                     return
@@ -167,12 +199,13 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     func setupViews(){
         view.addSubview(header)
         view.addSubview(navigationBar)
+        header.addSubview(headerBlackForeground)
         header.addSubview(scrollableHeaderPiece)
         
         navigationBar.anchors(top: nil, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: navigationBarHeight)
         
         header.anchors(top: navigationBar.bottomAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width)
-        
+        headerBlackForeground.anchors(top: header.topAnchor, right: header.rightAnchor, bottom: header.bottomAnchor, left: header.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
         headerTopAnchor = navigationBar.topAnchor.constraint(equalTo: view.topAnchor)
         headerTopAnchor!.isActive = true
         
@@ -185,8 +218,8 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     
     func setupNavigationItems(){
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(handleNext))
+        self.navigationBar.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
+        self.navigationBar.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(handleNext))
     }
     
     @objc func handleCancel(){
