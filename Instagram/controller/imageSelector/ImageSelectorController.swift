@@ -184,14 +184,14 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     
     fileprivate func pushHeaderUp(){
         headerTopAnchor?.constant = (scrollableHeaderPieceHeight - navigationBarHeight) - header.frame.height
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: { [weak self] in
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
             self?.view.layoutIfNeeded()
         }, completion: nil)
     }
     
     fileprivate func pullHeaderDown(){
         headerTopAnchor?.constant = 0
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: { [weak self] in
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
             self?.view.layoutIfNeeded()
         }, completion: nil)
     }
