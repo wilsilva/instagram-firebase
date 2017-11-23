@@ -46,6 +46,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor(white: 0, alpha: 0.5)
+        view.alpha = 0
         return view
     }()
     
@@ -102,6 +103,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     
     @objc func edgeGestureRecognizer(_ panGestureRecognizer: UIPanGestureRecognizer){
         if let view = panGestureRecognizer.view{
+            
             let currentLocation = panGestureRecognizer.location(in: view)
             let pinnedView = view.hitTest(currentLocation, with: nil)
             let translation = panGestureRecognizer.translation(in: view)
@@ -158,19 +160,14 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
                     
                 case .ended:
                     if scrollState == .enabled{
-                        if headerState == .opened{
-                            let currentHeaderPosition = header.frame.maxY
-                            if currentHeaderPosition < scrollableHeaderPiece.frame.maxY{
-                                headerState = .closed
-                                pushHeaderUp()
-                            }else{
-                                pullHeaderDown()
-                                headerState = .opened
-                            }
-                        }else{
-                            pullHeaderDown()
-                            headerState = .opened
+                        if headerState == .opened && header.frame.maxY < scrollableHeaderPiece.frame.maxY{
+                            headerState = .closed
+                            pushHeaderUp()
+                            return
                         }
+                        
+                        pullHeaderDown()
+                        headerState = .opened
                     }
                 default:
                     return
@@ -183,6 +180,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     fileprivate func pushHeaderUp(){
         headerTopAnchor?.constant = (scrollableHeaderPieceHeight - navigationBarHeight) - header.frame.height
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
+            self?.headerBlackForeground.alpha = 1
             self?.view.layoutIfNeeded()
         }, completion: nil)
     }
@@ -190,6 +188,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     fileprivate func pullHeaderDown(){
         headerTopAnchor?.constant = 0
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
+            self?.headerBlackForeground.alpha = 0
             self?.view.layoutIfNeeded()
         }, completion: nil)
     }
