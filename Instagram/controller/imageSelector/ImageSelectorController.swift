@@ -114,7 +114,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
                 switch(panGestureRecognizer.state){
                 case .began:
                     if headerState == .opened{
-                        if pinnedView == self.header{
+                        if pinnedView == self.header || pinnedView == self.headerBlackForeground{
                             scrollState = .disabled
                             return
                         }
