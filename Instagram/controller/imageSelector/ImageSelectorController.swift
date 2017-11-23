@@ -159,10 +159,8 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
                 case .ended:
                     if scrollState == .enabled{
                         if headerState == .opened{
-                            let headerYcenter = header.frame.height / 2
-                            let currentHeaderPosition = header.frame.maxY - (scrollableHeaderPieceHeight + navigationBarHeight)
-                            
-                            if currentHeaderPosition < headerYcenter{
+                            let currentHeaderPosition = header.frame.maxY
+                            if currentHeaderPosition < scrollableHeaderPiece.frame.maxY{
                                 headerState = .closed
                                 pushHeaderUp()
                             }else{
