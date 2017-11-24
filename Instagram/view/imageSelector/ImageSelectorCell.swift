@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UserPhotoCell: UICollectionViewCell {
+class ImageSelectorCell: UICollectionViewCell {
     
     var photo: UIImage?{
         didSet{

@@ -8,12 +8,8 @@
 
 import UIKit
 
-class ImageSelectorNavigationController: UINavigationController {
+class ImageSelectorNavigationController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    
-    override var prefersStatusBarHidden: Bool{
-        return true
     }
 }

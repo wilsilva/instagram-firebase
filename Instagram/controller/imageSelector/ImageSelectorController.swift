@@ -14,25 +14,23 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     let imageSize = CGSize(width: 600, height: 600)
     var images = [UIImage]()
     
-    var scrollDirection: ImageSelectorHeader.ScrollDirection = .Up
-    var scrollState: ImageSelectorHeader.ScrollState = .enabled
-    var headerState: ImageSelectorHeader.HeaderState = .opened
+    var scrollDirection: ScrollDirection = .Up
+    var scrollState: ScrollState = .enabled
+    var headerState: HeaderState = .opened
     
     var headerTopAnchor: NSLayoutConstraint?
     let navigationBarHeight: CGFloat = 50
     var navigationBar = ImageSelectorNavigationBar()
-    
     let header = ImageSelectorHeader()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        self.navigationController?.navigationBar.isHidden = true
         self.collectionView?.translatesAutoresizingMaskIntoConstraints = false
         self.collectionView?.backgroundColor = .white
-        self.collectionView?.register(UserPhotoCell.self, forCellWithReuseIdentifier: UserPhotoCell.ID)
+        self.collectionView?.register(ImageSelectorCell.self, forCellWithReuseIdentifier: ImageSelectorCell.ID)
         setupViews()
-        setupNavigationItems(navigationItem: navigationBar)
+        setupNavigationItems(navigationBar: navigationBar)
         fetchUserPhotos(withImageSize: imageSize,completion: loadImages)
         setupEdgeGestureRecognizer(views: view)
         setupTapGestureRecognizer(views: header.scrollableFrame)
@@ -95,18 +93,18 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         if let view = panGestureRecognizer.view{
             
             let currentLocation = panGestureRecognizer.location(in: view)
-            let pinnedView = view.hitTest(currentLocation, with: nil)
+            let pannedView = view.hitTest(currentLocation, with: nil)
             let translation = panGestureRecognizer.translation(in: view)
             let velocity = panGestureRecognizer.velocity(in: view)
             scrollDirection = velocity.y <= 0 ? .Up : .Down
             
             self.collectionView?.isScrollEnabled = true
             
-            if let pinnedView = pinnedView{
+            if let pannedView = pannedView{
                 switch(panGestureRecognizer.state){
                 case .began:
                     if headerState == .opened{
-                        if pinnedView == self.header || pinnedView == self.header.blackForeground{
+                        if pannedView == self.header || pannedView == self.header.selectedImage{
                             scrollState = .disabled
                             return
                         }
@@ -187,14 +185,10 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         view.addSubview(header)
         view.addSubview(navigationBar)
         
-        navigationBar.anchors(top: view.topAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: navigationBarHeight)
-        
+        navigationBar.anchors(top: nil, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: navigationBarHeight)
         header.anchors(top: navigationBar.bottomAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width)
-        
         headerTopAnchor = navigationBar.topAnchor.constraint(equalTo: view.topAnchor)
-        
         headerTopAnchor!.isActive = true
-        
         collectionView?.anchors(top: header.bottomAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
     }
     
@@ -208,9 +202,9 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         }
     }
     
-    fileprivate func setupNavigationItems(navigationItem: ImageSelectorNavigationBar){
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(handleNext))
+    fileprivate func setupNavigationItems(navigationBar: ImageSelectorNavigationBar){
+        navigationBar.leftBarButtonItem = ImageSelectorNavigationBarItem(title: "Cancel", controlState: .normal, target: self, action: #selector(handleCancel))
+        navigationBar.rightBarButtonItem = ImageSelectorNavigationBarItem(title: "Next", controlState: .normal, target: self, action: #selector(handleNext))
     }
     
     @objc func handleCancel(){
@@ -222,9 +216,9 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserPhotoCell.ID, for: indexPath)
-        if let userPhotoCell = cell as? UserPhotoCell{
-            userPhotoCell.photo = self.images[indexPath.row]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageSelectorCell.ID, for: indexPath)
+        if let imageSelectorCell = cell as? ImageSelectorCell{
+            imageSelectorCell.photo = self.images[indexPath.row]
         }
         return cell
     }
@@ -252,7 +246,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath)
-        if let userPhotoCell = cell as? UserPhotoCell, let photo = userPhotoCell.photo{
+        if let imageSelectorCell = cell as? ImageSelectorCell, let photo = imageSelectorCell.photo{
             header.selectedImage.image = photo
         }
     }

@@ -8,24 +8,24 @@
 
 import UIKit
 
+enum ScrollDirection {
+    case Up
+    case Down
+}
+
+enum ScrollState {
+    case enabled
+    case disabled
+}
+
+enum HeaderState {
+    case opened
+    case closed
+}
+
 class ImageSelectorHeader: UIView {
     static var ID = "imageSelectorHeaderId"
     static let scrollablFrameHeight: CGFloat = 44
-    
-    enum ScrollDirection {
-        case Up
-        case Down
-    }
-    
-    enum ScrollState {
-        case enabled
-        case disabled
-    }
-    
-    enum HeaderState {
-        case opened
-        case closed
-    }
     
     let selectedImage: UIImageView = {
         let imageView = UIImageView()
@@ -57,12 +57,9 @@ class ImageSelectorHeader: UIView {
         self.addSubview(blackForeground)
         self.addSubview(scrollableFrame)
         self.translatesAutoresizingMaskIntoConstraints = false
-        
-        blackForeground.anchors(top: topAnchor, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
-        
-        scrollableFrame.anchors(top: nil, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: ImageSelectorHeader.scrollablFrameHeight)
-        
         selectedImage.anchors(top: topAnchor, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
+        blackForeground.anchors(top: topAnchor, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
+        scrollableFrame.anchors(top: nil, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: ImageSelectorHeader.scrollablFrameHeight)
     }
     
     required init?(coder aDecoder: NSCoder) {

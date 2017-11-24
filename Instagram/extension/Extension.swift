@@ -43,13 +43,12 @@ extension UIView{
         }
     }
     
-    func insertDivider(with color: UIColor, top: NSLayoutYAxisAnchor?, right: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?,paddingTop: CGFloat, paddingRight: CGFloat, paddingBottom: CGFloat, paddingLeft: CGFloat, width: CGFloat?, height: CGFloat?) -> UIView{
+    func insertDivider(with color: UIColor, top: NSLayoutYAxisAnchor?, right: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?,paddingTop: CGFloat, paddingRight: CGFloat, paddingBottom: CGFloat, paddingLeft: CGFloat, width: CGFloat?, height: CGFloat?){
         let divider = UIView()
         divider.backgroundColor = color
         divider.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(divider)
         divider.anchors(top: top, right: right, bottom: bottom, left: left, paddingTop: paddingTop, paddingRight: paddingRight, paddingBottom: paddingBottom, paddingLeft: paddingLeft, width: width, height: height)
-        return divider
     }
 }
 

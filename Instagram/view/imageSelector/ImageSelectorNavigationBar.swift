@@ -10,21 +10,26 @@ import UIKit
 
 class ImageSelectorNavigationBar: UIView, ImageSelectorNavigationBarProtocol {
     
-    var leftBarButtonItem: UIBarButtonItem?{
+    var rightBarButtonItem: ImageSelectorNavigationBarItem? {
         didSet{
-            print("left button set")
+            if let rightBarButtonItem = rightBarButtonItem{
+                navigationBar.addSubview(rightBarButtonItem)
+                rightBarButtonItem.anchors(top: navigationBar.topAnchor, right: navigationBar.rightAnchor, bottom: navigationBar.bottomAnchor, left: nil, paddingTop: 0, paddingRight: -10, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
+            }
         }
     }
     
-    var rightBarButtonItem: UIBarButtonItem?{
+    var leftBarButtonItem: ImageSelectorNavigationBarItem? {
         didSet{
-            print("right button set")
+            if let leftBarButtonItem = leftBarButtonItem{
+                navigationBar.addSubview(leftBarButtonItem)
+                leftBarButtonItem.anchors(top: navigationBar.topAnchor, right: nil, bottom: navigationBar.bottomAnchor, left: navigationBar.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 10, width: 0, height: 0)
+            }
         }
     }
     
     let navigationBar: UIView = {
         let view = UIView()
-        view.backgroundColor = .purple
         view.isUserInteractionEnabled = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -39,6 +44,10 @@ class ImageSelectorNavigationBar: UIView, ImageSelectorNavigationBarProtocol {
     fileprivate func setupViews(){
         self.addSubview(navigationBar)
         navigationBar.anchors(top: self.topAnchor, right: self.rightAnchor, bottom: self.bottomAnchor, left: self.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
+    }
+    
+    fileprivate func setupButton(button: ImageSelectorNavigationBarItem){
+        
     }
     
     required init?(coder aDecoder: NSCoder) {

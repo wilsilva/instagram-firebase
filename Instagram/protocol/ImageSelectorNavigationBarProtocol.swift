@@ -10,6 +10,6 @@ import Foundation
 import UIKit
 
 protocol ImageSelectorNavigationBarProtocol{
-    var leftBarButtonItem: UIBarButtonItem?{get set}
-    var rightBarButtonItem: UIBarButtonItem?{get set}
+    var leftBarButtonItem: ImageSelectorNavigationBarItem?{get set}
+    var rightBarButtonItem: ImageSelectorNavigationBarItem?{get set}
 }

@@ -12,7 +12,7 @@ class AddPhotosNavigationController: MainMenuNavigationController {
     
     override func executeBeforeShowing() -> Bool {
         let imageSelector = ImageSelectorController(collectionViewLayout: UICollectionViewFlowLayout())
-        present(ImageSelectorNavigationController(rootViewController: imageSelector), animated: true, completion: nil)
+        present(imageSelector, animated: true, completion: nil)
         return false
     }
     
