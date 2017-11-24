@@ -40,6 +40,8 @@
 		8C3699AC1FB20D59005CAA2D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3699AB1FB20D59005CAA2D /* User.swift */; };
 		8CBE5F691FB46B4C00F227A2 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBE5F681FB46B4C00F227A2 /* LoginController.swift */; };
 		8CBE5F6B1FB4B68400F227A2 /* LoginNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBE5F6A1FB4B68400F227A2 /* LoginNavigationController.swift */; };
+		8CC07BDA1FC58E73009D863F /* ImageSelectorNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CC07BD91FC58E73009D863F /* ImageSelectorNavigationBar.swift */; };
+		8CC07BDC1FC58F9F009D863F /* ImageSelectorNavigationBarProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CC07BDB1FC58F9F009D863F /* ImageSelectorNavigationBarProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +102,8 @@
 		8C3699AB1FB20D59005CAA2D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		8CBE5F681FB46B4C00F227A2 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		8CBE5F6A1FB4B68400F227A2 /* LoginNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginNavigationController.swift; sourceTree = "<group>"; };
+		8CC07BD91FC58E73009D863F /* ImageSelectorNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSelectorNavigationBar.swift; sourceTree = "<group>"; };
+		8CC07BDB1FC58F9F009D863F /* ImageSelectorNavigationBarProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSelectorNavigationBarProtocol.swift; sourceTree = "<group>"; };
 		944C9E5B9F3C1892F00F7044 /* Pods_InstagramUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InstagramUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EE753E6DE72200C78035040 /* Pods-Instagram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Instagram/Pods-Instagram.debug.xcconfig"; sourceTree = "<group>"; };
 		B800594F1F3B05E2F160D273 /* Pods-InstagramTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstagramTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-InstagramTests/Pods-InstagramTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -143,6 +147,7 @@
 				486298361FB7AEB4005EFF69 /* LoginView.swift */,
 				8C1682901FBB03F600DD34B4 /* ImageSelectorHeader.swift */,
 				8C1682921FBB106500DD34B4 /* UserPhotoCell.swift */,
+				8CC07BD91FC58E73009D863F /* ImageSelectorNavigationBar.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -208,6 +213,7 @@
 			children = (
 				486298391FB7B042005EFF69 /* LoginProtocol.swift */,
 				482340EA1FBA54BC00C2B333 /* MainMenuNavigationProtocol.swift */,
+				8CC07BDB1FC58F9F009D863F /* ImageSelectorNavigationBarProtocol.swift */,
 			);
 			path = protocol;
 			sourceTree = "<group>";
@@ -628,6 +634,7 @@
 				482340EB1FBA54BC00C2B333 /* MainMenuNavigationProtocol.swift in Sources */,
 				48920B251FA299D40097986C /* AppDelegate.swift in Sources */,
 				8C3699AC1FB20D59005CAA2D /* User.swift in Sources */,
+				8CC07BDA1FC58E73009D863F /* ImageSelectorNavigationBar.swift in Sources */,
 				483DA7711FB1133900702266 /* UserProfileController.swift in Sources */,
 				8C1682931FBB106500DD34B4 /* UserPhotoCell.swift in Sources */,
 				8CBE5F6B1FB4B68400F227A2 /* LoginNavigationController.swift in Sources */,
@@ -637,6 +644,7 @@
 				482F4E401FB653B100D821F5 /* AddPhotosNavigationController.swift in Sources */,
 				48272D3C1FA7EFD700E45E44 /* Extension.swift in Sources */,
 				482F4E3E1FB6537B00D821F5 /* SearchNavigationController.swift in Sources */,
+				8CC07BDC1FC58F9F009D863F /* ImageSelectorNavigationBarProtocol.swift in Sources */,
 				8CBE5F691FB46B4C00F227A2 /* LoginController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

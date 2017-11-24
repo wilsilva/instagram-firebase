@@ -9,20 +9,35 @@
 import UIKit
 import Photos
 
-class ImageSelectorController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class ImageSelectorController: UICollectionViewController, UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate {
+
     let imageSize = CGSize(width: 600, height: 600)
     var images = [UIImage]()
     
+    var scrollDirection: ImageSelectorHeader.ScrollDirection = .Up
+    var scrollState: ImageSelectorHeader.ScrollState = .enabled
+    var headerState: ImageSelectorHeader.HeaderState = .opened
+    
+    var headerTopAnchor: NSLayoutConstraint?
+    let navigationBarHeight: CGFloat = 50
+    var navigationBar = ImageSelectorNavigationBar()
+    
+    let header = ImageSelectorHeader()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = .white
+        self.navigationController?.navigationBar.isHidden = true
+        self.collectionView?.translatesAutoresizingMaskIntoConstraints = false
         self.collectionView?.backgroundColor = .white
-        self.navigationController?.navigationBar.tintColor = .black
-        self.collectionView?.register(ImageSelectorHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: ImageSelectorHeader.ID)
         self.collectionView?.register(UserPhotoCell.self, forCellWithReuseIdentifier: UserPhotoCell.ID)
-        setupNavigationItems(navigationItem: self.navigationItem)
+        setupViews()
+        setupNavigationItems(navigationItem: navigationBar)
         fetchUserPhotos(withImageSize: imageSize,completion: loadImages)
+        setupEdgeGestureRecognizer(views: view)
+        setupTapGestureRecognizer(views: header.scrollableFrame)
     }
-    
+
     fileprivate func getFetchOptions() -> PHFetchOptions{
         let options = PHFetchOptions()
         let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
@@ -46,14 +61,154 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         }
     }
     
+    override var prefersStatusBarHidden: Bool{
+        return true
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    func setupEdgeGestureRecognizer(views: UIView...){
+        for view in views {
+            let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(edgeGestureRecognizer))
+            panGestureRecognizer.delegate = self
+            view.addGestureRecognizer(panGestureRecognizer)
+        }
+    }
+    
+    func setupTapGestureRecognizer(views: UIView...){
+        for view in views {
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGestureRecognizer))
+            view.addGestureRecognizer(tapGesture)
+        }
+    }
+    
+    @objc func tapGestureRecognizer(){
+        if headerState == .closed{
+            pullHeaderDown()
+            headerState = .opened
+        }
+    }
+    
+    @objc func edgeGestureRecognizer(_ panGestureRecognizer: UIPanGestureRecognizer){
+        if let view = panGestureRecognizer.view{
+            
+            let currentLocation = panGestureRecognizer.location(in: view)
+            let pinnedView = view.hitTest(currentLocation, with: nil)
+            let translation = panGestureRecognizer.translation(in: view)
+            let velocity = panGestureRecognizer.velocity(in: view)
+            scrollDirection = velocity.y <= 0 ? .Up : .Down
+            
+            self.collectionView?.isScrollEnabled = true
+            
+            if let pinnedView = pinnedView{
+                switch(panGestureRecognizer.state){
+                case .began:
+                    if headerState == .opened{
+                        if pinnedView == self.header || pinnedView == self.header.blackForeground{
+                            scrollState = .disabled
+                            return
+                        }
+                        scrollState = .enabled
+                    }else{
+                        if self.collectionView!.contentOffset.y > 0.0 || scrollDirection == .Up{
+                            scrollState = .disabled
+                            return
+                        }
+                        scrollState = .enabled
+                    }
+                case .changed:
+                    if scrollState == .enabled{
+                        if scrollDirection == .Up{
+                            if headerState == .opened{
+                                if currentLocation.y <= (header.frame.maxY - ImageSelectorHeader.scrollablFrameHeight){
+                                    self.collectionView?.isScrollEnabled = false
+                                    headerTopAnchor?.constant += translation.y
+                                }
+                            }else{
+                                if self.collectionView!.contentOffset.y <= 0.0 {
+                                    self.collectionView?.isScrollEnabled = false
+                                    headerTopAnchor?.constant += translation.y
+                                }
+                            }
+                        }
+                        else{
+                            if headerState == .opened{
+                                if currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height + ImageSelectorHeader.scrollablFrameHeight{
+                                    self.collectionView?.isScrollEnabled = false
+                                    headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
+                                }
+                            }else{
+                                if self.collectionView!.contentOffset.y <= 0.0 {
+                                    self.collectionView?.isScrollEnabled = false
+                                    headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
+                                }
+                            }
+                        }
+                    }
+                    
+                case .ended:
+                    if scrollState == .enabled{
+                        if headerState == .opened && header.frame.maxY < header.scrollableFrame.frame.maxY{
+                            headerState = .closed
+                            pushHeaderUp()
+                            return
+                        }
+                        
+                        pullHeaderDown()
+                        headerState = .opened
+                    }
+                default:
+                    return
+                }
+            }
+            panGestureRecognizer.setTranslation(CGPoint.zero, in: view.superview)
+        }
+    }
+    
+    fileprivate func pushHeaderUp(){
+        headerTopAnchor?.constant = (ImageSelectorHeader.scrollablFrameHeight - navigationBarHeight) - header.frame.height
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
+            self?.header.blackForeground.alpha = 1
+            self?.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
+    fileprivate func pullHeaderDown(){
+        headerTopAnchor?.constant = 0
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
+            self?.header.blackForeground.alpha = 0
+            self?.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
+    func setupViews(){
+        view.addSubview(header)
+        view.addSubview(navigationBar)
+        
+        navigationBar.anchors(top: view.topAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: navigationBarHeight)
+        
+        header.anchors(top: navigationBar.bottomAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width)
+        
+        headerTopAnchor = navigationBar.topAnchor.constraint(equalTo: view.topAnchor)
+        
+        headerTopAnchor!.isActive = true
+        
+        collectionView?.anchors(top: header.bottomAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
+    }
+    
     func loadImages(image: UIImage){
         self.images.append(image)
         DispatchQueue.main.sync {
+            if images.count == 1 {
+                header.selectedImage.image = image
+            }
             self.collectionView?.insertItems(at: [IndexPath(item: images.endIndex - 1, section: 0)])
         }
     }
     
-    fileprivate func setupNavigationItems(navigationItem: UINavigationItem){
+    fileprivate func setupNavigationItems(navigationItem: ImageSelectorNavigationBar){
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(handleNext))
     }
@@ -64,16 +219,6 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     
     @objc func handleNext(){
         print("Next")
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let size = view.frame.width
-        return CGSize(width: size, height: size)
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ImageSelectorHeader.ID, for: indexPath)
-        return cell
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -96,7 +241,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         let size = (self.view.frame.width - 3) / 4
         return CGSize(width: size, height: size)
     }
-
+    
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -108,15 +253,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath)
         if let userPhotoCell = cell as? UserPhotoCell, let photo = userPhotoCell.photo{
-            updateHeaderImage(collectionView, image: photo, indexPath: indexPath)
-        }
-    }
-    
-    func updateHeaderImage(_ collectionView: UICollectionView, image: UIImage, indexPath: IndexPath){
-        let indexPathForHeader = IndexPath(row: 0, section: indexPath.section)
-        let header = collectionView.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at: indexPathForHeader)
-        if let imageSelectorHeader = header as? ImageSelectorHeader{
-            imageSelectorHeader.userImage.image = image
+            header.selectedImage.image = photo
         }
     }
 }
