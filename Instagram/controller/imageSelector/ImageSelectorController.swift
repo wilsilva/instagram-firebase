@@ -110,6 +110,10 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         return currentLocation.y <= (header.frame.maxY - ImageSelectorHeader.scrollablFrameHeight)
     }
     
+    fileprivate func collectionViewIsAtTheTop(_ currentLocation: CGPoint) -> Bool{
+        return self.collectionView!.contentOffset.y <= 0.0
+    }
+    
     @objc func edgeGestureRecognizer(_ panGestureRecognizer: UIPanGestureRecognizer){
         if let view = panGestureRecognizer.view{
             
@@ -134,7 +138,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
                                     headerTopAnchor?.constant += translation.y
                                 }
                             }else{
-                                if self.collectionView!.contentOffset.y <= 0.0 {
+                                if collectionViewIsAtTheTop(self.collectionView!.contentOffset) {
                                     self.collectionView?.isScrollEnabled = false
                                     headerTopAnchor?.constant += translation.y
                                 }
@@ -147,7 +151,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
                                     headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
                                 }
                             }else{
-                                if self.collectionView!.contentOffset.y <= 0.0 {
+                                if collectionViewIsAtTheTop(self.collectionView!.contentOffset) {
                                     self.collectionView?.isScrollEnabled = false
                                     headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
                                 }
