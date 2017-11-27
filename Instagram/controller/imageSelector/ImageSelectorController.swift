@@ -88,6 +88,28 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         }
     }
     
+    fileprivate func getScrollDirection(by velocity: CGPoint) -> ScrollDirection{
+        return velocity.y <= 0 ? .Up : .Down
+    }
+    
+    fileprivate func getScrollState(by headerState: HeaderState, view: UIView) -> ScrollState{
+        if headerState == .opened{
+            if view == self.header || view == self.header.selectedImage{
+                return .disabled
+            }
+        }else{
+            if self.collectionView!.contentOffset.y > 0.0 || scrollDirection == .Up{
+                return .disabled
+            }
+        }
+        
+        return .enabled
+    }
+    
+    fileprivate func currentLocationIsShorterThenHeader(_ currentLocation: CGPoint, header: UIView) -> Bool{
+        return currentLocation.y <= (header.frame.maxY - ImageSelectorHeader.scrollablFrameHeight)
+    }
+    
     @objc func edgeGestureRecognizer(_ panGestureRecognizer: UIPanGestureRecognizer){
         if let view = panGestureRecognizer.view{
             
@@ -95,31 +117,19 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
             let pannedView = view.hitTest(currentLocation, with: nil)
             let translation = panGestureRecognizer.translation(in: view)
             let velocity = panGestureRecognizer.velocity(in: view)
-            scrollDirection = velocity.y <= 0 ? .Up : .Down
+            scrollDirection = self.getScrollDirection(by: velocity)
             
             self.collectionView?.isScrollEnabled = true
             
             if let pannedView = pannedView{
                 switch(panGestureRecognizer.state){
                 case .began:
-                    if headerState == .opened{
-                        if pannedView == self.header || pannedView == self.header.selectedImage{
-                            scrollState = .disabled
-                            return
-                        }
-                        scrollState = .enabled
-                    }else{
-                        if self.collectionView!.contentOffset.y > 0.0 || scrollDirection == .Up{
-                            scrollState = .disabled
-                            return
-                        }
-                        scrollState = .enabled
-                    }
+                    scrollState = self.getScrollState(by: headerState, view: pannedView)
                 case .changed:
                     if scrollState == .enabled{
                         if scrollDirection == .Up{
                             if headerState == .opened{
-                                if currentLocation.y <= (header.frame.maxY - ImageSelectorHeader.scrollablFrameHeight){
+                                if currentLocationIsShorterThenHeader(currentLocation, header: header){
                                     self.collectionView?.isScrollEnabled = false
                                     headerTopAnchor?.constant += translation.y
                                 }
