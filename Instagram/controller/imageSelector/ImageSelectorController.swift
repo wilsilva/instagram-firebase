@@ -11,8 +11,9 @@ import Photos
 
 class ImageSelectorController: UICollectionViewController, UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate {
 
-    let imageSize = CGSize(width: 600, height: 600)
-    var images = [UIImage]()
+    let imageSizeForCell = CGSize(width: 200, height: 200)
+    let imageSizeForHeader = CGSize(width: 600, height: 600)
+    var images = [(image: UIImage,asset: PHAsset)]()
     
     var scrollDirection: ScrollDirection = .Up
     var scrollState: ScrollState = .enabled
@@ -25,13 +26,14 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.collectionView?.numberOfItems(inSection: 0)
         self.view.backgroundColor = .white
         self.collectionView?.translatesAutoresizingMaskIntoConstraints = false
         self.collectionView?.backgroundColor = .white
         self.collectionView?.register(ImageSelectorCell.self, forCellWithReuseIdentifier: ImageSelectorCell.ID)
         setupViews()
         setupNavigationItems(navigationBar: navigationBar)
-        fetchUserPhotos(withImageSize: imageSize,completion: loadImages)
+        fetchUserPhotos(withImageSize: imageSizeForCell,completion: loadImages)
         setupEdgeGestureRecognizer(views: view)
         setupTapGestureRecognizer(views: header.scrollableFrame)
     }
@@ -43,7 +45,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         return options
     }
     
-    fileprivate func fetchUserPhotos(withImageSize imageSize: CGSize, completion: @escaping ((UIImage) -> Void)){
+    fileprivate func fetchUserPhotos(withImageSize imageSize: CGSize, completion: @escaping (((UIImage,PHAsset)) -> Void)){
         let result = PHAsset.fetchAssets(with: .image, options: getFetchOptions())
         DispatchQueue.global(qos: .background).async {
             result.enumerateObjects { (asset, count, stop) in
@@ -52,7 +54,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
                 options.isSynchronous = true
                 imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: options, resultHandler: { (image, info) in
                     if let image = image{
-                        completion(image)
+                        completion((image,asset))
                     }
                 })
             }
@@ -106,8 +108,12 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         return .enabled
     }
     
-    fileprivate func currentLocationIsShorterThenHeader(_ currentLocation: CGPoint, header: UIView) -> Bool{
+    fileprivate func headerCanScrollUpFrom(_ currentLocation: CGPoint, header: UIView) -> Bool{
         return currentLocation.y <= (header.frame.maxY - ImageSelectorHeader.scrollableFrameHeight)
+    }
+    
+    fileprivate func headerCanScrollDownFrom(_ currentLocation: CGPoint, header: UIView) -> Bool{
+        return currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height + ImageSelectorHeader.scrollableFrameHeight
     }
     
     fileprivate func collectionViewIsAtTheTop(_ currentLocation: CGPoint) -> Bool{
@@ -121,8 +127,8 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
             let pannedView = view.hitTest(currentLocation, with: nil)
             let translation = panGestureRecognizer.translation(in: view)
             let velocity = panGestureRecognizer.velocity(in: view)
-            scrollDirection = self.getScrollDirection(by: velocity)
             
+            scrollDirection = self.getScrollDirection(by: velocity)
             self.collectionView?.isScrollEnabled = true
             
             if let pannedView = pannedView{
@@ -133,7 +139,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
                     if scrollState == .enabled{
                         if scrollDirection == .Up{
                             if headerState == .opened{
-                                if currentLocationIsShorterThenHeader(currentLocation, header: header){
+                                if headerCanScrollUpFrom(currentLocation, header: header){
                                     self.collectionView?.isScrollEnabled = false
                                     headerTopAnchor?.constant += translation.y
                                 }
@@ -146,7 +152,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
                         }
                         else{
                             if headerState == .opened{
-                                if currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height + ImageSelectorHeader.scrollableFrameHeight{
+                                if headerCanScrollDownFrom(currentLocation, header: header){
                                     self.collectionView?.isScrollEnabled = false
                                     headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
                                 }
@@ -205,12 +211,14 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         collectionView?.anchors(top: header.bottomAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
     }
     
-    func loadImages(image: UIImage){
-        self.images.append(image)
+    func loadImages(imageAsset: (image: UIImage,asset: PHAsset)){
+        self.images.append(imageAsset)
         DispatchQueue.main.sync { [weak self] in
             if images.count == 1 {
-                header.selectedImage.image = image
+                let asset = imageAsset.asset
+                updateHeaderImage(asset, imageSize: imageSizeForHeader, header: header)
             }
+            
             self?.collectionView?.insertItems(at: [IndexPath(item: images.endIndex - 1, section: 0)])
         }
     }
@@ -231,7 +239,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageSelectorCell.ID, for: indexPath)
         if let imageSelectorCell = cell as? ImageSelectorCell{
-            imageSelectorCell.photo = self.images[indexPath.row]
+            imageSelectorCell.photo = self.images[indexPath.row].image
         }
         return cell
     }
@@ -258,10 +266,15 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath)
-        if let imageSelectorCell = cell as? ImageSelectorCell, let photo = imageSelectorCell.photo{
-            header.selectedImage.image = photo
-            pullHeaderDown()
+        let asset = self.images[indexPath.row].asset
+        updateHeaderImage(asset, imageSize: imageSizeForHeader, header: header)
+        pullHeaderDown()
+    }
+    
+    func updateHeaderImage(_ asset: PHAsset, imageSize: CGSize, header: ImageSelectorHeader){
+        let imageManager = PHImageManager.default()
+        imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: nil) { (image, info) in
+            header.selectedImage.image = image
         }
     }
 }
