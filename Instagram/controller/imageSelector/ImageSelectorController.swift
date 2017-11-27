@@ -107,7 +107,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     
     fileprivate func currentLocationIsShorterThenHeader(_ currentLocation: CGPoint, header: UIView) -> Bool{
-        return currentLocation.y <= (header.frame.maxY - ImageSelectorHeader.scrollablFrameHeight)
+        return currentLocation.y <= (header.frame.maxY - ImageSelectorHeader.scrollableFrameHeight)
     }
     
     fileprivate func collectionViewIsAtTheTop(_ currentLocation: CGPoint) -> Bool{
@@ -146,7 +146,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
                         }
                         else{
                             if headerState == .opened{
-                                if currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height + ImageSelectorHeader.scrollablFrameHeight{
+                                if currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height + ImageSelectorHeader.scrollableFrameHeight{
                                     self.collectionView?.isScrollEnabled = false
                                     headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
                                 }
@@ -178,7 +178,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     
     fileprivate func pushHeaderUp(){
         headerState = .closed
-        headerTopAnchor?.constant = (ImageSelectorHeader.scrollablFrameHeight - navigationBarHeight) - header.frame.height
+        headerTopAnchor?.constant = (ImageSelectorHeader.scrollableFrameHeight - navigationBarHeight) - header.frame.height
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
             self?.header.blackForeground.alpha = 1
             self?.view.layoutIfNeeded()

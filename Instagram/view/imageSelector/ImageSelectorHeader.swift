@@ -25,7 +25,7 @@ enum HeaderState {
 
 class ImageSelectorHeader: UIView {
     static var ID = "imageSelectorHeaderId"
-    static let scrollablFrameHeight: CGFloat = 44
+    static let scrollableFrameHeight: CGFloat = 44
     
     let selectedImage: UIImageView = {
         let imageView = UIImageView()
@@ -59,7 +59,7 @@ class ImageSelectorHeader: UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
         selectedImage.anchors(top: topAnchor, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
         blackForeground.anchors(top: topAnchor, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
-        scrollableFrame.anchors(top: nil, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: ImageSelectorHeader.scrollablFrameHeight)
+        scrollableFrame.anchors(top: nil, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: ImageSelectorHeader.scrollableFrameHeight)
     }
     
     required init?(coder aDecoder: NSCoder) {
