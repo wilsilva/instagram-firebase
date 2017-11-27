@@ -85,7 +85,6 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     @objc func tapGestureRecognizer(){
         if headerState == .closed{
             pullHeaderDown()
-            headerState = .opened
         }
     }
     
@@ -149,13 +148,11 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
                 case .ended:
                     if scrollState == .enabled{
                         if headerState == .opened && header.frame.maxY < header.scrollableFrame.frame.maxY{
-                            headerState = .closed
                             pushHeaderUp()
                             return
                         }
                         
                         pullHeaderDown()
-                        headerState = .opened
                     }
                 default:
                     return
@@ -166,6 +163,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     
     fileprivate func pushHeaderUp(){
+        headerState = .closed
         headerTopAnchor?.constant = (ImageSelectorHeader.scrollablFrameHeight - navigationBarHeight) - header.frame.height
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
             self?.header.blackForeground.alpha = 1
@@ -174,6 +172,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     
     fileprivate func pullHeaderDown(){
+        headerState = .opened
         headerTopAnchor?.constant = 0
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
             self?.header.blackForeground.alpha = 0
@@ -194,11 +193,11 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     
     func loadImages(image: UIImage){
         self.images.append(image)
-        DispatchQueue.main.sync {
+        DispatchQueue.main.sync { [weak self] in
             if images.count == 1 {
                 header.selectedImage.image = image
             }
-            self.collectionView?.insertItems(at: [IndexPath(item: images.endIndex - 1, section: 0)])
+            self?.collectionView?.insertItems(at: [IndexPath(item: images.endIndex - 1, section: 0)])
         }
     }
     
@@ -248,6 +247,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         let cell = collectionView.cellForItem(at: indexPath)
         if let imageSelectorCell = cell as? ImageSelectorCell, let photo = imageSelectorCell.photo{
             header.selectedImage.image = photo
+            pullHeaderDown()
         }
     }
 }
