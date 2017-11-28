@@ -23,9 +23,16 @@ enum HeaderState {
     case closed
 }
 
+struct HeaderInfo{
+    var headerState: HeaderState
+    var scrollState: ScrollState
+    var scrollDirection: ScrollDirection
+}
+
 class ImageSelectorHeader: UIView {
     static var ID = "imageSelectorHeaderId"
     static let scrollableFrameHeight: CGFloat = 44
+    var info = HeaderInfo(headerState: .opened, scrollState: .enabled, scrollDirection: .Up)
     
     let selectedImage: UIImageView = {
         let imageView = UIImageView()

@@ -15,11 +15,6 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     let imageSizeForHeader = CGSize(width: 600, height: 600)
     var images = [(image: UIImage,asset: PHAsset)]()
     
-    var scrollDirection: ScrollDirection = .Up
-    var scrollState: ScrollState = .enabled
-    var headerState: HeaderState = .opened
-    
-    var headerTopAnchor: NSLayoutConstraint?
     let navigationBarHeight: CGFloat = 50
     var navigationBar = ImageSelectorNavigationBar()
     let header = ImageSelectorHeader()
@@ -85,8 +80,8 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     
     @objc func tapGestureRecognizer(){
-        if headerState == .closed{
-            pullHeaderDown()
+        if header.info.headerState == .closed{
+            pullHeaderDown(header: header, navigationBar: navigationBar)
         }
     }
     
@@ -100,7 +95,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
                 return .disabled
             }
         }else{
-            if self.collectionView!.contentOffset.y > 0.0 || scrollDirection == .Up{
+            if self.collectionView!.contentOffset.y > 0.0 || header.info.scrollDirection == .Up{
                 return .disabled
             }
         }
@@ -128,51 +123,51 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
             let translation = panGestureRecognizer.translation(in: view)
             let velocity = panGestureRecognizer.velocity(in: view)
             
-            scrollDirection = self.getScrollDirection(by: velocity)
+            header.info.scrollDirection = self.getScrollDirection(by: velocity)
             self.collectionView?.isScrollEnabled = true
             
             if let pannedView = pannedView{
                 switch(panGestureRecognizer.state){
                 case .began:
-                    scrollState = self.getScrollState(by: headerState, view: pannedView)
+                    header.info.scrollState = self.getScrollState(by: header.info.headerState, view: pannedView)
                 case .changed:
-                    if scrollState == .enabled{
-                        if scrollDirection == .Up{
-                            if headerState == .opened{
+                    if header.info.scrollState == .enabled{
+                        if header.info.scrollDirection == .Up{
+                            if header.info.headerState == .opened{
                                 if headerCanScrollUpFrom(currentLocation, header: header){
                                     self.collectionView?.isScrollEnabled = false
-                                    headerTopAnchor?.constant += translation.y
+                                    navigationBar.barTopAnchor?.constant += translation.y
                                 }
                             }else{
                                 if collectionViewIsAtTheTop(self.collectionView!.contentOffset) {
                                     self.collectionView?.isScrollEnabled = false
-                                    headerTopAnchor?.constant += translation.y
+                                    navigationBar.barTopAnchor?.constant += translation.y
                                 }
                             }
                         }
                         else{
-                            if headerState == .opened{
+                            if header.info.headerState == .opened{
                                 if headerCanScrollDownFrom(currentLocation, header: header){
                                     self.collectionView?.isScrollEnabled = false
-                                    headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
+                                    navigationBar.barTopAnchor?.constant = min(navigationBar.barTopAnchor!.constant + translation.y,0.0)
                                 }
                             }else{
                                 if collectionViewIsAtTheTop(self.collectionView!.contentOffset) {
                                     self.collectionView?.isScrollEnabled = false
-                                    headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
+                                    navigationBar.barTopAnchor?.constant = min(navigationBar.barTopAnchor!.constant + translation.y,0.0)
                                 }
                             }
                         }
                     }
                     
                 case .ended:
-                    if scrollState == .enabled{
-                        if headerState == .opened && header.frame.maxY < header.scrollableFrame.frame.maxY{
-                            pushHeaderUp()
+                    if header.info.scrollState == .enabled{
+                        if header.info.headerState == .opened && header.frame.maxY < header.scrollableFrame.frame.maxY{
+                            pushHeaderUp(header: header, navigationBar: navigationBar)
                             return
                         }
                         
-                        pullHeaderDown()
+                        pullHeaderDown(header: header, navigationBar: navigationBar)
                     }
                 default:
                     return
@@ -182,18 +177,18 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         }
     }
     
-    fileprivate func pushHeaderUp(){
-        headerState = .closed
-        headerTopAnchor?.constant = (ImageSelectorHeader.scrollableFrameHeight - navigationBarHeight) - header.frame.height
+    fileprivate func pushHeaderUp(header: ImageSelectorHeader, navigationBar: ImageSelectorNavigationBar){
+        header.info.headerState = .closed
+        navigationBar.barTopAnchor?.constant = (ImageSelectorHeader.scrollableFrameHeight - navigationBarHeight) - header.frame.height
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
             self?.header.blackForeground.alpha = 1
             self?.view.layoutIfNeeded()
         }, completion: nil)
     }
     
-    fileprivate func pullHeaderDown(){
-        headerState = .opened
-        headerTopAnchor?.constant = 0
+    fileprivate func pullHeaderDown(header: ImageSelectorHeader, navigationBar: ImageSelectorNavigationBar){
+        header.info.headerState = .opened
+        navigationBar.barTopAnchor?.constant = 0
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
             self?.header.blackForeground.alpha = 0
             self?.view.layoutIfNeeded()
@@ -206,8 +201,9 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
         
         navigationBar.anchors(top: nil, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: navigationBarHeight)
         header.anchors(top: navigationBar.bottomAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width)
-        headerTopAnchor = navigationBar.topAnchor.constraint(equalTo: view.topAnchor)
-        headerTopAnchor!.isActive = true
+        navigationBar.barTopAnchor = navigationBar.topAnchor.constraint(equalTo: view.topAnchor)
+        navigationBar.barTopAnchor!.isActive = true
+        
         collectionView?.anchors(top: header.bottomAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
     }
     
@@ -268,7 +264,7 @@ class ImageSelectorController: UICollectionViewController, UICollectionViewDeleg
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = self.images[indexPath.row].asset
         updateHeaderImage(asset, imageSize: imageSizeForHeader, header: header)
-        pullHeaderDown()
+        pullHeaderDown(header: header, navigationBar: navigationBar)
     }
     
     func updateHeaderImage(_ asset: PHAsset, imageSize: CGSize, header: ImageSelectorHeader){

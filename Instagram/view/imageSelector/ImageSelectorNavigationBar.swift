@@ -9,6 +9,7 @@
 import UIKit
 
 class ImageSelectorNavigationBar: UIView, ImageSelectorNavigationBarProtocol {
+    var barTopAnchor: NSLayoutConstraint?
     
     var rightBarButtonItem: ImageSelectorNavigationBarItem? {
         didSet{
