@@ -10,6 +10,6 @@ import UIKit
 
 protocol ImageSelectorNavigationControllerProtocol{
     var scrollableNavigationBar: UINavigationBar{get}
-    var scrollableNavigationBarTopPosition: NSLayoutConstraint{get set}
-    func setScrollableNavigationBarPosition(_ position: CGPoint)
+    var scrollableNavigationBarTopAnchor: NSLayoutConstraint?{get set}
+    func setScrollableNavigationBarVerticalPosition(_ y: CGFloat)
 }
