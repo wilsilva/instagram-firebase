@@ -9,9 +9,8 @@
 import UIKit
 import Photos
 
-class ImageSelectorController: UIViewController, ImageSelectorViewControllerProtocol,UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate {
+class ImageSelectorController: UIImageSelectorController,UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate {
     
-    var imageSelectorNavigationController: ImageSelectorNavigationController?    
     let imageSizeForCell = CGSize(width: 200, height: 200)
     let imageSizeForHeader = CGSize(width: 600, height: 600)
     var images = [(image: UIImage,asset: PHAsset)]()
@@ -32,9 +31,8 @@ class ImageSelectorController: UIViewController, ImageSelectorViewControllerProt
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         self.collectionView.backgroundColor = .white
         self.collectionView.register(ImageSelectorCell.self, forCellWithReuseIdentifier: ImageSelectorCell.ID)
-        
         setupViews()
-        setupNavigationItems(navigationBar: imageSelectorNavigationController!.scrollableNavigationBar)
+        setupNavigationItems(navigationBar: imageSelectorNavigationController?.scrollableNavigationBar)
         fetchUserPhotos(withImageSize: imageSizeForCell,completion: loadImages)
         setupEdgeGestureRecognizer(views: view)
         setupTapGestureRecognizer(views: header.scrollableFrame)
@@ -204,9 +202,8 @@ class ImageSelectorController: UIViewController, ImageSelectorViewControllerProt
     
     func setupViews(){
         view.addSubview(header)
-        
-        header.anchors(top: imageSelectorNavigationController!.scrollableNavigationBar.bottomAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width)
-        
+        view.addSubview(collectionView)
+        header.anchors(top: self.imageSelectorNavigationController?.scrollableNavigationBar.bottomAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width)
         collectionView.anchors(top: header.bottomAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
     }
     
@@ -222,13 +219,13 @@ class ImageSelectorController: UIViewController, ImageSelectorViewControllerProt
         }
     }
     
-    fileprivate func setupNavigationItems(navigationBar: UINavigationBar){
+    fileprivate func setupNavigationItems(navigationBar: UINavigationBar?){
         let cancelButton = UINavigationItem()
         cancelButton.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
         
         let nextButton = UINavigationItem()
         nextButton.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
-        navigationBar.setItems([cancelButton,nextButton], animated: false)
+        navigationBar?.setItems([cancelButton,nextButton], animated: false)
     }
     
     @objc func handleCancel(){
