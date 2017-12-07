@@ -39,12 +39,9 @@
 		8C1682911FBB03F600DD34B4 /* ImageSelectorHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1682901FBB03F600DD34B4 /* ImageSelectorHeader.swift */; };
 		8C1682931FBB106500DD34B4 /* ImageSelectorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1682921FBB106500DD34B4 /* ImageSelectorCell.swift */; };
 		8C3699AC1FB20D59005CAA2D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3699AB1FB20D59005CAA2D /* User.swift */; };
-		8C6C03671FD8548E000085AD /* UIImageSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6C03661FD8548E000085AD /* UIImageSelectorController.swift */; };
 		8C6C03691FD8556D000085AD /* ImageSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6C03681FD8556D000085AD /* ImageSelectorViewController.swift */; };
-		8C7D60111FC87B110023B62D /* ImageSelectorNavigationBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7D60101FC87B110023B62D /* ImageSelectorNavigationBarItem.swift */; };
 		8CBE5F691FB46B4C00F227A2 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBE5F681FB46B4C00F227A2 /* LoginController.swift */; };
 		8CBE5F6B1FB4B68400F227A2 /* LoginNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBE5F6A1FB4B68400F227A2 /* LoginNavigationController.swift */; };
-		8CC07BDA1FC58E73009D863F /* ImageSelectorNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CC07BD91FC58E73009D863F /* ImageSelectorNavigationBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,12 +101,9 @@
 		8C1682901FBB03F600DD34B4 /* ImageSelectorHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSelectorHeader.swift; sourceTree = "<group>"; };
 		8C1682921FBB106500DD34B4 /* ImageSelectorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSelectorCell.swift; sourceTree = "<group>"; };
 		8C3699AB1FB20D59005CAA2D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		8C6C03661FD8548E000085AD /* UIImageSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageSelectorController.swift; sourceTree = "<group>"; };
 		8C6C03681FD8556D000085AD /* ImageSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageSelectorViewController.swift; sourceTree = "<group>"; };
-		8C7D60101FC87B110023B62D /* ImageSelectorNavigationBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSelectorNavigationBarItem.swift; sourceTree = "<group>"; };
 		8CBE5F681FB46B4C00F227A2 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		8CBE5F6A1FB4B68400F227A2 /* LoginNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginNavigationController.swift; sourceTree = "<group>"; };
-		8CC07BD91FC58E73009D863F /* ImageSelectorNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSelectorNavigationBar.swift; sourceTree = "<group>"; };
 		944C9E5B9F3C1892F00F7044 /* Pods_InstagramUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InstagramUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EE753E6DE72200C78035040 /* Pods-Instagram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Instagram/Pods-Instagram.debug.xcconfig"; sourceTree = "<group>"; };
 		B800594F1F3B05E2F160D273 /* Pods-InstagramTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstagramTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-InstagramTests/Pods-InstagramTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -184,7 +178,6 @@
 			children = (
 				48275FAE1FD619B300F5CC41 /* ImageSelectorNavigationController.swift */,
 				482340EE1FBA6C7100C2B333 /* ImageSelectorController.swift */,
-				8C6C03661FD8548E000085AD /* UIImageSelectorController.swift */,
 			);
 			path = imageSelector;
 			sourceTree = "<group>";
@@ -331,8 +324,6 @@
 			children = (
 				8C1682901FBB03F600DD34B4 /* ImageSelectorHeader.swift */,
 				8C1682921FBB106500DD34B4 /* ImageSelectorCell.swift */,
-				8CC07BD91FC58E73009D863F /* ImageSelectorNavigationBar.swift */,
-				8C7D60101FC87B110023B62D /* ImageSelectorNavigationBarItem.swift */,
 			);
 			path = imageSelector;
 			sourceTree = "<group>";
@@ -664,7 +655,6 @@
 				48920B271FA299D40097986C /* SignupController.swift in Sources */,
 				482340EF1FBA6C7100C2B333 /* ImageSelectorController.swift in Sources */,
 				8C1682911FBB03F600DD34B4 /* ImageSelectorHeader.swift in Sources */,
-				8C7D60111FC87B110023B62D /* ImageSelectorNavigationBarItem.swift in Sources */,
 				48920B2D1FA299D40097986C /* Instagram.xcdatamodeld in Sources */,
 				8C6C03691FD8556D000085AD /* ImageSelectorViewController.swift in Sources */,
 				483DA76F1FB1119300702266 /* MainTabController.swift in Sources */,
@@ -677,7 +667,6 @@
 				48920B251FA299D40097986C /* AppDelegate.swift in Sources */,
 				48275FB01FD619B300F5CC41 /* ImageSelectorNavigationController.swift in Sources */,
 				8C3699AC1FB20D59005CAA2D /* User.swift in Sources */,
-				8CC07BDA1FC58E73009D863F /* ImageSelectorNavigationBar.swift in Sources */,
 				483DA7711FB1133900702266 /* UserProfileController.swift in Sources */,
 				8C1682931FBB106500DD34B4 /* ImageSelectorCell.swift in Sources */,
 				8CBE5F6B1FB4B68400F227A2 /* LoginNavigationController.swift in Sources */,
@@ -689,7 +678,6 @@
 				48272D3C1FA7EFD700E45E44 /* Extension.swift in Sources */,
 				482F4E3E1FB6537B00D821F5 /* SearchNavigationController.swift in Sources */,
 				8CBE5F691FB46B4C00F227A2 /* LoginController.swift in Sources */,
-				8C6C03671FD8548E000085AD /* UIImageSelectorController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

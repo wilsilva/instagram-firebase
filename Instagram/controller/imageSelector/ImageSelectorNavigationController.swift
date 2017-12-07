@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ImageSelectorNavigationController: UINavigationController, ImageSelectorNavigationControllerProtocol {
+class ImageSelectorNavigationController: UIViewController {
     
     var scrollableNavigationBar: UINavigationBar = {
         let navigationBar = UINavigationBar()
@@ -17,17 +17,19 @@ class ImageSelectorNavigationController: UINavigationController, ImageSelectorNa
         return navigationBar
     }()
     
-    var scrollableNavigationBarTopAnchor: NSLayoutConstraint?
+    let imageSelectorNavigationController: UINavigationController = {
+        let navigationController = UINavigationController()
+        navigationController.navigationBar.isHidden = true
+        navigationController.view.translatesAutoresizingMaskIntoConstraints = false
+        return navigationController
+    }()
     
-    func setScrollableNavigationBarVerticalPosition(_ y: CGFloat) {
-        scrollableNavigationBarTopAnchor?.constant = y
-    }
+    var scrollableNavigationBarTopAnchor: NSLayoutConstraint?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupViews()
         view.backgroundColor = .white
-        navigationBar.isHidden = true
+        setupViews()
     }
     
     override var prefersStatusBarHidden: Bool{
@@ -36,23 +38,15 @@ class ImageSelectorNavigationController: UINavigationController, ImageSelectorNa
     
     func setupViews(){
         view.addSubview(scrollableNavigationBar)
-        scrollableNavigationBar.anchors(top: nil, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: navigationBar.frame.height)
+        view.addSubview(imageSelectorNavigationController.view)
+        let imageSelector = ImageSelectorController()
+        imageSelector.imageSelectorNavigationController = self
+        imageSelectorNavigationController.viewControllers = [imageSelector]
+        
+        scrollableNavigationBar.anchors(top: nil, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: imageSelectorNavigationController.navigationBar.frame.height)
         scrollableNavigationBarTopAnchor = scrollableNavigationBar.topAnchor.constraint(equalTo: view.topAnchor)
         scrollableNavigationBarTopAnchor?.isActive = true
-    }
-    
-    override init(rootViewController: UIViewController) {
-        super.init(rootViewController: rootViewController)
-        if var rootViewController = rootViewController as? ImageSelectorViewControllerProtocol{
-            rootViewController.imageSelectorNavigationController = self
-        }
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        
+        imageSelectorNavigationController.view.anchors(top: scrollableNavigationBar.bottomAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
     }
 }

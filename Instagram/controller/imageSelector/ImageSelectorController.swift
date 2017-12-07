@@ -9,11 +9,10 @@
 import UIKit
 import Photos
 
-class ImageSelectorController: UIImageSelectorController,UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate {
+class ImageSelectorController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate {
     
     let imageSizeForCell = CGSize(width: 200, height: 200)
     let imageSizeForHeader = CGSize(width: 600, height: 600)
-    var images = [(image: UIImage,asset: PHAsset)]()
     let navigationBarHeight: CGFloat = 50
     let header = ImageSelectorHeader()
     let collectionView: UICollectionView = {
@@ -21,23 +20,20 @@ class ImageSelectorController: UIImageSelectorController,UICollectionViewDelegat
         return collectionView
     }()
     
+    var images = [(image: UIImage,asset: PHAsset)]()
+    var headerTopAnchor: NSLayoutConstraint?
+    var imageSelectorNavigationController: ImageSelectorNavigationController?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        
-        self.collectionView.delegate = self
-        self.collectionView.dataSource = self
-        self.collectionView.numberOfItems(inSection: 0)
-        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
-        self.collectionView.backgroundColor = .white
-        self.collectionView.register(ImageSelectorCell.self, forCellWithReuseIdentifier: ImageSelectorCell.ID)
         setupViews()
         setupNavigationItems(navigationBar: imageSelectorNavigationController?.scrollableNavigationBar)
         fetchUserPhotos(withImageSize: imageSizeForCell,completion: loadImages)
         setupEdgeGestureRecognizer(views: view)
         setupTapGestureRecognizer(views: header.scrollableFrame)
     }
-
+    
     fileprivate func getFetchOptions() -> PHFetchOptions{
         let options = PHFetchOptions()
         let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
@@ -86,7 +82,7 @@ class ImageSelectorController: UIImageSelectorController,UICollectionViewDelegat
     
     @objc func tapGestureRecognizer(){
         if header.info.headerState == .closed{
-            pullHeaderDown(header: header, navigationBar: imageSelectorNavigationController!.scrollableNavigationBar)
+            pullHeaderDown(header: header)
         }
     }
     
@@ -107,6 +103,8 @@ class ImageSelectorController: UIImageSelectorController,UICollectionViewDelegat
         
         return .enabled
     }
+    
+    fileprivate func scrollViewElementsWith(constant position: CGPoint){}
     
     fileprivate func headerCanScrollUpFrom(_ currentLocation: CGPoint, header: UIView) -> Bool{
         return currentLocation.y <= (header.frame.maxY - ImageSelectorHeader.scrollableFrameHeight)
@@ -141,11 +139,13 @@ class ImageSelectorController: UIImageSelectorController,UICollectionViewDelegat
                             if header.info.headerState == .opened{
                                 if headerCanScrollUpFrom(currentLocation, header: header){
                                     self.collectionView.isScrollEnabled = false
+                                    headerTopAnchor?.constant += translation.y
                                     imageSelectorNavigationController?.scrollableNavigationBarTopAnchor?.constant += translation.y
                                 }
                             }else{
                                 if collectionViewIsAtTheTop(self.collectionView.contentOffset) {
                                     self.collectionView.isScrollEnabled = false
+                                    headerTopAnchor?.constant += translation.y
                                     imageSelectorNavigationController?.scrollableNavigationBarTopAnchor?.constant += translation.y
                                 }
                             }
@@ -154,12 +154,14 @@ class ImageSelectorController: UIImageSelectorController,UICollectionViewDelegat
                             if header.info.headerState == .opened{
                                 if headerCanScrollDownFrom(currentLocation, header: header){
                                     self.collectionView.isScrollEnabled = false
-                                    imageSelectorNavigationController?.scrollableNavigationBarTopAnchor?.constant = min((imageSelectorNavigationController?.scrollableNavigationBarTopAnchor!.constant)! + translation.y,0.0)
+                                    headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
+                                    imageSelectorNavigationController?.scrollableNavigationBarTopAnchor?.constant = min(imageSelectorNavigationController!.scrollableNavigationBarTopAnchor!.constant + translation.y,0.0)
                                 }
                             }else{
                                 if collectionViewIsAtTheTop(self.collectionView.contentOffset) {
                                     self.collectionView.isScrollEnabled = false
-                                    imageSelectorNavigationController?.scrollableNavigationBarTopAnchor?.constant = min((imageSelectorNavigationController?.scrollableNavigationBarTopAnchor!.constant)! + translation.y,0.0)
+                                    headerTopAnchor?.constant = min(headerTopAnchor!.constant + translation.y,0.0)
+                                    imageSelectorNavigationController?.scrollableNavigationBarTopAnchor?.constant = min(imageSelectorNavigationController!.scrollableNavigationBarTopAnchor!.constant + translation.y,0.0)
                                 }
                             }
                         }
@@ -167,12 +169,13 @@ class ImageSelectorController: UIImageSelectorController,UICollectionViewDelegat
                     
                 case .ended:
                     if header.info.scrollState == .enabled{
-                        if header.info.headerState == .opened && header.frame.maxY < header.scrollableFrame.frame.maxY{
-                            pushHeaderUp(header: header, navigationBar: imageSelectorNavigationController!.scrollableNavigationBar)
+                        print(header.scrollableFrame.frame.maxY)
+                        if header.info.headerState == .opened && header.frame.maxY < (self.view.frame.maxY - header.scrollableFrame.frame.maxY){
+                            pushHeaderUp(header: header)
                             return
                         }
                         
-                        pullHeaderDown(header: header, navigationBar: imageSelectorNavigationController!.scrollableNavigationBar)
+                        pullHeaderDown(header: header)
                     }
                 default:
                     return
@@ -182,28 +185,39 @@ class ImageSelectorController: UIImageSelectorController,UICollectionViewDelegat
         }
     }
     
-    fileprivate func pushHeaderUp(header: ImageSelectorHeader, navigationBar: UINavigationBar){
+    fileprivate func pushHeaderUp(header: ImageSelectorHeader){
         header.info.headerState = .closed
-        imageSelectorNavigationController!.scrollableNavigationBarTopAnchor?.constant = (ImageSelectorHeader.scrollableFrameHeight - navigationBarHeight) - header.frame.height
+        imageSelectorNavigationController?.scrollableNavigationBarTopAnchor?.constant =  ImageSelectorHeader.scrollableFrameHeight - header.frame.height
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
             self?.header.blackForeground.alpha = 1
             self?.view.layoutIfNeeded()
-        }, completion: nil)
+            }, completion: nil)
     }
     
-    fileprivate func pullHeaderDown(header: ImageSelectorHeader, navigationBar: UINavigationBar){
+    fileprivate func pullHeaderDown(header: ImageSelectorHeader){
         header.info.headerState = .opened
-        imageSelectorNavigationController!.scrollableNavigationBarTopAnchor?.constant = 0
+        imageSelectorNavigationController?.scrollableNavigationBarTopAnchor?.constant = 0
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
             self?.header.blackForeground.alpha = 0
             self?.view.layoutIfNeeded()
-        }, completion: nil)
+            }, completion: nil)
     }
     
     func setupViews(){
         view.addSubview(header)
         view.addSubview(collectionView)
-        header.anchors(top: self.imageSelectorNavigationController?.scrollableNavigationBar.bottomAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width)
+        if let controller = navigationController?.viewControllers.first as? ImageSelectorNavigationController{
+            imageSelectorNavigationController = controller
+        }
+        
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
+        self.collectionView.numberOfItems(inSection: 0)
+        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
+        self.collectionView.backgroundColor = .white
+        self.collectionView.register(ImageSelectorCell.self, forCellWithReuseIdentifier: ImageSelectorCell.ID)
+        
+        header.anchors(top: view.topAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width)
         collectionView.anchors(top: header.bottomAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
     }
     
@@ -220,16 +234,15 @@ class ImageSelectorController: UIImageSelectorController,UICollectionViewDelegat
     }
     
     fileprivate func setupNavigationItems(navigationBar: UINavigationBar?){
-        let cancelButton = UINavigationItem()
-        cancelButton.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
-        
-        let nextButton = UINavigationItem()
-        nextButton.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
-        navigationBar?.setItems([cancelButton,nextButton], animated: false)
+        let navigationItem = UINavigationItem()
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
+        navigationItem.leftBarButtonItem?.tintColor = .black
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(handleNext))
+        navigationBar?.setItems([navigationItem], animated: false)
     }
     
     @objc func handleCancel(){
-        self.dismiss(animated: true, completion: nil)
+        imageSelectorNavigationController?.dismiss(animated: true, completion: nil)
     }
     
     @objc func handleNext(){
@@ -268,7 +281,7 @@ class ImageSelectorController: UIImageSelectorController,UICollectionViewDelegat
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = self.images[indexPath.row].asset
         updateHeaderImage(asset, imageSize: imageSizeForHeader, header: header)
-        pullHeaderDown(header: header, navigationBar: imageSelectorNavigationController!.scrollableNavigationBar)
+        pullHeaderDown(header: header)
     }
     
     func updateHeaderImage(_ asset: PHAsset, imageSize: CGSize, header: ImageSelectorHeader){
