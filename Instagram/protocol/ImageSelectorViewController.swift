@@ -8,6 +8,6 @@
 
 import UIKit
 
-protocol ImageSelectorViewControllerProtocol {
-    var imageSelectorNavigationController: ImageSelectorNavigationController? {set get}
+protocol ImageSelectionControllerProtocol {
+    var separateNavigationControler: UISeparateNavigationController? {set get}
 }

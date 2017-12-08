@@ -31,7 +31,7 @@ struct HeaderInfo{
 
 class ImageSelectorHeader: UIView {
     static var ID = "imageSelectorHeaderId"
-    static let scrollableFrameHeight: CGFloat = 44
+    static let scrollableFrameHeight: CGFloat = 35
     var info = HeaderInfo(headerState: .opened, scrollState: .enabled, scrollDirection: .Up)
     
     let selectedImage: UIImageView = {
