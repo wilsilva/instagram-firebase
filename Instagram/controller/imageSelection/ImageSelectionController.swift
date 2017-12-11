@@ -9,8 +9,8 @@
 import UIKit
 import Photos
 
-class ImageSelectionController: UIViewController,ImageSelectionControllerProtocol,UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate {
-    
+class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol,UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate {
+    var imageSelectionView: ImageSelectorView?
     let imageSizeForCell = CGSize(width: 200, height: 200)
     let imageSizeForHeader = CGSize(width: 600, height: 600)
     let header = ImageSelectorHeader()
@@ -18,18 +18,20 @@ class ImageSelectionController: UIViewController,ImageSelectionControllerProtoco
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         return collectionView
     }()
-    
-    var separateNavigationControler: UISeparateNavigationController?
     var images = [(image: UIImage,asset: PHAsset)]()
+    var separateNavigationControler: UISeparateNavigationController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .white
-        setupViews()
+        imageSelectionView = ImageSelectorView(controller: self, frame: view.frame)
+        self.view = imageSelectionView
+        self.imageSelectionView?.collectionView(datasource: self)
+        self.imageSelectionView?.collectionView(delegate: self)
         setupNavigationItems(navigationItem: self.navigationItem)
         fetchUserPhotos(withImageSize: imageSizeForCell,completion: loadImages)
-        setupEdgeGestureRecognizer(views: view)
-        setupTapGestureRecognizer(views: header.scrollableFrame)
+//        setupEdgeGestureRecognizer(views: view)
+        self.imageSelectionView?.addHeaderTapGestureRecognizer(self.view, action: #selector(tapGestureRecognizerHandler))
+        self.imageSelectionView?.addHeaderPanGestureRecognizer(self, target: self, action: #selector(panGestureRecognizerHandler))
     }
     
     fileprivate func getFetchOptions() -> PHFetchOptions{
@@ -63,22 +65,7 @@ class ImageSelectionController: UIViewController,ImageSelectionControllerProtoco
         return true
     }
     
-    func setupEdgeGestureRecognizer(views: UIView...){
-        for view in views {
-            let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(edgeGestureRecognizer))
-            panGestureRecognizer.delegate = self
-            view.addGestureRecognizer(panGestureRecognizer)
-        }
-    }
-    
-    func setupTapGestureRecognizer(views: UIView...){
-        for view in views {
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGestureRecognizer))
-            view.addGestureRecognizer(tapGesture)
-        }
-    }
-    
-    @objc func tapGestureRecognizer(){
+    @objc func tapGestureRecognizerHandler(){
         if header.info.headerState == .closed{
             pullHeaderDown(header: header)
         }
@@ -116,9 +103,8 @@ class ImageSelectionController: UIViewController,ImageSelectionControllerProtoco
         return self.collectionView.contentOffset.y <= 0.0
     }
     
-    @objc func edgeGestureRecognizer(_ panGestureRecognizer: UIPanGestureRecognizer){
+    @objc func panGestureRecognizerHandler(_ panGestureRecognizer: UIPanGestureRecognizer){
         if let view = panGestureRecognizer.view{
-            
             let currentLocation = panGestureRecognizer.location(in: view)
             let pannedView = view.hitTest(currentLocation, with: nil)
             let translation = panGestureRecognizer.translation(in: view)
@@ -196,29 +182,14 @@ class ImageSelectionController: UIViewController,ImageSelectionControllerProtoco
             }, completion: nil)
     }
     
-    func setupViews(){
-        view.addSubview(header)
-        view.addSubview(collectionView)
-        self.collectionView.delegate = self
-        self.collectionView.dataSource = self
-        self.collectionView.numberOfItems(inSection: 0)
-        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
-        self.collectionView.backgroundColor = .white
-        self.collectionView.register(ImageSelectorCell.self, forCellWithReuseIdentifier: ImageSelectorCell.ID)
-        
-        header.anchors(top: view.topAnchor, right: view.rightAnchor, bottom: nil, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: view.frame.width)
-        collectionView.anchors(top: header.bottomAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
-    }
-    
     func loadImages(imageAsset: (image: UIImage,asset: PHAsset)){
         self.images.append(imageAsset)
         DispatchQueue.main.sync { [weak self] in
             if images.count == 1 {
                 let asset = imageAsset.asset
-                updateHeaderImage(asset, imageSize: imageSizeForHeader, header: header)
+                updateHeaderImage(asset, imageSize: imageSizeForHeader)
             }
-            
-            self?.collectionView.insertItems(at: [IndexPath(item: images.endIndex - 1, section: 0)])
+            self?.imageSelectionView?.collectionView(insertImage: imageAsset.image)
         }
     }
     
@@ -268,14 +239,14 @@ class ImageSelectionController: UIViewController,ImageSelectionControllerProtoco
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = self.images[indexPath.row].asset
-        updateHeaderImage(asset, imageSize: imageSizeForHeader, header: header)
+        updateHeaderImage(asset, imageSize: imageSizeForHeader)
         pullHeaderDown(header: header)
     }
     
-    func updateHeaderImage(_ asset: PHAsset, imageSize: CGSize, header: ImageSelectorHeader){
+    func updateHeaderImage(_ asset: PHAsset, imageSize: CGSize){
         let imageManager = PHImageManager.default()
         imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: nil) { (image, info) in
-            header.selectedImage.image = image
+            self.imageSelectionView?.updateHeaderImage(image: image!)
         }
     }
 }

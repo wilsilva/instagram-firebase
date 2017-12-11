@@ -36,6 +36,8 @@
 		4A8A78AE2B6566ABA4E260B9 /* Pods_InstagramTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A3FC3D073EDD32D4F0FEA4 /* Pods_InstagramTests.framework */; };
 		6BD70AE516C403D602CB7C36 /* Pods_InstagramUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 944C9E5B9F3C1892F00F7044 /* Pods_InstagramUITests.framework */; };
 		7D1FC7017931A0BE0EE334D6 /* Pods_Instagram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70A4F601699D38F6B1D09E23 /* Pods_Instagram.framework */; };
+		8C0604091FDEA1D80036E507 /* ImageSelectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C0604081FDEA1D80036E507 /* ImageSelectorProtocol.swift */; };
+		8C06040B1FDEA2840036E507 /* ImageSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C06040A1FDEA2840036E507 /* ImageSelectorView.swift */; };
 		8C1682911FBB03F600DD34B4 /* ImageSelectorHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1682901FBB03F600DD34B4 /* ImageSelectorHeader.swift */; };
 		8C1682931FBB106500DD34B4 /* ImageSelectorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1682921FBB106500DD34B4 /* ImageSelectorCell.swift */; };
 		8C3699AC1FB20D59005CAA2D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3699AB1FB20D59005CAA2D /* User.swift */; };
@@ -98,6 +100,8 @@
 		48FDC1F61FDA006A0089AF91 /* ImageCaptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCaptionController.swift; sourceTree = "<group>"; };
 		6660DEC7FCCF6CA0A46FA358 /* Pods-InstagramUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstagramUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-InstagramUITests/Pods-InstagramUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		70A4F601699D38F6B1D09E23 /* Pods_Instagram.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Instagram.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C0604081FDEA1D80036E507 /* ImageSelectorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSelectorProtocol.swift; sourceTree = "<group>"; };
+		8C06040A1FDEA2840036E507 /* ImageSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSelectorView.swift; sourceTree = "<group>"; };
 		8C1682901FBB03F600DD34B4 /* ImageSelectorHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSelectorHeader.swift; sourceTree = "<group>"; };
 		8C1682921FBB106500DD34B4 /* ImageSelectorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSelectorCell.swift; sourceTree = "<group>"; };
 		8C3699AB1FB20D59005CAA2D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -212,6 +216,7 @@
 			children = (
 				8C6C03681FD8556D000085AD /* ImageSelectorViewController.swift */,
 				486298391FB7B042005EFF69 /* LoginProtocol.swift */,
+				8C0604081FDEA1D80036E507 /* ImageSelectorProtocol.swift */,
 				482340EA1FBA54BC00C2B333 /* MainMenuNavigationProtocol.swift */,
 			);
 			path = protocol;
@@ -324,6 +329,7 @@
 			children = (
 				8C1682901FBB03F600DD34B4 /* ImageSelectorHeader.swift */,
 				8C1682921FBB106500DD34B4 /* ImageSelectorCell.swift */,
+				8C06040A1FDEA2840036E507 /* ImageSelectorView.swift */,
 			);
 			path = imageSelector;
 			sourceTree = "<group>";
@@ -657,6 +663,7 @@
 				8C1682911FBB03F600DD34B4 /* ImageSelectorHeader.swift in Sources */,
 				48920B2D1FA299D40097986C /* Instagram.xcdatamodeld in Sources */,
 				48FDC1F71FDA006A0089AF91 /* ImageCaptionController.swift in Sources */,
+				8C06040B1FDEA2840036E507 /* ImageSelectorView.swift in Sources */,
 				8C6C03691FD8556D000085AD /* ImageSelectorViewController.swift in Sources */,
 				483DA76F1FB1119300702266 /* MainTabController.swift in Sources */,
 				482340ED1FBA55E700C2B333 /* MainMenuNavigationController.swift in Sources */,
@@ -675,6 +682,7 @@
 				482017F11FABCE050080B18B /* Alert.swift in Sources */,
 				482F4E421FB6541200D821F5 /* FavouritesNavigationController.swift in Sources */,
 				482F4E401FB653B100D821F5 /* AddPhotosNavigationController.swift in Sources */,
+				8C0604091FDEA1D80036E507 /* ImageSelectorProtocol.swift in Sources */,
 				48272D3C1FA7EFD700E45E44 /* Extension.swift in Sources */,
 				482F4E3E1FB6537B00D821F5 /* SearchNavigationController.swift in Sources */,
 				8CBE5F691FB46B4C00F227A2 /* LoginController.swift in Sources */,
