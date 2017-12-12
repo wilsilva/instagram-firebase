@@ -154,7 +154,9 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
     func updateHeaderImage(_ asset: PHAsset, imageSize: CGSize){
         let imageManager = PHImageManager.default()
         imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: nil) { (image, info) in
-            self.imageSelectionView?.updateHeaderImage(image: image!)
+            if let image = image{
+                self.imageSelectionView?.updateHeaderImage(image: image)
+            }
         }
     }
 }
