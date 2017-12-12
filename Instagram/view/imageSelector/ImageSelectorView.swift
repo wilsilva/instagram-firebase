@@ -13,7 +13,7 @@ import Photos
 class ImageSelectorView: UIView, ImageSelectorViewProtocol{
     
     var controller: ImageSelectorControllerProtocol?
-    
+    var imageSelectorTopAnchor: NSLayoutConstraint?
     let imageSizeForCell = CGSize(width: 200, height: 200)
     let imageSizeForHeader = CGSize(width: 600, height: 600)
     let header = ImageSelectorHeader()
@@ -22,12 +22,56 @@ class ImageSelectorView: UIView, ImageSelectorViewProtocol{
         return collectionView
     }()
     
-    func pushHeaderUp(header: ImageSelectorHeader) {
+    func collectionView(setScrollState enabled: Bool) {
+        self.collectionView.isScrollEnabled = enabled
+    }
+    
+    func getScrollDirection(by velocity: CGPoint) -> ScrollDirection {
+        return velocity.y <= 0 ? .Up : .Down
+    }
+    
+    func collectionView(insertImage image: UIImage, index: Int) {
+        collectionView.insertItems(at: [IndexPath(item: index, section: 0)])
+    }
+    
+    func getScrollState(view: UIView) -> ScrollState {
+        if header.info.headerState == .opened{
+            if view == self.header || view == self.header.selectedImage{
+                return .disabled
+            }
+        }else{
+            if self.collectionView.contentOffset.y > 0.0 || header.info.scrollDirection == .Up{
+                return .disabled
+            }
+        }
         
+        return .enabled
+    }
+    
+    func setScrollDirection(by velocity: CGPoint) {
+        self.header.info.scrollDirection = getScrollDirection(by: velocity)
+    }
+    
+    func setScrollState(view: UIView) {
+        self.header.info.scrollState = getScrollState(view: view)
+    }
+    
+    func pushHeaderUp(header: ImageSelectorHeader) {
+        self.header.info.headerState = .closed
+        self.imageSelectorTopAnchor?.constant = -self.header.frame.maxY
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
+            self?.header.blackForeground.alpha = 1
+            self?.layoutIfNeeded()
+        }, completion: nil)
     }
     
     func pullHeaderDown(header: ImageSelectorHeader) {
-        
+        header.info.headerState = .opened
+        self.imageSelectorTopAnchor?.constant = 0
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
+            self?.header.blackForeground.alpha = 0
+            self?.layoutIfNeeded()
+        }, completion: nil)
     }
     
     func addHeaderTapGestureRecognizer(_ target: Any?, action: Selector?) {
@@ -47,15 +91,11 @@ class ImageSelectorView: UIView, ImageSelectorViewProtocol{
     
     func collectionView(datasource controller: UICollectionViewDataSource) {
         self.collectionView.dataSource = controller
+        collectionView.numberOfItems(inSection: 0)
     }
     
     func collectionView(delegate controller: UICollectionViewDelegate) {
         self.collectionView.delegate = controller
-    }
-    
-    func collectionView(insertImage image: UIImage) {
-        let endIndex = self.collectionView.numberOfItems(inSection: 0)
-        self.collectionView.insertItems(at: [IndexPath(item: endIndex, section: 0)])
     }
     
     required init(controller: ImageSelectorControllerProtocol, frame: CGRect) {
@@ -66,7 +106,6 @@ class ImageSelectorView: UIView, ImageSelectorViewProtocol{
         addSubview(header)
         addSubview(collectionView)
         
-        collectionView.numberOfItems(inSection: 0)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .white
         collectionView.register(ImageSelectorCell.self, forCellWithReuseIdentifier: ImageSelectorCell.ID)

@@ -16,12 +16,13 @@ protocol ImageSelectorControllerProtocol{
 
 protocol ImageSelectorViewProtocol{
     init(controller: ImageSelectorControllerProtocol, frame: CGRect)
-    func collectionView(datasource controller: UICollectionViewDataSource)
-    func collectionView(delegate controller: UICollectionViewDelegate)
-    func collectionView(insertImage image: UIImage)
+    func collectionView(insertImage image: UIImage, index: Int)
+    func collectionView(setScrollState enabled: Bool)
     func updateHeaderImage(image: UIImage)
     func addHeaderTapGestureRecognizer(_ target: Any?,action: Selector?)
     func addHeaderPanGestureRecognizer(_ delegate: UIGestureRecognizerDelegate,target: Any?,action: Selector?)
     func pushHeaderUp(header: ImageSelectorHeader)
     func pullHeaderDown(header: ImageSelectorHeader)
+    func setScrollDirection(by velocity: CGPoint)
+    func setScrollState(view: UIView)
 }
