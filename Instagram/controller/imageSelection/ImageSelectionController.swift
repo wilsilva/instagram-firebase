@@ -18,6 +18,10 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
     var images = [(image: UIImage,asset: PHAsset)]()
     var separateNavigationControler: UISeparateNavigationController?
     
+    override var prefersStatusBarHidden: Bool{
+        return true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         imageSelectionView = ImageSelectorView(controller: self, frame: view.frame)
@@ -54,31 +58,12 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
         }
     }
     
-    override var prefersStatusBarHidden: Bool{
-        return true
-    }
-    
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
     
     @objc func tapGestureRecognizerHandler(){
-        self.imageSelectionView?.pullHeaderDown(header: header)
-    }
-    
-    fileprivate func scrollViewElementsWith(constant position: CGPoint){}
-    
-    fileprivate func headerCanScrollUpFrom(_ currentLocation: CGPoint, header: UIView) -> Bool{
-        return currentLocation.y <= (header.frame.maxY - ImageSelectorHeader.scrollableFrameHeight)
-    }
-    
-    fileprivate func headerCanScrollDownFrom(_ currentLocation: CGPoint, header: UIView) -> Bool{
-        return currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height + ImageSelectorHeader.scrollableFrameHeight
-    }
-    
-    fileprivate func collectionViewIsAtTheTop(_ currentLocation: CGPoint) -> Bool{
-//        return self.collectionView.contentOffset.y <= 0.0
-        return false
+        self.imageSelectionView?.pullHeaderDown()
     }
     
     @objc func panGestureRecognizerHandler(_ panGestureRecognizer: UIPanGestureRecognizer){
@@ -94,43 +79,9 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
                 case .began:
                     self.imageSelectionView?.setScrollState(view: pannedView)
                 case .changed:
-                    if header.info.scrollState == .enabled{
-                        if header.info.scrollDirection == .Up{
-                            if header.info.headerState == .opened{
-                                if headerCanScrollUpFrom(currentLocation, header: header){
-                                    self.imageSelectionView?.collectionView(setScrollState: false)
-                                    separateNavigationControler?.navigationControllerTopAnchor?.constant += translation.y
-                                }
-                            }else{
-//                                if collectionViewIsAtTheTop(self.collectionView.contentOffset) {
-//                                    self.imageSelectionView?.collectionView(setScrollState: false)
-//                                    separateNavigationControler?.navigationControllerTopAnchor?.constant += translation.y
-//                                }
-                            }
-                        }
-                        else{
-                            if header.info.headerState == .opened{
-                                if headerCanScrollDownFrom(currentLocation, header: header){
-                                    self.imageSelectionView?.collectionView(setScrollState: false)
-                                    separateNavigationControler?.navigationControllerTopAnchor?.constant = min(separateNavigationControler!.navigationControllerTopAnchor!.constant + translation.y,0.0)
-                                }
-                            }else{
-//                                if collectionViewIsAtTheTop(self.collectionView.contentOffset) {
-//                                    self.imageSelectionView?.collectionView(setScrollState: false)
-//                                    separateNavigationControler?.navigationControllerTopAnchor?.constant = min(separateNavigationControler!.navigationControllerTopAnchor!.constant + translation.y,0.0)
-//                                }
-                            }
-                        }
-                    }
+                    self.imageSelectionView?.scrollHeader(from: currentLocation, translation: translation)
                 case .ended:
-                    if header.info.scrollState == .enabled{
-                        if header.info.headerState == .opened && header.scrollableFrame.frame.minY < (self.view.frame.maxY - header.frame.maxY){
-                            self.imageSelectionView?.pushHeaderUp(header: header)
-                            return
-                        }
-                        
-                        self.imageSelectionView?.pullHeaderDown(header: header)
-                    }
+                    self.imageSelectionView?.attractHeader(using: self.view.frame.maxY)
                 default:
                     return
                 }
@@ -197,7 +148,7 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = self.images[indexPath.row].asset
         updateHeaderImage(asset, imageSize: imageSizeForHeader)
-        self.imageSelectionView?.pullHeaderDown(header: header)
+        self.imageSelectionView?.pullHeaderDown()
     }
     
     func updateHeaderImage(_ asset: PHAsset, imageSize: CGSize){

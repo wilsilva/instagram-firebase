@@ -22,6 +22,59 @@ class ImageSelectorView: UIView, ImageSelectorViewProtocol{
         return collectionView
     }()
     
+    fileprivate func headerCanScrollUpFrom(_ currentLocation: CGPoint, header: UIView) -> Bool{
+        return currentLocation.y <= (header.frame.maxY - ImageSelectorHeader.scrollableFrameHeight)
+    }
+    
+    fileprivate func headerCanScrollDownFrom(_ currentLocation: CGPoint, header: UIView) -> Bool{
+        return currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height + ImageSelectorHeader.scrollableFrameHeight
+    }
+    
+    fileprivate func collectionViewIsAtTheTop(_ currentLocation: CGPoint) -> Bool{
+        return self.collectionView.contentOffset.y <= 0.0
+    }
+    
+    func attractHeader(using currentFrameLocation: CGFloat) {
+        if header.info.scrollState == .enabled{
+            if header.info.headerState == .opened && header.scrollableFrame.frame.minY < (currentFrameLocation - header.frame.maxY){
+                pushHeaderUp()
+                return
+            }
+            pullHeaderDown()
+        }
+    }
+    
+    func scrollHeader(from currentLocation: CGPoint, translation: CGPoint) {
+        if header.info.scrollState == .enabled{
+            if header.info.scrollDirection == .Up{
+                if header.info.headerState == .opened{
+                    if headerCanScrollUpFrom(currentLocation, header: header){
+                        collectionView(setScrollState: false)
+                        imageSelectorTopAnchor?.constant += translation.y
+                    }
+                }else{
+                    if collectionViewIsAtTheTop(self.collectionView.contentOffset) {
+                        collectionView(setScrollState: false)
+                        imageSelectorTopAnchor?.constant += translation.y
+                    }
+                }
+            }
+            else{
+                if header.info.headerState == .opened{
+                    if headerCanScrollDownFrom(currentLocation, header: header){
+                        collectionView(setScrollState: false)
+                        imageSelectorTopAnchor?.constant = min(imageSelectorTopAnchor!.constant + translation.y,0.0)
+                    }
+                }else{
+                    if collectionViewIsAtTheTop(self.collectionView.contentOffset) {
+                        collectionView(setScrollState: false)
+                        imageSelectorTopAnchor?.constant = min(imageSelectorTopAnchor!.constant + translation.y,0.0)
+                    }
+                }
+            }
+        }
+    }
+    
     func collectionView(setScrollState enabled: Bool) {
         self.collectionView.isScrollEnabled = enabled
     }
@@ -56,18 +109,18 @@ class ImageSelectorView: UIView, ImageSelectorViewProtocol{
         self.header.info.scrollState = getScrollState(view: view)
     }
     
-    func pushHeaderUp(header: ImageSelectorHeader) {
-        self.header.info.headerState = .closed
-        self.imageSelectorTopAnchor?.constant = -self.header.frame.maxY
+    func pushHeaderUp() {
+        header.info.headerState = .closed
+        imageSelectorTopAnchor?.constant = -self.header.frame.maxY
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
             self?.header.blackForeground.alpha = 1
             self?.layoutIfNeeded()
         }, completion: nil)
     }
     
-    func pullHeaderDown(header: ImageSelectorHeader) {
+    func pullHeaderDown() {
         header.info.headerState = .opened
-        self.imageSelectorTopAnchor?.constant = 0
+        imageSelectorTopAnchor?.constant = 0
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: { [weak self] in
             self?.header.blackForeground.alpha = 0
             self?.layoutIfNeeded()
