@@ -34,7 +34,13 @@ class ImageSelectorHeader: UIView {
     static let scrollableFrameHeight: CGFloat = 35
     var info = HeaderInfo(headerState: .opened, scrollState: .enabled, scrollDirection: .Up)
     
-    let selectedImage: UIImageView = {
+    var selectedImage = UIImage(){
+        didSet{
+            selectedImageView.image = selectedImage
+        }
+    }
+    
+    let selectedImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
@@ -60,11 +66,11 @@ class ImageSelectorHeader: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.addSubview(selectedImage)
+        self.addSubview(selectedImageView)
         self.addSubview(blackForeground)
         self.addSubview(scrollableFrame)
         self.translatesAutoresizingMaskIntoConstraints = false
-        selectedImage.anchors(top: topAnchor, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
+        selectedImageView.anchors(top: topAnchor, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
         blackForeground.anchors(top: topAnchor, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
         scrollableFrame.anchors(top: nil, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: ImageSelectorHeader.scrollableFrameHeight)
     }

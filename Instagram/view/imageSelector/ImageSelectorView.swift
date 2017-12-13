@@ -139,7 +139,7 @@ class ImageSelectorView: UIView, ImageSelectorViewProtocol{
     }
     
     func updateHeaderImage(image: UIImage) {
-        header.selectedImage.image = image
+        header.selectedImage = image
     }
     
     func collectionView(datasource controller: UICollectionViewDataSource) {

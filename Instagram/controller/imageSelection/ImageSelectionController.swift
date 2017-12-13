@@ -14,7 +14,12 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
     let imageSizeForCell = CGSize(width: 200, height: 200)
     let imageSizeForHeader = CGSize(width: 600, height: 600)
     let header = ImageSelectorHeader()
-    
+    var selectedImage = UIImage(){
+        didSet{
+            updateHeaderImage(selectedImage)
+            self.imageSelectionView?.pullHeaderDown()
+        }
+    }
     var images = [(image: UIImage,asset: PHAsset)]()
     var separateNavigationControler: UISeparateNavigationController?
     
@@ -94,8 +99,8 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
         self.images.append(imageAsset)
         DispatchQueue.main.sync { [weak self] in
             if images.count == 1 {
-                let asset = imageAsset.asset
-                updateHeaderImage(asset, imageSize: imageSizeForHeader)
+                let image = imageAsset.image
+                selectedImage = image
             }
             self?.imageSelectionView?.collectionView(insertImage: imageAsset.image, index: self!.images.endIndex - 1)
         }
@@ -113,6 +118,7 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
     
     @objc func handleNext(){
         let imageCaptionController = ImageCaptionController()
+        imageCaptionController.selectedImage = self.selectedImage
         navigationController?.pushViewController(imageCaptionController, animated: true)
     }
     
@@ -147,16 +153,15 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let asset = self.images[indexPath.row].asset
-        updateHeaderImage(asset, imageSize: imageSizeForHeader)
-        self.imageSelectionView?.pullHeaderDown()
-    }
-    
-    func updateHeaderImage(_ asset: PHAsset, imageSize: CGSize){
         let imageManager = PHImageManager.default()
-        imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: nil) { (image, info) in
+        imageManager.requestImage(for: asset, targetSize: imageSizeForHeader, contentMode: .aspectFit, options: nil) { [weak self] (image, info) in
             if let image = image{
-                self.imageSelectionView?.updateHeaderImage(image: image)
+                self?.selectedImage = image
             }
         }
+    }
+    
+    fileprivate func updateHeaderImage(_ image: UIImage){
+        self.imageSelectionView?.updateHeaderImage(image: image)
     }
 }
