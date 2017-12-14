@@ -11,7 +11,7 @@ import Firebase
 
 class UserProfileController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
-    var images = [UIImage]()
+    var posts = [(image:UIImage,post:Post)]()
     var userProfilePictureURL: String?
     var user: User?{
         didSet{
@@ -31,19 +31,32 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         setupNavigationItem(navigationItem)
         do {
            try fetchUser()
+           observePostsAddition()
+           observePostsDeletion()
         }catch FetchUserError.notLoggedIn{
-            print("Not logged in")
+            Alert.showBasic("User Error", message: "Sorry but you have to log in", viewController: self, handler: nil)
         }catch{
             Alert.showBasic("User Info Error", message: error.localizedDescription, viewController: self, handler: nil)
         }
-        
-        observePosts()
     }
     
-    fileprivate func observePosts(){
+    fileprivate func observePostsAddition(){
         guard let userUID = Auth.auth().currentUser?.uid else { return }
-        Database.database().reference().child("posts").child(userUID).observe(.childAdded) { (snapShot) in
-            self.loadImage(with: snapShot)
+        Database.database().reference().child("posts").child(userUID).observe(.childAdded) { [weak self] (snapShot) in
+            if let post = Post(snapshot: snapShot){
+                self?.fetchImages(with: post,completion: self?.loadImage)
+            }
+        }
+    }
+    
+    fileprivate func observePostsDeletion(){
+        guard let userUID = Auth.auth().currentUser?.uid else { return }
+        Database.database().reference().child("posts").child(userUID).observe(.childRemoved) { [weak self] (snapShot) in
+            if let post = Post(snapshot: snapShot){
+                if let index = self?.posts.index(where: {$0.post.uid == post.uid}) {
+                    self?.remoteFromImage(from: index)
+                }
+            }
         }
     }
     
@@ -51,25 +64,41 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         guard let userUID = Auth.auth().currentUser?.uid else { throw FetchUserError.notLoggedIn }
         Database.database().reference().child("users").child(userUID).observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
             self?.user = User(snapshot: snapshot)
-//            self?.collectionView?.reloadData()
+            self?.collectionView?.reloadData()
         }) { (error) in
             Alert.showBasic("Get user info error", message: error.localizedDescription, viewController: self, handler: nil)
         }
     }
     
-    fileprivate func loadImage(with snapShot: DataSnapshot){
-        if let post = Post(snapshot: snapShot){
+    fileprivate func loadImage(_ imageInfo: (data:Data,post:Post)){
+        if let image = UIImage(data: imageInfo.data){
+            DispatchQueue.main.async {
+                self.collectionView?.numberOfItems(inSection: 0)
+                self.posts.append((image,imageInfo.post))
+                self.collectionView?.insertItems(at: [IndexPath(row: self.posts.count - 1, section: 0)])
+            }
+        }
+    }
+    
+    fileprivate func remoteFromImage(from index:Int){
+        DispatchQueue.main.async {
+            self.collectionView?.numberOfItems(inSection: 0)
+            self.posts.remove(at: index)
+            self.collectionView?.deleteItems(at: [IndexPath(row: index, section: 0)])
+        }
+    }
+    
+    fileprivate func fetchImages(with post: Post, completion: (((Data,Post)) -> Void)?){
+        if let url = post.imageURL{
             let session = URLSession(configuration: .default)
-            session.dataTask(with: post.imageURL!, completionHandler: { (data, response, error) in
+            session.dataTask(with: url, completionHandler: { (data, response, error) in
                 if let error = error{
                     Alert.showBasic("Error", message: error.localizedDescription, viewController: self, handler: nil)
                     return
                 }
                 
-                if let data = data{
-                    if let image = UIImage(data: data){
-                        self.images.append(image)
-                    }
+                if let data = data, let completion = completion{
+                    completion((data, post))
                 }
             }).resume()
         }
@@ -116,13 +145,13 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PotsCellCollectionViewCell.ID, for: indexPath)
         if let postCell = cell as? PotsCellCollectionViewCell{
-            postCell.imageView.image = images[indexPath.row]
+            postCell.imageView.image = posts[indexPath.row].image
         }
         return cell
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return images.count
+        return posts.count
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
