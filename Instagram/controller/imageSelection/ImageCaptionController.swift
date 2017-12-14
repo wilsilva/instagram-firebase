@@ -7,9 +7,17 @@
 //
 
 import UIKit
+import Firebase
 
 class ImageCaptionController: UIViewController {
     
+    enum ImageUpoadException: Error{
+        case userNotLoggedIn
+        case imageNotFound
+        case captionNotFound
+    }
+    
+    var user: User?
     var selectedImage = UIImage(){
         didSet{
             selectedImageView.image = selectedImage
@@ -56,6 +64,59 @@ class ImageCaptionController: UIViewController {
     }
     
     fileprivate func setupNavigationItems(navigationItem: UINavigationItem){
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Share", style: .done, target: self, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Share", style: .done, target: self, action: #selector(shareHandler))
+    }
+    
+    @objc fileprivate func shareHandler(){
+        do {
+            try uploadImage(selectedImage,imageCaption: self.captionTextView.text, completion: dismissScreen)
+        } catch ImageUpoadException.captionNotFound {
+            Alert.showBasic("Upload Error", message: "Sorry, but you need to feel in the image caption", viewController: self, handler: nil)
+        }catch ImageUpoadException.imageNotFound {
+            Alert.showBasic("Upload Error", message: "Sorry, an error occurred. We could not find an image to upload", viewController: self, handler: nil)
+        }catch ImageUpoadException.userNotLoggedIn {
+            Alert.showBasic("Upload Error", message: "Sorry, but you need to be logged in to upload an image", viewController: self, handler: nil)
+        }catch{
+            Alert.showBasic("Upload Error", message: "Sorry, an error occurred", viewController: self, handler: nil)
+        }
+    }
+    
+    fileprivate func uploadImage(_ image: UIImage, imageCaption: String? , completion: (() -> Void)?) throws{
+        guard let uploadData = UIImageJPEGRepresentation(selectedImage, 0.5) else{throw ImageUpoadException.imageNotFound}
+        guard let userUID = Auth.auth().currentUser?.uid else { throw ImageUpoadException.userNotLoggedIn }
+        guard let imageCaption = imageCaption else {throw ImageUpoadException.captionNotFound}
+        if imageCaption.count <= 0{
+            throw ImageUpoadException.captionNotFound
+        }
+        
+        let filename = NSUUID().uuidString
+        
+        Storage.storage().reference().child("posts").child(filename).putData(uploadData, metadata: nil) { [weak self] (metadata, error) in
+            if let error = error{
+                print(error)
+                return
+            }
+            if let imageURL = metadata?.downloadURL()?.absoluteString {
+                self?.saveToDatabase(imageURL: imageURL, imageCaption: imageCaption, userUID: userUID, completion: completion)
+            }
+        }
+    }
+    
+    fileprivate func saveToDatabase(imageURL: String, imageCaption: String, userUID: String, completion: (() -> Void)?){
+        let postsInfoDictionary = ["imageURL":imageURL,"imageCaption": imageCaption]
+        Database.database().reference().child("posts").child(userUID).childByAutoId().updateChildValues(postsInfoDictionary) { (error, dataReference) in
+            if let error = error{
+                print(error)
+                return
+            }
+            
+            if let completion = completion{
+                completion()
+            }
+        }
+    }
+    
+    func dismissScreen(){
+        UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 }

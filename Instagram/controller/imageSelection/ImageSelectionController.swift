@@ -107,16 +107,16 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
     }
     
     fileprivate func setupNavigationItems(navigationItem: UINavigationItem){
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(handleNext))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .done, target: self, action: #selector(nextHandler))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(cancelHandler))
         navigationItem.leftBarButtonItem?.tintColor = .black
     }
     
-    @objc func handleCancel(){
-        self.separateNavigationControler?.dismiss(animated: true, completion: nil)
+    @objc func cancelHandler(){
+        UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
     }
     
-    @objc func handleNext(){
+    @objc func nextHandler(){
         let imageCaptionController = ImageCaptionController()
         imageCaptionController.selectedImage = self.selectedImage
         navigationController?.pushViewController(imageCaptionController, animated: true)

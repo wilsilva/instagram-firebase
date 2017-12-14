@@ -11,35 +11,39 @@ import Firebase
 
 class UserProfileController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
+    var images = [UIImage]()
+    var userProfilePictureURL: String?
     var user: User?{
         didSet{
             navigationItem.title = user?.name
         }
     }
     
-    var photoCellId = "photoCellId"
-    
     enum FetchUserError: Error{
         case notLoggedIn
     }
-    
-    var userProfilePictureURL: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: UserProfileHeader.ID)
-        collectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: photoCellId)
+        collectionView?.register(PotsCellCollectionViewCell.self, forCellWithReuseIdentifier: PotsCellCollectionViewCell.ID)
         setupNavigationItem(navigationItem)
         do {
            try fetchUser()
         }catch FetchUserError.notLoggedIn{
-//            Alert.showBasic("User Info Error", message: "Sorry, but looks like you're not logged in. Please try logging in to continue.", viewController: self, handler: { [weak self] (alertAction) in
-//                self?.dismiss(animated: true, completion:nil)
-//                self?.present(SignupController(), animated: true, completion: nil)
-//            })
+            print("Not logged in")
         }catch{
             Alert.showBasic("User Info Error", message: error.localizedDescription, viewController: self, handler: nil)
+        }
+        
+        observePosts()
+    }
+    
+    fileprivate func observePosts(){
+        guard let userUID = Auth.auth().currentUser?.uid else { return }
+        Database.database().reference().child("posts").child(userUID).observe(.childAdded) { (snapShot) in
+            self.loadImage(with: snapShot)
         }
     }
     
@@ -47,9 +51,27 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         guard let userUID = Auth.auth().currentUser?.uid else { throw FetchUserError.notLoggedIn }
         Database.database().reference().child("users").child(userUID).observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
             self?.user = User(snapshot: snapshot)
-            self?.collectionView?.reloadData()
+//            self?.collectionView?.reloadData()
         }) { (error) in
             Alert.showBasic("Get user info error", message: error.localizedDescription, viewController: self, handler: nil)
+        }
+    }
+    
+    fileprivate func loadImage(with snapShot: DataSnapshot){
+        if let post = Post(snapshot: snapShot){
+            let session = URLSession(configuration: .default)
+            session.dataTask(with: post.imageURL!, completionHandler: { (data, response, error) in
+                if let error = error{
+                    Alert.showBasic("Error", message: error.localizedDescription, viewController: self, handler: nil)
+                    return
+                }
+                
+                if let data = data{
+                    if let image = UIImage(data: data){
+                        self.images.append(image)
+                    }
+                }
+            }).resume()
         }
     }
     
@@ -92,13 +114,15 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoCellId, for: indexPath)
-        cell.backgroundColor = UIColor.blue
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PotsCellCollectionViewCell.ID, for: indexPath)
+        if let postCell = cell as? PotsCellCollectionViewCell{
+            postCell.imageView.image = images[indexPath.row]
+        }
         return cell
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
+        return images.count
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

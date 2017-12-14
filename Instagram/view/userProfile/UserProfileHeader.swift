@@ -9,7 +9,7 @@
 import UIKit
 
 class UserProfileHeader: UICollectionViewCell {
-    static var ID = "userProfileHeaderId"
+    static let ID = "userProfileHeaderId"
     
     var user: User?{
         didSet{
