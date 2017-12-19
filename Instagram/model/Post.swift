@@ -9,18 +9,35 @@
 import Foundation
 import Firebase
 class Post: NSObject{
-    var imageCaption: String?
-    var imageURL: URL?
+    var caption: String?
+    var url: URL?
+    var creationDate: Double
     var uid: String?
+    var imageHeight: CGFloat
+    var imageWidth: CGFloat
     
     init?(snapshot: DataSnapshot) {
-        guard let uid = snapshot.key as? String else{return nil}
+        guard !snapshot.key.isEmpty else{return nil}
+        self.uid = snapshot.key
         guard let snapshot = snapshot.value as? [String: Any] else{return nil}
-        guard let imageCaption = snapshot["imageCaption"] as? String else{return nil}
-        guard let imageURL = snapshot["imageURL"] as? String else{return nil}
+        guard let caption = snapshot["caption"] as? String else{return nil}
+        guard let url = snapshot["URL"] as? String else{return nil}
+        guard let creationDate = snapshot["creationDate"] as? Double else{return nil}
+        guard let imageHeight = snapshot["imageHeight"] as? CGFloat else{return nil}
+        guard let imageWidth = snapshot["imageWidth"] as? CGFloat else{return nil}
         
-        self.uid = uid
-        self.imageCaption = imageCaption
-        self.imageURL = URL(string: imageURL)
+        self.caption = caption
+        self.url = URL(string: url)
+        self.creationDate = creationDate
+        self.imageHeight = imageHeight
+        self.imageWidth = imageWidth
+    }
+    
+    init(caption: String, url: String, creationDate: Double, imageHeight: CGFloat, imageWidth: CGFloat) {
+        self.caption = caption
+        self.url = URL(string: url)
+        self.creationDate = creationDate
+        self.imageHeight = imageHeight
+        self.imageWidth = imageWidth
     }
 }
