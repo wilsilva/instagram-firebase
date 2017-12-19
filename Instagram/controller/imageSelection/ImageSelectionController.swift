@@ -10,10 +10,10 @@ import UIKit
 import Photos
 
 class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol,UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate {
-    var imageSelectionView: ImageSelectorView?
+    var imageSelectionView: ImageSelectionView?
     let imageSizeForCell = CGSize(width: 200, height: 200)
     let imageSizeForHeader = CGSize(width: 600, height: 600)
-    let header = ImageSelectorHeader()
+    let header = ImageSelectionHeader()
     var selectedImage = UIImage(){
         didSet{
             updateHeaderImage(selectedImage)
@@ -29,7 +29,7 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageSelectionView = ImageSelectorView(controller: self, frame: view.frame)
+        imageSelectionView = ImageSelectionView(controller: self, frame: view.frame)
         self.view = imageSelectionView
         self.imageSelectionView?.collectionView(datasource: self)
         self.imageSelectionView?.collectionView(delegate: self)
@@ -123,8 +123,8 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageSelectorCell.ID, for: indexPath)
-        if let imageSelectorCell = cell as? ImageSelectorCell{
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageSelectionCell.ID, for: indexPath)
+        if let imageSelectorCell = cell as? ImageSelectionCell{
             imageSelectorCell.photo = self.images[indexPath.row].image
         }
         return cell
