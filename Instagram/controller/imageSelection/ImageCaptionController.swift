@@ -17,6 +17,7 @@ class ImageCaptionController: UIViewController {
         case captionNotFound
     }
     
+    var postsInfoDictionary = [String:Any]()
     var user: User?
     var selectedImage = UIImage(){
         didSet{
@@ -95,8 +96,13 @@ class ImageCaptionController: UIViewController {
     }
     
     fileprivate func startLoadingAnimation(){
-        navigationController?.navigationBar.disable()
+        navigationController?.navigationBar.isUserInteractionEnabled = false
         loadingIcon.startAnimating()
+    }
+    
+    fileprivate func stopLoadingAnimation(){
+        navigationController?.navigationBar.isUserInteractionEnabled = true
+        loadingIcon.stopAnimating()
     }
     
     fileprivate func uploadImage(_ image: UIImage, imageCaption: String? , completion: (() -> Void)?) throws{
@@ -113,19 +119,21 @@ class ImageCaptionController: UIViewController {
         Storage.storage().reference().child("posts").child(filename).putData(uploadData, metadata: nil) { [weak self] (metadata, error) in
             if let error = error{
                 print(error)
+                self?.stopLoadingAnimation()
                 return
             }
             if let imageURL = metadata?.downloadURL()?.absoluteString {
+                self?.postsInfoDictionary = ["URL":imageURL,"caption": imageCaption,"creationDate":Date.timeIntervalSinceReferenceDate,"imageHeight":image.size.height,"imageWidth":image.size.width]
                 self?.saveToDatabase(imageURL: imageURL, imageCaption: imageCaption, userUID: userUID, completion: completion)
             }
         }
     }
     
     fileprivate func saveToDatabase(imageURL: String, imageCaption: String, userUID: String, completion: (() -> Void)?){
-        let postsInfoDictionary = ["imageURL":imageURL,"imageCaption": imageCaption]
-        Database.database().reference().child("posts").child(userUID).childByAutoId().updateChildValues(postsInfoDictionary) { (error, dataReference) in
+        Database.database().reference().child("posts").child(userUID).childByAutoId().updateChildValues(postsInfoDictionary) { [weak self] (error, dataReference) in
             if let error = error{
                 print(error)
+                self?.stopLoadingAnimation()
                 return
             }
             
