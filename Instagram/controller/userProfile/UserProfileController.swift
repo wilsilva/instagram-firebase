@@ -42,7 +42,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     
     fileprivate func observePostsAddition(){
         guard let userUID = Auth.auth().currentUser?.uid else { return }
-        Database.database().reference().child("posts").child(userUID).observe(.childAdded) { [weak self] (snapShot) in
+        Database.database().reference().child("posts").child(userUID).queryOrdered(byChild: "creationDate").observe(.childAdded) { [weak self] (snapShot) in
             if let post = Post(snapshot: snapShot){
                 self?.fetchImages(with: post,completion: self?.loadImage)
             }
@@ -74,8 +74,8 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         if let image = UIImage(data: imageInfo.data){
             DispatchQueue.main.async {
                 self.collectionView?.numberOfItems(inSection: 0)
-                self.posts.append((image,imageInfo.post))
-                self.collectionView?.insertItems(at: [IndexPath(row: self.posts.count - 1, section: 0)])
+                self.posts.insert(((image,imageInfo.post)), at: 0)
+                self.collectionView?.insertItems(at: [IndexPath(row: 0, section: 0)])
             }
         }
     }
@@ -89,7 +89,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     }
     
     fileprivate func fetchImages(with post: Post, completion: (((Data,Post)) -> Void)?){
-        if let url = post.imageURL{
+        if let url = post.url{
             let session = URLSession(configuration: .default)
             session.dataTask(with: url, completionHandler: { (data, response, error) in
                 if let error = error{
