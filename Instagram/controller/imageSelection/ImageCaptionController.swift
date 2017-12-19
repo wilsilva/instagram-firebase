@@ -24,6 +24,12 @@ class ImageCaptionController: UIViewController {
         }
     }
     
+    let loadingIcon: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return activityIndicator
+    }()
+    
     let containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -34,6 +40,8 @@ class ImageCaptionController: UIViewController {
     let selectedImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
@@ -52,7 +60,8 @@ class ImageCaptionController: UIViewController {
     }
     
     fileprivate func setupViews(){
-        self.view.addSubview(containerView)
+        view.addSubview(containerView)
+        view.addSubview(loadingIcon)
         containerView.addSubview(selectedImageView)
         containerView.addSubview(captionTextView)
         
@@ -61,6 +70,9 @@ class ImageCaptionController: UIViewController {
         selectedImageView.anchors(top: containerView.topAnchor, right: nil, bottom: nil, left: containerView.leftAnchor, paddingTop: 8, paddingRight: 0, paddingBottom: 0, paddingLeft: 8, width: 84, height: 84)
         
         captionTextView.anchors(top: containerView.topAnchor, right: containerView.rightAnchor, bottom: containerView.bottomAnchor, left: selectedImageView.rightAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 8, width: 0, height: 0)
+        
+        loadingIcon.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        loadingIcon.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
     fileprivate func setupNavigationItems(navigationItem: UINavigationItem){
@@ -70,6 +82,7 @@ class ImageCaptionController: UIViewController {
     @objc fileprivate func shareHandler(){
         do {
             try uploadImage(selectedImage,imageCaption: self.captionTextView.text, completion: dismissScreen)
+            startLoadingAnimation()
         } catch ImageUpoadException.captionNotFound {
             Alert.showBasic("Upload Error", message: "Sorry, but you need to feel in the image caption", viewController: self, handler: nil)
         }catch ImageUpoadException.imageNotFound {
@@ -81,10 +94,16 @@ class ImageCaptionController: UIViewController {
         }
     }
     
+    fileprivate func startLoadingAnimation(){
+        navigationController?.navigationBar.disable()
+        loadingIcon.startAnimating()
+    }
+    
     fileprivate func uploadImage(_ image: UIImage, imageCaption: String? , completion: (() -> Void)?) throws{
         guard let uploadData = UIImageJPEGRepresentation(selectedImage, 0.5) else{throw ImageUpoadException.imageNotFound}
         guard let userUID = Auth.auth().currentUser?.uid else { throw ImageUpoadException.userNotLoggedIn }
         guard let imageCaption = imageCaption else {throw ImageUpoadException.captionNotFound}
+        
         if imageCaption.count <= 0{
             throw ImageUpoadException.captionNotFound
         }
