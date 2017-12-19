@@ -10,7 +10,7 @@ import UIKit
 
 class UISeparateNavigationController: UIViewController{
     
-    let imageSelectorNavigationController: UINavigationController = {
+    let imageSelectionNavigationController: UINavigationController = {
         let navigationController = UINavigationController()
         navigationController.view.translatesAutoresizingMaskIntoConstraints = false
         navigationController.navigationBar.isTranslucent = false
@@ -30,9 +30,9 @@ class UISeparateNavigationController: UIViewController{
     }
     
     func setupViews(){
-        view.addSubview(imageSelectorNavigationController.view)
-        imageSelectorNavigationController.view.anchors(top: nil, right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
-        navigationControllerTopAnchor = imageSelectorNavigationController.view.topAnchor.constraint(equalTo: view.topAnchor)
+        view.addSubview(imageSelectionNavigationController.view)
+        imageSelectionNavigationController.view.anchors(top: nil, right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
+        navigationControllerTopAnchor = imageSelectionNavigationController.view.topAnchor.constraint(equalTo: view.topAnchor)
         navigationControllerTopAnchor?.isActive = true
     }
     
@@ -41,7 +41,7 @@ class UISeparateNavigationController: UIViewController{
         if let rootViewController = rootViewController as? ImageSelectionController{
             rootViewController.separateNavigationControler = self
         }
-        imageSelectorNavigationController.viewControllers = [rootViewController]
+        imageSelectionNavigationController.viewControllers = [rootViewController]
     }
     
     required init?(coder aDecoder: NSCoder) {

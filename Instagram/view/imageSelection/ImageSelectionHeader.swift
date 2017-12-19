@@ -29,8 +29,8 @@ struct HeaderInfo{
     var scrollDirection: ScrollDirection
 }
 
-class ImageSelectorHeader: UIView {
-    static var ID = "imageSelectorHeaderId"
+class ImageSelectionHeader: UIView {
+    static var ID = "imageSelectionHeaderId"
     static let scrollableFrameHeight: CGFloat = 35
     var info = HeaderInfo(headerState: .opened, scrollState: .enabled, scrollDirection: .Up)
     
@@ -72,7 +72,7 @@ class ImageSelectorHeader: UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
         selectedImageView.anchors(top: topAnchor, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
         blackForeground.anchors(top: topAnchor, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
-        scrollableFrame.anchors(top: nil, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: ImageSelectorHeader.scrollableFrameHeight)
+        scrollableFrame.anchors(top: nil, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: ImageSelectionHeader.scrollableFrameHeight)
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -10,24 +10,24 @@ import Foundation
 import UIKit
 import Photos
 
-class ImageSelectorView: UIView, ImageSelectorViewProtocol{
+class ImageSelectionView: UIView, ImageSelectorViewProtocol{
     
     var controller: ImageSelectorControllerProtocol?
     var imageSelectorTopAnchor: NSLayoutConstraint?
     let imageSizeForCell = CGSize(width: 200, height: 200)
     let imageSizeForHeader = CGSize(width: 600, height: 600)
-    let header = ImageSelectorHeader()
+    let header = ImageSelectionHeader()
     let collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         return collectionView
     }()
     
     fileprivate func headerCanScrollUpFrom(_ currentLocation: CGPoint, header: UIView) -> Bool{
-        return currentLocation.y <= (header.frame.maxY - ImageSelectorHeader.scrollableFrameHeight)
+        return currentLocation.y <= (header.frame.maxY - ImageSelectionHeader.scrollableFrameHeight)
     }
     
     fileprivate func headerCanScrollDownFrom(_ currentLocation: CGPoint, header: UIView) -> Bool{
-        return currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height + ImageSelectorHeader.scrollableFrameHeight
+        return currentLocation.y <= header.frame.maxY && header.frame.maxY <= header.frame.height + ImageSelectionHeader.scrollableFrameHeight
     }
     
     fileprivate func collectionViewIsAtTheTop(_ currentLocation: CGPoint) -> Bool{
@@ -161,7 +161,7 @@ class ImageSelectorView: UIView, ImageSelectorViewProtocol{
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .white
-        collectionView.register(ImageSelectorCell.self, forCellWithReuseIdentifier: ImageSelectorCell.ID)
+        collectionView.register(ImageSelectionCell.self, forCellWithReuseIdentifier: ImageSelectionCell.ID)
         header.anchors(top: topAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: frame.width)
         collectionView.anchors(top: header.bottomAnchor, right: rightAnchor, bottom: bottomAnchor, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
     }
