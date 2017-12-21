@@ -7,8 +7,11 @@
 //
 
 import UIKit
-
+import Photos
+import Firebase
 class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+    
+    var posts = [Post]()
     
     let titleView: UIImageView = {
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
@@ -20,26 +23,50 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         return imageView
     }()
     
+    fileprivate func fetchPosts(completion: ((_ post: Post) -> Void)?){
+        guard let userId = Auth.auth().currentUser?.uid else {return}
+        Database.database().reference().child("posts").child(userId).queryOrdered(byChild: "creationDate").observeSingleEvent(of: .value) {(snapShot) in
+            for child in snapShot.children{
+                if let postSnapShot = child as? DataSnapshot, let post = Post(snapshot: postSnapShot){
+                    if let completion = completion{
+                        completion(post)
+                    }
+                }
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView?.backgroundColor = .white
-        self.collectionView?.dataSource = self
         collectionView?.register(PostCell.self, forCellWithReuseIdentifier: PostCell.ID)
+        fetchPosts(completion: loadPost)
         setupNavigationItems()
     }
     
+    fileprivate func loadPost(post: Post){
+        self.posts.append(post)
+        self.collectionView?.reloadData()
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return posts.count
+    }
+    
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCell.ID, for: indexPath)
-        cell.backgroundColor = .red
+        if let postCell = cell as? PostCell{
+            postCell.post = posts[indexPath.row]
+        }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 300)
+        return CGSize(width: view.frame.width, height: 500)
     }
     
     fileprivate func setupNavigationItems(){
