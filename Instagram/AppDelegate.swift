@@ -25,6 +25,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         return true
     }
+    
+    fileprivate func setupShorcutItems(){
+        var shortCutItem: UIApplicationShortcutItem?
+        if (Auth.auth().currentUser?.uid) != nil{
+            shortCutItem = UIApplicationShortcutItem(type: "UIApplicationShortcutIconTypePlay", localizedTitle: "Share post")
+        }else{
+            shortCutItem = UIApplicationShortcutItem(type: "UIApplicationShortcutIconTypePlay", localizedTitle: "Login")
+        }
+        UIApplication.shared.shortcutItems = [shortCutItem!]
+    }
+    
+    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+        
+        if shortcutItem.type == "UIApplicationShortcutIconTypePlay"{
+            window?.rootViewController = MainTabController()
+        }
+    }
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -37,6 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
+        setupShorcutItems()
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
     }
 
