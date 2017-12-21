@@ -35,7 +35,7 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
         self.imageSelectionView?.collectionView(delegate: self)
         self.imageSelectionView?.imageSelectorTopAnchor = separateNavigationControler?.navigationControllerTopAnchor
         setupNavigationItems(navigationItem: self.navigationItem)
-        fetchUserPhotos(withImageSize: imageSizeForCell,completion: loadImages)
+        fetchUserPhotos(withImageSize: imageSizeForCell,options:getFetchOptions(), completion: loadImages)
         self.imageSelectionView?.addHeaderTapGestureRecognizer(self, action: #selector(tapGestureRecognizerHandler))
         self.imageSelectionView?.addHeaderPanGestureRecognizer(self, target: self, action: #selector(panGestureRecognizerHandler))
     }
@@ -47,8 +47,8 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
         return options
     }
     
-    fileprivate func fetchUserPhotos(withImageSize imageSize: CGSize, completion: @escaping (((UIImage,PHAsset)) -> Void)){
-        let result = PHAsset.fetchAssets(with: .image, options: getFetchOptions())
+    fileprivate func fetchUserPhotos(withImageSize imageSize: CGSize,options: PHFetchOptions, completion: (((UIImage,PHAsset)) -> Void)?){
+        let result = PHAsset.fetchAssets(with: .image, options: options)
         DispatchQueue.global(qos: .background).async {
             result.enumerateObjects { (asset, count, stop) in
                 let imageManager = PHImageManager.default()
@@ -56,7 +56,9 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
                 options.isSynchronous = true
                 imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: options, resultHandler: { (image, info) in
                     if let image = image{
-                        completion((image,asset))
+                        if let completion = completion{
+                            completion((image,asset))
+                        }
                     }
                 })
             }
