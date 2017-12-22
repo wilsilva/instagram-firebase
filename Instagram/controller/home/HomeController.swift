@@ -66,7 +66,8 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 500)
+        let height = view.frame.width + 60 + 50 + 80
+        return CGSize(width: view.frame.width, height: height)
     }
     
     fileprivate func setupNavigationItems(){
