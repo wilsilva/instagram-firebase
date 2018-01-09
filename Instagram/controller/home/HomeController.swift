@@ -24,12 +24,19 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }()
     
     fileprivate func fetchPosts(completion: ((_ post: Post) -> Void)?){
-        guard let userId = Auth.auth().currentUser?.uid else {return}
-        Database.database().reference().child("posts").child(userId).queryOrdered(byChild: "creationDate").observeSingleEvent(of: .value) {(snapShot) in
+        guard Auth.auth().currentUser?.uid != nil else {return}
+        Database.database().reference().child("users").observeSingleEvent(of: .value) { (snapShot) in
             for child in snapShot.children{
-                if let postSnapShot = child as? DataSnapshot, let post = Post(snapshot: postSnapShot){
-                    if let completion = completion{
-                        completion(post)
+                if let userSnapshot = child as? DataSnapshot,let user = User(snapshot: userSnapshot){
+                    Database.database().reference().child("posts").child(userSnapshot.key).queryOrdered(byChild: "creationDate").observeSingleEvent(of: .value) {(snapShot) in
+                        for child in snapShot.children{
+                            if let postSnapShot = child as? DataSnapshot, let post = Post(snapshot: postSnapShot){
+                                post.user = user
+                                if let completion = completion{
+                                    completion(post)
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -39,18 +46,22 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView?.backgroundColor = .white
+        self.collectionView?.numberOfItems(inSection: 0)
         collectionView?.register(PostCell.self, forCellWithReuseIdentifier: PostCell.ID)
         fetchPosts(completion: loadPost)
         setupNavigationItems()
     }
     
     fileprivate func loadPost(post: Post){
-        self.posts.append(post)
-        self.collectionView?.reloadData()
+        DispatchQueue.main.async { [weak self] in
+            self?.posts.append(post)
+            self?.collectionView?.numberOfItems(inSection: 0)
+            self?.collectionView?.insertItems(at: [IndexPath(row: self!.posts.endIndex - 1, section: 0)])
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return posts.count
+        return self.posts.count
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {

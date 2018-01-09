@@ -115,7 +115,7 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
     }
     
     @objc func cancelHandler(){
-        UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+        separateNavigationControler?.dismiss(animated: true, completion: nil)
     }
     
     @objc func nextHandler(){

@@ -8,6 +8,7 @@
 
 import Foundation
 import Firebase
+
 class Post: NSObject{
     var caption: String?
     var url: URL?
@@ -15,6 +16,7 @@ class Post: NSObject{
     var uid: String?
     var imageHeight: CGFloat
     var imageWidth: CGFloat
+    var user: User?
     
     init?(snapshot: DataSnapshot) {
         guard !snapshot.key.isEmpty else{return nil}

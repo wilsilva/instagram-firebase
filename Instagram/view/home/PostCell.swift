@@ -9,9 +9,11 @@
 import Foundation
 import UIKit
 
+var imageCache = [String:UIImage?]()
+
 class PostCell: UICollectionViewCell{
     static var ID = "postCell"
-    var imageCache = [String:UIImage?]()
+    
     var post: Post?{
         didSet{
             loadPost()
@@ -53,7 +55,6 @@ class PostCell: UICollectionViewCell{
     let userName: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "NightLife"
         return label
     }()
     
@@ -117,6 +118,10 @@ class PostCell: UICollectionViewCell{
         setupViews()
     }
     
+    override func prepareForReuse() {
+        postImage.image = nil
+    }
+    
     fileprivate func setupViews(){
         addSubview(headerContainer)
         addSubview(postImage)
@@ -161,9 +166,18 @@ class PostCell: UICollectionViewCell{
                 }
                 
                 loadImageWith(url: url, completion: { [weak self] (data) in
-                    self?.imageCache[url.absoluteString] = UIImage(data: data)
+                    imageCache[url.absoluteString] = UIImage(data: data)
                     DispatchQueue.main.async {
                         self?.postImage.image = UIImage(data: data)
+                    }
+                })
+            }
+            
+            if let user = post.user{
+                userName.text = user.name
+                loadImageWith(url: user.profilePictureURL!, completion: { [weak self] (data) in
+                    DispatchQueue.main.async {
+                        self?.userProfileImage.image = UIImage(data: data)
                     }
                 })
             }
