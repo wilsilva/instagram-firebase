@@ -43,6 +43,7 @@ class PostCell: UICollectionViewCell{
         stackView.alignment = .fill
         stackView.axis = .vertical
         stackView.distribution = .fill
+        stackView.spacing = 4
         return stackView
     }()
     
@@ -54,48 +55,52 @@ class PostCell: UICollectionViewCell{
     
     let userName: UILabel = {
         let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     let moreOptions: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
+        button.setTitle("•••", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(#imageLiteral(resourceName: "send2").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.tintColor = .black
         return button
     }()
     
     let postImage: UIImageView = {
         let imageView = UIImageView()
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
     let likePost: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(#imageLiteral(resourceName: "like_unselected"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "like_unselected").withRenderingMode(.alwaysOriginal), for: .normal)
         return button
     }()
     
     let postComment: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(#imageLiteral(resourceName: "comment"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "comment").withRenderingMode(.alwaysOriginal), for: .normal)
         return button
     }()
     
     let sharePost: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(#imageLiteral(resourceName: "send2"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "send2").withRenderingMode(.alwaysOriginal), for: .normal)
         return button
     }()
     
     let savePost: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(#imageLiteral(resourceName: "ribbon"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "ribbon").withRenderingMode(.alwaysOriginal), for: .normal)
         return button
     }()
     
@@ -103,6 +108,7 @@ class PostCell: UICollectionViewCell{
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.s"
+        label.numberOfLines = 0
         return label
     }()
     
@@ -132,18 +138,19 @@ class PostCell: UICollectionViewCell{
         headerContainer.addSubview(userProfileImage)
         headerContainer.addSubview(userName)
         headerContainer.addSubview(moreOptions)
-        headerContainer.anchors(top: topAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: -16, paddingBottom: 0, paddingLeft: 0, width: 0, height: 60)
+        headerContainer.anchors(top: topAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: -16, paddingBottom: 0, paddingLeft: 8, width: 0, height: 60)
         
-        userProfileImage.anchors(top: nil, right: nil, bottom: nil, left: headerContainer.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 8, width: 35, height: 35)
-        userName.anchors(top: nil, right: nil, bottom: nil, left: userProfileImage.rightAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 8, width: 0, height: 0)
-        moreOptions.anchors(top: headerContainer.topAnchor, right: headerContainer.rightAnchor, bottom: nil, left: nil, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
+        userProfileImage.anchors(top: nil, right: nil, bottom: nil, left: headerContainer.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 35, height: 35)
+        userName.anchors(top: nil, right: moreOptions.leftAnchor, bottom: nil, left: userProfileImage.rightAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 8, width: 0, height: 0)
+        moreOptions.anchors(top: headerContainer.topAnchor, right: headerContainer.rightAnchor, bottom: nil, left: nil, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 44, height: 0)
         userName.centerYAnchor.constraint(equalTo: headerContainer.centerYAnchor, constant: 0).isActive = true
         userProfileImage.centerYAnchor.constraint(equalTo: headerContainer.centerYAnchor, constant: 0).isActive = true
         moreOptions.centerYAnchor.constraint(equalTo: userProfileImage.centerYAnchor, constant: 0).isActive = true
         
-        postImage.anchors(top: headerContainer.bottomAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 350)
+        postImage.anchors(top: headerContainer.bottomAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 0)
+        postImage.heightAnchor.constraint(equalTo: widthAnchor, multiplier: 1).isActive = true
         
-        footerContainer.anchors(top: postImage.bottomAnchor, right: nil, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 120, height: 56)
+        footerContainer.anchors(top: postImage.bottomAnchor, right: nil, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 120, height: 50)
         footerContainer.insertArrangedSubview(likePost, at: 0)
         footerContainer.insertArrangedSubview(postComment, at: 1)
         footerContainer.insertArrangedSubview(sharePost, at: 2)
