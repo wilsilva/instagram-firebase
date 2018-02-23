@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+  Instagram
+
+  Created by tiago turibio on 22/02/18.
+  Copyright © 2018 tiago turibio. All rights reserved.
+*/
+
+"followers" = "seguidores";
+"posts" = "posts";
+"follows" = "segue";
+"logout" = "Sair";
+"cancel" = "Cancelar";
+"edit_profile" = "Editar Perfil";

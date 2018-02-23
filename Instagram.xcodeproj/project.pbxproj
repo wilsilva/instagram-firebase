@@ -32,6 +32,7 @@
 		48920B3D1FA299D40097986C /* InstagramTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48920B3C1FA299D40097986C /* InstagramTests.swift */; };
 		48920B481FA299D40097986C /* InstagramUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48920B471FA299D40097986C /* InstagramUITests.swift */; };
 		48AAB3951FB11C1E0072771F /* UserProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AAB3941FB11C1E0072771F /* UserProfileHeader.swift */; };
+		48EAAFCE203F850F00C71496 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48EAAFD0203F850F00C71496 /* Localizable.strings */; };
 		48F9B4AE1FE9C3D100E2CD8D /* ImageSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F9B4AB1FE9C3D000E2CD8D /* ImageSelectionCell.swift */; };
 		48F9B4AF1FE9C3D100E2CD8D /* ImageSelectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F9B4AC1FE9C3D000E2CD8D /* ImageSelectionHeader.swift */; };
 		48F9B4B01FE9C3D100E2CD8D /* ImageSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F9B4AD1FE9C3D100E2CD8D /* ImageSelectorView.swift */; };
@@ -101,6 +102,9 @@
 		48920B471FA299D40097986C /* InstagramUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramUITests.swift; sourceTree = "<group>"; };
 		48920B491FA299D40097986C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48AAB3941FB11C1E0072771F /* UserProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileHeader.swift; sourceTree = "<group>"; };
+		48EAAFCB203F837D00C71496 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		48EAAFCF203F850F00C71496 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		48EAAFD1203F851200C71496 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		48F9B4AB1FE9C3D000E2CD8D /* ImageSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageSelectionCell.swift; path = Instagram/view/imageSelection/ImageSelectionCell.swift; sourceTree = SOURCE_ROOT; };
 		48F9B4AC1FE9C3D000E2CD8D /* ImageSelectionHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageSelectionHeader.swift; path = Instagram/view/imageSelection/ImageSelectionHeader.swift; sourceTree = SOURCE_ROOT; };
 		48F9B4AD1FE9C3D100E2CD8D /* ImageSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageSelectorView.swift; path = Instagram/view/imageSelection/ImageSelectorView.swift; sourceTree = SOURCE_ROOT; };
@@ -234,6 +238,7 @@
 		48920B181FA299D40097986C = {
 			isa = PBXGroup;
 			children = (
+				48EAAFD0203F850F00C71496 /* Localizable.strings */,
 				48920B231FA299D40097986C /* Instagram */,
 				48920B3B1FA299D40097986C /* InstagramTests */,
 				48920B461FA299D40097986C /* InstagramUITests */,
@@ -485,6 +490,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"pt-BR",
 			);
 			mainGroup = 48920B181FA299D40097986C;
 			productRefGroup = 48920B221FA299D40097986C /* Products */;
@@ -503,6 +509,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48EAAFCE203F850F00C71496 /* Localizable.strings in Resources */,
 				48920B321FA299D40097986C /* LaunchScreen.storyboard in Resources */,
 				488C439B1FAB4C3E00B667FC /* GoogleService-Info.plist in Resources */,
 				4821C9C11FB3D2AE00AF5D2F /* Assets.xcassets in Resources */,
@@ -766,8 +773,18 @@
 			isa = PBXVariantGroup;
 			children = (
 				48920B311FA299D40097986C /* Base */,
+				48EAAFCB203F837D00C71496 /* pt-BR */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		48EAAFD0203F850F00C71496 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				48EAAFCF203F850F00C71496 /* en */,
+				48EAAFD1203F851200C71496 /* pt-BR */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -777,6 +794,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -834,6 +852,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -886,7 +905,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = WZA5VVFPHP;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Instagram/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tgzoom.Instagram;
@@ -902,7 +921,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = WZA5VVFPHP;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Instagram/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tgzoom.Instagram;

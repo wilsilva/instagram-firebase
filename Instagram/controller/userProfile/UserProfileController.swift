@@ -110,7 +110,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     
     @objc func handleLogout(){
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { [weak self] (_) in
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("logout", comment: ""), style: .destructive, handler: { [weak self] (_) in
             do{
                 try Auth.auth().signOut()
                 self?.present(LoginNavigationController(), animated: true, completion: nil)
@@ -119,7 +119,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
             }
         }))
         
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (_) in
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: .cancel, handler: { (_) in
             
         }))
         

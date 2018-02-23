@@ -48,7 +48,7 @@ class PostCell: UICollectionViewCell{
     }()
     
     let userProfileImage: UIImageView = {
-        let imageView = UIImageView(image: #imageLiteral(resourceName: "plus_photo"))
+        let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -126,6 +126,7 @@ class PostCell: UICollectionViewCell{
     
     override func prepareForReuse() {
         postImage.image = nil
+        userProfileImage.image = nil
     }
     
     fileprivate func setupViews(){
@@ -161,11 +162,20 @@ class PostCell: UICollectionViewCell{
         commentsContainer.anchors(top: footerContainer.bottomAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 8, width: 0, height: 0)
         commentsContainer.insertArrangedSubview(postCaption, at: 0)
         commentsContainer.insertArrangedSubview(postDate, at: 1)
-        
     }
     
     func loadPost(){
         if let post = post{
+            
+            if let user = post.user{
+                userName.text = user.name
+                loadImageWith(url: user.profilePictureURL!, completion: { [weak self] (data) in
+                    DispatchQueue.main.async {
+                        self?.userProfileImage.image = UIImage(data: data)
+                    }
+                })
+            }
+            
             if let url = post.url{
                 if let cachedImage = imageCache[url.absoluteString]{
                     self.postImage.image = cachedImage
@@ -176,15 +186,6 @@ class PostCell: UICollectionViewCell{
                     imageCache[url.absoluteString] = UIImage(data: data)
                     DispatchQueue.main.async {
                         self?.postImage.image = UIImage(data: data)
-                    }
-                })
-            }
-            
-            if let user = post.user{
-                userName.text = user.name
-                loadImageWith(url: user.profilePictureURL!, completion: { [weak self] (data) in
-                    DispatchQueue.main.async {
-                        self?.userProfileImage.image = UIImage(data: data)
                     }
                 })
             }

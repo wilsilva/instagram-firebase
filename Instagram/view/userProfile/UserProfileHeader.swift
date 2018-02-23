@@ -110,7 +110,7 @@ class UserProfileHeader: UICollectionViewCell {
     
     let postsLabel: UILabel = {
         let label = UILabel()
-        label.text = "posts"
+        label.text = NSLocalizedString("posts", comment: "")
         label.textColor = UIColor(white: 0, alpha: 0.3)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -126,7 +126,7 @@ class UserProfileHeader: UICollectionViewCell {
     
     let followersLabel: UILabel = {
         let label = UILabel()
-        label.text = "followers"
+        label.text = NSLocalizedString("followers", comment: "")
         label.textColor = UIColor(white: 0, alpha: 0.3)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -142,7 +142,7 @@ class UserProfileHeader: UICollectionViewCell {
     
     let followsLabel: UILabel = {
         let label = UILabel()
-        label.text = "follows"
+        label.text = NSLocalizedString("follows", comment: "")
         label.textColor = UIColor(white: 0, alpha: 0.3)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -154,7 +154,7 @@ class UserProfileHeader: UICollectionViewCell {
         button.tintColor = UIColor.black
         button.layer.borderColor = UIColor.lightGray.cgColor
         button.layer.borderWidth = 0.5
-        button.setTitle("Edit Profile", for: .normal)
+        button.setTitle(NSLocalizedString("edit_profile", comment: ""), for: .normal)
         button.layer.cornerRadius = 3
         return button
     }()
