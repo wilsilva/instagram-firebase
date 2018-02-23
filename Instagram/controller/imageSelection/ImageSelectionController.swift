@@ -35,9 +35,27 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
         self.imageSelectionView?.collectionView(delegate: self)
         self.imageSelectionView?.imageSelectorTopAnchor = separateNavigationControler?.navigationControllerTopAnchor
         setupNavigationItems(navigationItem: self.navigationItem)
-        fetchUserPhotos(withImageSize: imageSizeForCell,options:getFetchOptions(), completion: loadImages)
         self.imageSelectionView?.addHeaderTapGestureRecognizer(self, action: #selector(tapGestureRecognizerHandler))
         self.imageSelectionView?.addHeaderPanGestureRecognizer(self, target: self, action: #selector(panGestureRecognizerHandler))
+        testPhotoLibraryPermission(status: PHPhotoLibrary.authorizationStatus())
+    }
+    
+    fileprivate func testPhotoLibraryPermission(status: PHAuthorizationStatus){
+        if status == .authorized{
+            fetchUserPhotos(withImageSize: imageSizeForCell,options:getFetchOptions(), completion: loadImages)
+        }else if status == .denied{
+            Alert.showBasic("Permission denied", message: "Sorry but we need your permission to access the photo library", viewController: self,handler: { (action) in
+                UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
+            })
+        }else if status == .notDetermined{
+            requestPhotoLibraryAuthorization()
+        }
+    }
+    
+    fileprivate func requestPhotoLibraryAuthorization(){
+        PHPhotoLibrary.requestAuthorization({ [weak self] (status) in
+           self?.testPhotoLibraryPermission(status: status)
+        })
     }
     
     fileprivate func getFetchOptions() -> PHFetchOptions{
