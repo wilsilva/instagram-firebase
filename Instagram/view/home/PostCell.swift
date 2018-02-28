@@ -191,6 +191,10 @@ class PostCell: UICollectionViewCell{
                     }
                 })
             }
+            
+            if let caption = post.caption{
+               self.postCaption.text = caption
+            }
         }
     }
     
