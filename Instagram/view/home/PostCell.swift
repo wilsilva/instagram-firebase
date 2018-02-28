@@ -50,6 +50,8 @@ class PostCell: UICollectionViewCell{
     let userProfileImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 17.5
+        imageView.clipsToBounds = true
         return imageView
     }()
     
