@@ -25,8 +25,8 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     fileprivate func fetchPosts(completion: ((_ post: Post) -> Void)?){
         guard let userID = Auth.auth().currentUser?.uid else {return}
-        Database.database().reference().child("users").child(userID).observeSingleEvent(of: .value) { (snapshot) in
-            if let user = User(snapshot:snapshot){
+        Database.fetchUser(with: userID) { (user) in
+            if let user = user{
                 Database.database().reference().child("posts").child(userID).queryOrdered(byChild: "creationDate").observeSingleEvent(of: .value) {(snapShot) in
                     for child in snapShot.children{
                         if let postSnapShot = child as? DataSnapshot, let post = Post(snapshot: postSnapShot){

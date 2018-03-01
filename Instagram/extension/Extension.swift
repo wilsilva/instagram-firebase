@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Firebase
 
 extension UIColor{
     static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor{
@@ -88,5 +89,16 @@ extension UIButton{
         self.layer.cornerRadius = self.frame.width / 2
         self.layer.masksToBounds = true
         self.setImage(image, for: state)
+    }
+}
+
+extension Database{
+    static func fetchUser(with UID: String, completion: ((User?) -> Void)?){
+        Database.database().reference().child("users").child(UID).observeSingleEvent(of: .value, with: { (snapshot) in
+            let user = User(snapshot: snapshot)
+            if let completion = completion{
+                completion(user)
+            }
+        })
     }
 }

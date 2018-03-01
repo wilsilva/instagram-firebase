@@ -192,10 +192,15 @@ class PostCell: UICollectionViewCell{
                 })
             }
             
-            if let caption = post.caption{
-               self.postCaption.text = caption
-            }
+            setupAttributedPostCaption(post: post)
         }
+    }
+    
+    fileprivate func setupAttributedPostCaption(post: Post){
+        guard let user = post.user else {return}
+        let attributedText = NSMutableAttributedString(string: user.name!, attributes: [.font: UIFont.boldSystemFont(ofSize: 15)])
+        attributedText.append(NSAttributedString(string: " "+post.caption!, attributes: [.font : UIFont.systemFont(ofSize: 15)]))
+        self.postCaption.attributedText = attributedText
     }
     
     fileprivate func loadImageWith(url imageUrl: URL, completion: ((_ data:Data)->Void)?){

@@ -11,7 +11,7 @@ import Firebase
 
 class UserProfileController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
-    var posts = [(image:UIImage,post:Post)]()
+    var posts = [Post]()
     var userProfilePictureURL: String?
     var user: User?{
         didSet{
@@ -44,7 +44,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         guard let userUID = Auth.auth().currentUser?.uid else { return }
         Database.database().reference().child("posts").child(userUID).queryOrdered(byChild: "creationDate").observe(.childAdded) { [weak self] (snapShot) in
             if let post = Post(snapshot: snapShot){
-                self?.fetchImages(with: post,completion: self?.loadImage)
+                self?.loadImage(post: post)
             }
         }
     }
@@ -53,7 +53,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         guard let userUID = Auth.auth().currentUser?.uid else { return }
         Database.database().reference().child("posts").child(userUID).observe(.childRemoved) { [weak self] (snapShot) in
             if let post = Post(snapshot: snapShot){
-                if let index = self?.posts.index(where: {$0.post.uid == post.uid}) {
+                if let index = self?.posts.index(where: {$0.uid == post.uid}) {
                     self?.remoteFromImage(from: index)
                 }
             }
@@ -62,21 +62,17 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     
     fileprivate func fetchUser() throws{
         guard let userUID = Auth.auth().currentUser?.uid else { throw FetchUserError.notLoggedIn }
-        Database.database().reference().child("users").child(userUID).observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
-            self?.user = User(snapshot: snapshot)
+        Database.fetchUser(with: userUID,completion: { [weak self] (user) in
+            self?.user = user
             self?.collectionView?.reloadData()
-        }) { (error) in
-            Alert.showBasic("Get user info error", message: error.localizedDescription, viewController: self, handler: nil)
-        }
+        })
     }
     
-    fileprivate func loadImage(_ imageInfo: (data:Data,post:Post)){
-        if let image = UIImage(data: imageInfo.data){
-            DispatchQueue.main.async {
-                self.collectionView?.numberOfItems(inSection: 0)
-                self.posts.insert(((image,imageInfo.post)), at: 0)
-                self.collectionView?.insertItems(at: [IndexPath(row: 0, section: 0)])
-            }
+    fileprivate func loadImage(post:Post){
+        DispatchQueue.main.async {
+            self.collectionView?.numberOfItems(inSection: 0)
+            self.posts.insert(post, at: 0)
+            self.collectionView?.insertItems(at: [IndexPath(row: 0, section: 0)])
         }
     }
     
@@ -145,7 +141,14 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PotsCellCollectionViewCell.ID, for: indexPath)
         if let postCell = cell as? PotsCellCollectionViewCell{
-            postCell.imageView.image = posts[indexPath.row].image
+            let post = self.posts[indexPath.row]
+            self.fetchImages(with: post, completion: { (data,post) in
+                if let image = UIImage(data: data){
+                    DispatchQueue.main.async {
+                        postCell.imageView.image = image
+                    }
+                }
+            })
         }
         return cell
     }
