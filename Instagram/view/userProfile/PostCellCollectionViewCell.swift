@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PotsCellCollectionViewCell: UICollectionViewCell {
+class PostCellCollectionViewCell: UICollectionViewCell {
     static let ID = "postCellID"
     let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -18,7 +18,10 @@ class PotsCellCollectionViewCell: UICollectionViewCell {
         imageView.backgroundColor = UIColor.lightGray
         return imageView
     }()
-    
+    override func prepareForReuse() {
+        imageView.image = nil
+        super.prepareForReuse()
+    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()

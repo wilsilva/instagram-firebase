@@ -12,6 +12,7 @@ import Firebase
 class UserProfileController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     var posts = [Post]()
+    var imageCache = [String:UIImage]()
     var userProfilePictureURL: String?
     var user: User?{
         didSet{
@@ -27,7 +28,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: UserProfileHeader.ID)
-        collectionView?.register(PotsCellCollectionViewCell.self, forCellWithReuseIdentifier: PotsCellCollectionViewCell.ID)
+        collectionView?.register(PostCellCollectionViewCell.self, forCellWithReuseIdentifier: PostCellCollectionViewCell.ID)
         setupNavigationItem(navigationItem)
         do {
            try fetchUser()
@@ -69,13 +70,10 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     }
     
     fileprivate func loadImage(post:Post){
-        DispatchQueue.main.async {
-            self.collectionView?.numberOfItems(inSection: 0)
-            self.posts.insert(post, at: 0)
-            self.collectionView?.insertItems(at: [IndexPath(row: 0, section: 0)])
-        }
+        self.collectionView?.numberOfItems(inSection: 0)
+        self.posts.insert(post, at: 0)
+        self.collectionView?.insertItems(at: [IndexPath(row: 0, section: 0)])
     }
-    
     fileprivate func remoteFromImage(from index:Int){
         DispatchQueue.main.async {
             self.collectionView?.numberOfItems(inSection: 0)
@@ -88,10 +86,10 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         if let url = post.url{
             let session = URLSession(configuration: .default)
             session.dataTask(with: url, completionHandler: { (data, response, error) in
-                if let error = error{
+                /*if let error = error{
                     Alert.showBasic("Error", message: error.localizedDescription, viewController: self, handler: nil)
                     return
-                }
+                }*/
                 
                 if let data = data, let completion = completion{
                     completion((data, post))
@@ -115,9 +113,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
             }
         }))
         
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: .cancel, handler: { (_) in
-            
-        }))
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: .cancel, handler: nil))
         
         present(alertController, animated: true, completion: nil)
     }
@@ -139,14 +135,23 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PotsCellCollectionViewCell.ID, for: indexPath)
-        if let postCell = cell as? PotsCellCollectionViewCell{
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCellCollectionViewCell.ID, for: indexPath)
+        if let postCell = cell as? PostCellCollectionViewCell{
             let post = self.posts[indexPath.row]
-            self.fetchImages(with: post, completion: { (data,post) in
-                if let image = UIImage(data: data){
-                    DispatchQueue.main.async {
+            let urlString = post.url?.absoluteString
+
+            if let image = imageCache[urlString!]{
+                postCell.imageView.image = image
+                return cell
+            }
+                
+            self.fetchImages(with: post, completion: { [weak self] (data,post) in
+                DispatchQueue.main.async {
+                    let image = UIImage(data: data)
+                    if urlString! == post.url!.absoluteString{
                         postCell.imageView.image = image
                     }
+                    self?.imageCache[post.url!.absoluteString] = image
                 }
             })
         }

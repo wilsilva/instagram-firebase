@@ -27,13 +27,11 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         guard let userID = Auth.auth().currentUser?.uid else {return}
         Database.fetchUser(with: userID) { (user) in
             if let user = user{
-                Database.database().reference().child("posts").child(userID).queryOrdered(byChild: "creationDate").observeSingleEvent(of: .value) {(snapShot) in
-                    for child in snapShot.children{
-                        if let postSnapShot = child as? DataSnapshot, let post = Post(snapshot: postSnapShot){
-                            post.user = user
-                            if let completion = completion{
-                                completion(post)
-                            }
+                Database.database().reference().child("posts").child(userID).queryOrdered(byChild: "creationDate").observe(.childAdded) {(snapshot) in
+                    if let post = Post(snapshot: snapshot){
+                        post.user = user
+                        if let completion = completion{
+                            completion(post)
                         }
                     }
                 }
@@ -52,9 +50,9 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     fileprivate func loadPost(post: Post){
         DispatchQueue.main.async { [weak self] in
-            self?.posts.append(post)
+            self?.posts.insert(post, at: 0)
             self?.collectionView?.numberOfItems(inSection: 0)
-            self?.collectionView?.insertItems(at: [IndexPath(row: self!.posts.endIndex - 1, section: 0)])
+            self?.collectionView?.insertItems(at: [IndexPath(row: 0, section: 0)])
         }
     }
     

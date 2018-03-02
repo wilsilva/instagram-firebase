@@ -44,9 +44,9 @@
 		7D1FC7017931A0BE0EE334D6 /* Pods_Instagram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70A4F601699D38F6B1D09E23 /* Pods_Instagram.framework */; };
 		8C0604091FDEA1D80036E507 /* ImageSelectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C0604081FDEA1D80036E507 /* ImageSelectorProtocol.swift */; };
 		8C3699AC1FB20D59005CAA2D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3699AB1FB20D59005CAA2D /* User.swift */; };
+		8C56710A2049D1C100BE7120 /* PostCellCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C5671092049D1C100BE7120 /* PostCellCollectionViewCell.swift */; };
 		8C6C03691FD8556D000085AD /* ImageSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6C03681FD8556D000085AD /* ImageSelectorViewController.swift */; };
 		8C7FBBEB1FE2D7A300F46439 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7FBBEA1FE2D7A300F46439 /* Post.swift */; };
-		8C7FBBED1FE2DAF600F46439 /* PotsCellCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7FBBEC1FE2DAF600F46439 /* PotsCellCollectionViewCell.swift */; };
 		8CBE5F691FB46B4C00F227A2 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBE5F681FB46B4C00F227A2 /* LoginController.swift */; };
 		8CBE5F6B1FB4B68400F227A2 /* LoginNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBE5F6A1FB4B68400F227A2 /* LoginNavigationController.swift */; };
 /* End PBXBuildFile section */
@@ -115,9 +115,9 @@
 		70A4F601699D38F6B1D09E23 /* Pods_Instagram.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Instagram.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C0604081FDEA1D80036E507 /* ImageSelectorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSelectorProtocol.swift; sourceTree = "<group>"; };
 		8C3699AB1FB20D59005CAA2D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		8C5671092049D1C100BE7120 /* PostCellCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCellCollectionViewCell.swift; sourceTree = "<group>"; };
 		8C6C03681FD8556D000085AD /* ImageSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageSelectorViewController.swift; sourceTree = "<group>"; };
 		8C7FBBEA1FE2D7A300F46439 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
-		8C7FBBEC1FE2DAF600F46439 /* PotsCellCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PotsCellCollectionViewCell.swift; sourceTree = "<group>"; };
 		8CBE5F681FB46B4C00F227A2 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		8CBE5F6A1FB4B68400F227A2 /* LoginNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginNavigationController.swift; sourceTree = "<group>"; };
 		944C9E5B9F3C1892F00F7044 /* Pods_InstagramUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InstagramUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -379,7 +379,7 @@
 			isa = PBXGroup;
 			children = (
 				48AAB3941FB11C1E0072771F /* UserProfileHeader.swift */,
-				8C7FBBEC1FE2DAF600F46439 /* PotsCellCollectionViewCell.swift */,
+				8C5671092049D1C100BE7120 /* PostCellCollectionViewCell.swift */,
 			);
 			path = userProfile;
 			sourceTree = "<group>";
@@ -712,8 +712,8 @@
 				48F9B4B61FE9C7BB00E2CD8D /* PostCell.swift in Sources */,
 				48275FB01FD619B300F5CC41 /* UISeparateNavigationController.swift in Sources */,
 				8C3699AC1FB20D59005CAA2D /* User.swift in Sources */,
+				8C56710A2049D1C100BE7120 /* PostCellCollectionViewCell.swift in Sources */,
 				483DA7711FB1133900702266 /* UserProfileController.swift in Sources */,
-				8C7FBBED1FE2DAF600F46439 /* PotsCellCollectionViewCell.swift in Sources */,
 				8CBE5F6B1FB4B68400F227A2 /* LoginNavigationController.swift in Sources */,
 				486298371FB7AEB4005EFF69 /* LoginView.swift in Sources */,
 				482017F11FABCE050080B18B /* Alert.swift in Sources */,
@@ -907,6 +907,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 27E9959VWR;
 				INFOPLIST_FILE = Instagram/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tgzoom.Instagram;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -923,6 +924,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 27E9959VWR;
 				INFOPLIST_FILE = Instagram/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tgzoom.Instagram;
 				PRODUCT_NAME = "$(TARGET_NAME)";

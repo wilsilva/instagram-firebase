@@ -187,7 +187,9 @@ class PostCell: UICollectionViewCell{
                 loadImageWith(url: url, completion: { [weak self] (data) in
                     imageCache[url.absoluteString] = UIImage(data: data)
                     DispatchQueue.main.async {
-                        self?.postImage.image = UIImage(data: data)
+                        if url == post.url{
+                            self?.postImage.image = UIImage(data: data)
+                        }
                     }
                 })
             }
