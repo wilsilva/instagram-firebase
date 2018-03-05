@@ -49,6 +49,8 @@
 		8C7FBBEB1FE2D7A300F46439 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7FBBEA1FE2D7A300F46439 /* Post.swift */; };
 		8CBE5F691FB46B4C00F227A2 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBE5F681FB46B4C00F227A2 /* LoginController.swift */; };
 		8CBE5F6B1FB4B68400F227A2 /* LoginNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBE5F6A1FB4B68400F227A2 /* LoginNavigationController.swift */; };
+		8CCB5147204DAF6D001CD5D1 /* UserSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCB5146204DAF6D001CD5D1 /* UserSearchController.swift */; };
+		8CCB514A204DC5FF001CD5D1 /* UserSearchCellCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CCB5149204DC5FE001CD5D1 /* UserSearchCellCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -120,6 +122,8 @@
 		8C7FBBEA1FE2D7A300F46439 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		8CBE5F681FB46B4C00F227A2 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		8CBE5F6A1FB4B68400F227A2 /* LoginNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginNavigationController.swift; sourceTree = "<group>"; };
+		8CCB5146204DAF6D001CD5D1 /* UserSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchController.swift; sourceTree = "<group>"; };
+		8CCB5149204DC5FE001CD5D1 /* UserSearchCellCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearchCellCollectionViewCell.swift; sourceTree = "<group>"; };
 		944C9E5B9F3C1892F00F7044 /* Pods_InstagramUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InstagramUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EE753E6DE72200C78035040 /* Pods-Instagram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Instagram/Pods-Instagram.debug.xcconfig"; sourceTree = "<group>"; };
 		B800594F1F3B05E2F160D273 /* Pods-InstagramTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstagramTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-InstagramTests/Pods-InstagramTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -158,6 +162,7 @@
 		482017EF1FABCDF60080B18B /* view */ = {
 			isa = PBXGroup;
 			children = (
+				8CCB5148204DC5DF001CD5D1 /* search */,
 				48F9B4B41FE9C7A400E2CD8D /* home */,
 				48F9B4AA1FE9C3C000E2CD8D /* imageSelection */,
 				8C7D60161FC87BE40023B62D /* helpers */,
@@ -357,6 +362,7 @@
 		8C3699AD1FB22462005CAA2D /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				8CCB5143204DAED3001CD5D1 /* search */,
 				48F9B4B11FE9C44A00E2CD8D /* home */,
 				482340F51FBA6FEE00C2B333 /* navigationTab */,
 				482340F81FBA701F00C2B333 /* userProfile */,
@@ -390,6 +396,22 @@
 				482017F01FABCE050080B18B /* Alert.swift */,
 			);
 			path = helpers;
+			sourceTree = "<group>";
+		};
+		8CCB5143204DAED3001CD5D1 /* search */ = {
+			isa = PBXGroup;
+			children = (
+				8CCB5146204DAF6D001CD5D1 /* UserSearchController.swift */,
+			);
+			path = search;
+			sourceTree = "<group>";
+		};
+		8CCB5148204DC5DF001CD5D1 /* search */ = {
+			isa = PBXGroup;
+			children = (
+				8CCB5149204DC5FE001CD5D1 /* UserSearchCellCollectionViewCell.swift */,
+			);
+			path = search;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -715,7 +737,9 @@
 				8C56710A2049D1C100BE7120 /* PostCellCollectionViewCell.swift in Sources */,
 				483DA7711FB1133900702266 /* UserProfileController.swift in Sources */,
 				8CBE5F6B1FB4B68400F227A2 /* LoginNavigationController.swift in Sources */,
+				8CCB514A204DC5FF001CD5D1 /* UserSearchCellCollectionViewCell.swift in Sources */,
 				486298371FB7AEB4005EFF69 /* LoginView.swift in Sources */,
+				8CCB5147204DAF6D001CD5D1 /* UserSearchController.swift in Sources */,
 				482017F11FABCE050080B18B /* Alert.swift in Sources */,
 				8C7FBBEB1FE2D7A300F46439 /* Post.swift in Sources */,
 				482F4E421FB6541200D821F5 /* FavouritesNavigationController.swift in Sources */,

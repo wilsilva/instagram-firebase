@@ -144,17 +144,18 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
                 postCell.imageView.image = image
                 return cell
             }
-                
+            
             self.fetchImages(with: post, completion: { [weak self] (data,post) in
                 DispatchQueue.main.async {
                     let image = UIImage(data: data)
-                    if urlString! == post.url!.absoluteString{
+                    if urlString! == post.url!.absoluteString, postCell.imageView.image == nil{
                         postCell.imageView.image = image
                     }
                     self?.imageCache[post.url!.absoluteString] = image
                 }
             })
         }
+        
         return cell
     }
     

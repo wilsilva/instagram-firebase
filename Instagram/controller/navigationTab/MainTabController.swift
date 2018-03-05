@@ -43,11 +43,11 @@ class MainTabController: UITabBarController,UITabBarControllerDelegate {
         let userProfileController = UserProfileController(collectionViewLayout: UICollectionViewFlowLayout())
         let homeController = HomeController(collectionViewLayout: UICollectionViewFlowLayout())
         return [
+            SearchNavigationController(rootViewController: UserSearchController(collectionViewLayout: UICollectionViewFlowLayout())),
             HomeNavigationController(rootViewController: homeController),
-            SearchNavigationController(rootViewController: UIViewController()),
             AddPhotosNavigationController(rootViewController: UIViewController()),
             FavouritesNavigationController(rootViewController: UIViewController()),
-            UserProfileNavigationController(rootViewController: userProfileController)
+            UserProfileNavigationController(rootViewController: userProfileController),
         ]
     }
     

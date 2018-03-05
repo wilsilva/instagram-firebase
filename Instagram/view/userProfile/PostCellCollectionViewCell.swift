@@ -10,6 +10,7 @@ import UIKit
 
 class PostCellCollectionViewCell: UICollectionViewCell {
     static let ID = "postCellID"
+    
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -18,10 +19,12 @@ class PostCellCollectionViewCell: UICollectionViewCell {
         imageView.backgroundColor = UIColor.lightGray
         return imageView
     }()
+    
     override func prepareForReuse() {
         imageView.image = nil
         super.prepareForReuse()
     }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
