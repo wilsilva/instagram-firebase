@@ -9,7 +9,7 @@
 import UIKit
 
 class UserSearchCellCollectionViewCell: UICollectionViewCell {
-    
+
     var user: User?{
         didSet{
             loadUser()
@@ -80,34 +80,24 @@ class UserSearchCellCollectionViewCell: UICollectionViewCell {
     }
     
     fileprivate func loadUser(){
-        
         if let user = user{
             userName.text = user.name
+            
             if let url = user.profilePictureURL{
-                loadImageWith(url: url, completion: { [weak self] (data) in
-                    if let image = UIImage(data: data){
-                        DispatchQueue.main.async {
-                            self?.userProfilePicture.image = image
+                
+                if let cachedImage = userProfileCache[url.absoluteString]{
+                    self.userProfilePicture.image = cachedImage
+                }else{
+                    self.userProfilePicture.loadImageWith(url: url, completion: { [weak self] (data) in
+                        userProfileCache[url.absoluteString] = UIImage(data: data)
+                        if let image = UIImage(data: data){
+                            DispatchQueue.main.async {
+                                self?.userProfilePicture.image = image
+                            }
                         }
-                    }
-                })
-            }
-        }
-        
-    }
-    
-    private func loadImageWith(url imageUrl: URL, completion: ((_ data:Data)->Void)?){
-        let session = URLSession(configuration: .default)
-        session.dataTask(with: imageUrl) { (data, response, error) in
-            if let error = error{
-                print(error)
-                return
-            }
-            if let data = data{
-                if let completion = completion{
-                    completion(data)
+                    })
                 }
             }
-            }.resume()
+        }
     }
 }

@@ -63,9 +63,11 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     
     fileprivate func fetchUser() throws{
         guard let userUID = Auth.auth().currentUser?.uid else { throw FetchUserError.notLoggedIn }
-        Database.fetchUser(with: userUID,completion: { [weak self] (user) in
-            self?.user = user
-            self?.collectionView?.reloadData()
+        Database.fetchUser(with: userUID,completion: { (user) in
+            DispatchQueue.main.async { [weak self] in
+                self?.user = user
+                self?.collectionView?.reloadSections(IndexSet(integer: 0))
+            }
         })
     }
     
@@ -86,11 +88,6 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         if let url = post.url{
             let session = URLSession(configuration: .default)
             session.dataTask(with: url, completionHandler: { (data, response, error) in
-                /*if let error = error{
-                    Alert.showBasic("Error", message: error.localizedDescription, viewController: self, handler: nil)
-                    return
-                }*/
-                
                 if let data = data, let completion = completion{
                     completion((data, post))
                 }

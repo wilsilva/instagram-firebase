@@ -229,18 +229,15 @@ class UserProfileHeader: UICollectionViewCell {
     
     func updateUI(){
         if let url = user?.profilePictureURL{
-            let session = URLSession(configuration: .default)
-            session.dataTask(with: url, completionHandler: { (data, response, error) in
-                if let error = error{
-                    print(error)
-                    return
-                }
-                if let data = data{
+            if let cachedImage = userProfileCache[url.absoluteString]{
+                userProfileImage.image = cachedImage
+            }else{
+                self.userProfileImage.loadImageWith(url: url, completion: { (data) in
                     DispatchQueue.main.async { [weak self] in
                         self?.userProfileImage.image = UIImage(data: data)
                     }
-                }
-            }).resume()
+                })
+            }
         }
         
         if let name = user?.name{

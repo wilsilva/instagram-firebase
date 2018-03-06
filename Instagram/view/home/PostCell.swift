@@ -9,7 +9,8 @@
 import Foundation
 import UIKit
 
-var imageCache = [String:UIImage?]()
+public var imageCache = [String:UIImage?]()
+public var userProfileCache = [String:UIImage?]()
 
 class PostCell: UICollectionViewCell{
     static var ID = "postCell"
@@ -171,29 +172,35 @@ class PostCell: UICollectionViewCell{
             
             if let user = post.user{
                 userName.text = user.name
-                loadImageWith(url: user.profilePictureURL!, completion: { [weak self] (data) in
-                    DispatchQueue.main.async {
-                        self?.userProfileImage.image = UIImage(data: data)
+                
+                if let url = user.profilePictureURL{
+                    if let cachedImage = userProfileCache[url.absoluteString]{
+                        self.userProfileImage.image = cachedImage
+                    }else{
+                        self.userProfileImage.loadImageWith(url: url, completion: { [weak self] (data) in
+                            DispatchQueue.main.async {
+                                self?.userProfileImage.image = UIImage(data: data)
+                                userProfileCache[url.absoluteString] = UIImage(data: data)
+                            }
+                        })
                     }
-                })
+                }
             }
             
             if let url = post.url{
                 if let cachedImage = imageCache[url.absoluteString]{
                     self.postImage.image = cachedImage
-                    return
-                }
-                
-                loadImageWith(url: url, completion: { [weak self] (data) in
-                    imageCache[url.absoluteString] = UIImage(data: data)
-                    DispatchQueue.main.async {
-                        if url == post.url{
-                            self?.postImage.image = UIImage(data: data)
+                }else{
+                    self.postImage.loadImageWith(url: url, completion: { [weak self] (data) in
+                        imageCache[url.absoluteString] = UIImage(data: data)
+                        DispatchQueue.main.async {
+                            if url == post.url{
+                                self?.postImage.image = UIImage(data: data)
+                            }
                         }
-                    }
-                })
+                    })
+                }
             }
-            
             setupAttributedPostCaption(post: post)
         }
     }
@@ -203,21 +210,6 @@ class PostCell: UICollectionViewCell{
         let attributedText = NSMutableAttributedString(string: user.name!, attributes: [.font: UIFont.boldSystemFont(ofSize: 15)])
         attributedText.append(NSAttributedString(string: " "+post.caption!, attributes: [.font : UIFont.systemFont(ofSize: 15)]))
         self.postCaption.attributedText = attributedText
-    }
-    
-    fileprivate func loadImageWith(url imageUrl: URL, completion: ((_ data:Data)->Void)?){
-        let session = URLSession(configuration: .default)
-        session.dataTask(with: imageUrl) { (data, response, error) in
-            if let error = error{
-                print(error)
-                return
-            }
-            if let data = data{
-                if let completion = completion{
-                    completion(data)
-                }
-            }
-            }.resume()
     }
     
     required init?(coder aDecoder: NSCoder) {

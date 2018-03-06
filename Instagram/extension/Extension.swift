@@ -102,3 +102,20 @@ extension Database{
         })
     }
 }
+
+extension UIImageView{
+    func loadImageWith(url imageUrl: URL, completion: ((_ data:Data)->Void)?){
+        let session = URLSession(configuration: .default)
+        session.dataTask(with: imageUrl) { (data, response, error) in
+            if let error = error{
+                print(error)
+                return
+            }
+            if let data = data{
+                if let completion = completion{
+                    completion(data)
+                }
+            }
+            }.resume()
+    }
+}
