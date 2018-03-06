@@ -10,42 +10,64 @@ import UIKit
 
 class UserSearchCellCollectionViewCell: UICollectionViewCell {
     
+    var user: User?{
+        didSet{
+            loadUser()
+        }
+    }
+    
     static let ID = "UserSearchCellCollectionViewCell"
+    
+    let userSearchStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .fillProportionally
+        stackView.alignment = .fill
+        stackView.spacing = 6
+        return stackView
+    }()
     
     let userProfilePicture: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 30
+        imageView.layer.cornerRadius = 17.5
         imageView.clipsToBounds = true
-        imageView.image = UIImage(named: "grid")
         return imageView
     }()
     
     let userName: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "tiago"
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.font = UIFont.boldSystemFont(ofSize: 10)
         return label
     }()
     
     let numberOfPosts: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "100 Posts"
+        label.font = UIFont.systemFont(ofSize: 8)
+        label.textColor = UIColor(white: 0, alpha: 0.3)
         return label
     }()
     
     fileprivate func setupViews(){
+        
+        addSubview(userSearchStackView)
         addSubview(userProfilePicture)
-        addSubview(userName)
-        addSubview(numberOfPosts)
+
+        userProfilePicture.anchors(top: nil, right: nil, bottom: nil, left: leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 8, width: 35, height: 35)
+        userProfilePicture.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
-        userProfilePicture.anchors(top: topAnchor, right: nil, bottom: nil, left: leftAnchor, paddingTop: 8, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 60, height: 60)
-        userName.anchors(top: userProfilePicture.topAnchor, right: nil, bottom: nil, left: userProfilePicture.rightAnchor, paddingTop: 8, paddingRight: 0, paddingBottom: 0, paddingLeft: 8, width: 0, height: 0)
-        numberOfPosts.anchors(top: userName.bottomAnchor, right: nil, bottom: nil, left: userProfilePicture.rightAnchor, paddingTop: 8, paddingRight: 0, paddingBottom: 0, paddingLeft: 8, width: 0, height: 0)
+        userSearchStackView.anchors(top: nil, right: rightAnchor, bottom: nil, left: userProfilePicture.rightAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 8, width: 0, height: 0)
         
-        insertDivider(with: .lightGray, top: userProfilePicture.bottomAnchor, right: rightAnchor, bottom: nil, left: leftAnchor, paddingTop: 8, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 1)
+        userSearchStackView.centerYAnchor.constraint(equalTo: userProfilePicture.centerYAnchor).isActive = true
+        
+        userSearchStackView.insertArrangedSubview(userName, at: 0)
+        userSearchStackView.insertArrangedSubview(numberOfPosts, at: 1)
+
+        insertDivider(with: UIColor(white: 0, alpha: 0.3), top: bottomAnchor, right: rightAnchor, bottom: nil, left: userSearchStackView.leftAnchor, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, width: 0, height: 1)
+ 
     }
     
     override init(frame: CGRect) {
@@ -55,5 +77,37 @@ class UserSearchCellCollectionViewCell: UICollectionViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    fileprivate func loadUser(){
+        
+        if let user = user{
+            userName.text = user.name
+            if let url = user.profilePictureURL{
+                loadImageWith(url: url, completion: { [weak self] (data) in
+                    if let image = UIImage(data: data){
+                        DispatchQueue.main.async {
+                            self?.userProfilePicture.image = image
+                        }
+                    }
+                })
+            }
+        }
+        
+    }
+    
+    private func loadImageWith(url imageUrl: URL, completion: ((_ data:Data)->Void)?){
+        let session = URLSession(configuration: .default)
+        session.dataTask(with: imageUrl) { (data, response, error) in
+            if let error = error{
+                print(error)
+                return
+            }
+            if let data = data{
+                if let completion = completion{
+                    completion(data)
+                }
+            }
+            }.resume()
     }
 }
