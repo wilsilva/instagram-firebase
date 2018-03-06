@@ -66,7 +66,7 @@ class UserSearchController: UICollectionViewController,UICollectionViewDelegateF
     }
     
     fileprivate func fetchUsers(){
-        Database.database().reference().child("users").queryOrdered(byChild: "name").observeSingleEvent(of: .value) { (snapshot) in
+        Database.database().reference().child("users").observeSingleEvent(of: .value) { (snapshot) in
             snapshot.children.forEach({ (value) in
                 if let userSnapshot = value as? DataSnapshot{
                     if let user = User(snapshot: userSnapshot){
@@ -80,15 +80,24 @@ class UserSearchController: UICollectionViewController,UICollectionViewDelegateF
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
+        self.filteredUsers = filterUsers(users: users, searchText: searchText)
+        collectionView?.reloadData()
+    }
+    
+    private func filterUsers(users: [User], searchText: String) -> [User]{
+        let filteredUsers: [User]
         if searchText.isEmpty{
-            self.filteredUsers = self.users
+            filteredUsers = users
         }else{
-            self.filteredUsers = users.filter { (user) -> Bool in
+            filteredUsers = users.filter { (user) -> Bool in
                 return user.name!.lowercased().contains(searchText.lowercased())
             }
         }
         
-        collectionView?.reloadData()
+        filteredUsers.sort { (user1, user2) -> Bool in
+            return user1.name!.compare(user2.name!) == .orderedDescending
+        }
+        
+        return filteredUsers
     }
 }
