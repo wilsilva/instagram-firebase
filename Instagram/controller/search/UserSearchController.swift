@@ -69,7 +69,7 @@ class UserSearchController: UICollectionViewController,UICollectionViewDelegateF
         Database.database().reference().child("users").observeSingleEvent(of: .value) { (snapshot) in
             snapshot.children.forEach({ (value) in
                 if let userSnapshot = value as? DataSnapshot{
-                    if let user = User(snapshot: userSnapshot){
+                    if let user = User(snapshot: userSnapshot),user.uid != Auth.auth().currentUser?.uid{
                         self.users.append(user)
                     }
                 }
@@ -99,5 +99,18 @@ class UserSearchController: UICollectionViewController,UICollectionViewDelegateF
         }
         
         return filteredUsers
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let user = filteredUsers[indexPath.item]
+        searchBar.resignFirstResponder()
+        openUserProfile(user: user)
+    }
+    
+    fileprivate func openUserProfile(user: User){
+       let userProfileController = UserProfileController(collectionViewLayout: UICollectionViewFlowLayout())
+        userProfileController.userUID = user.uid
+        userProfileController.hideFollowButton = false
+        navigationController?.pushViewController(userProfileController, animated: true)
     }
 }

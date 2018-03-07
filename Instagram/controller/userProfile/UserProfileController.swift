@@ -10,15 +10,19 @@ import UIKit
 import Firebase
 
 class UserProfileController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    
+    var hideFollowButton: Bool = true
     var posts = [Post]()
     var imageCache = [String:UIImage]()
     var userProfilePictureURL: String?
     var user: User?{
         didSet{
             navigationItem.title = user?.name
+            observePostsAddition()
+            observePostsDeletion()
         }
     }
+    
+    var userUID: String?
     
     enum FetchUserError: Error{
         case notLoggedIn
@@ -30,10 +34,9 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         collectionView?.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: UserProfileHeader.ID)
         collectionView?.register(PostCellCollectionViewCell.self, forCellWithReuseIdentifier: PostCellCollectionViewCell.ID)
         setupNavigationItem(navigationItem)
+
         do {
-           try fetchUser()
-           observePostsAddition()
-           observePostsDeletion()
+            try fetchUser()
         }catch FetchUserError.notLoggedIn{
             Alert.showBasic("User Error", message: "Sorry but you have to log in", viewController: self, handler: nil)
         }catch{
@@ -42,7 +45,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     }
     
     fileprivate func observePostsAddition(){
-        guard let userUID = Auth.auth().currentUser?.uid else { return }
+        guard let userUID = user?.uid else{ return}
         Database.database().reference().child("posts").child(userUID).queryOrdered(byChild: "creationDate").observe(.childAdded) { [weak self] (snapShot) in
             if let post = Post(snapshot: snapShot){
                 self?.loadImage(post: post)
@@ -51,18 +54,18 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     }
     
     fileprivate func observePostsDeletion(){
-        guard let userUID = Auth.auth().currentUser?.uid else { return }
+        guard let userUID = user?.uid else{ return}
         Database.database().reference().child("posts").child(userUID).observe(.childRemoved) { [weak self] (snapShot) in
             if let post = Post(snapshot: snapShot){
                 if let index = self?.posts.index(where: {$0.uid == post.uid}) {
-                    self?.remoteFromImage(from: index)
+                    self?.removeImage(from: index)
                 }
             }
         }
     }
     
     fileprivate func fetchUser() throws{
-        guard let userUID = Auth.auth().currentUser?.uid else { throw FetchUserError.notLoggedIn }
+        guard let userUID = self.userUID ?? Auth.auth().currentUser?.uid else{throw FetchUserError.notLoggedIn}
         Database.fetchUser(with: userUID,completion: { (user) in
             DispatchQueue.main.async { [weak self] in
                 self?.user = user
@@ -76,7 +79,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         self.posts.insert(post, at: 0)
         self.collectionView?.insertItems(at: [IndexPath(row: 0, section: 0)])
     }
-    fileprivate func remoteFromImage(from index:Int){
+    fileprivate func removeImage(from index:Int){
         DispatchQueue.main.async {
             self.collectionView?.numberOfItems(inSection: 0)
             self.posts.remove(at: index)
@@ -122,6 +125,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: UserProfileHeader.ID, for: indexPath)
         if let userProfileHeader = header as? UserProfileHeader{
+            userProfileHeader.hideFollowButton = self.hideFollowButton
             userProfileHeader.user = self.user
         }
         return header

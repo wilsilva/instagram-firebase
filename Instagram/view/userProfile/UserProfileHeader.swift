@@ -17,6 +17,8 @@ class UserProfileHeader: UICollectionViewCell {
         }
     }
     
+    var hideFollowButton: Bool = true
+    
     let postsStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -242,6 +244,17 @@ class UserProfileHeader: UICollectionViewCell {
         
         if let name = user?.name{
             userNameLabel.text = name
+        }
+        
+        setupEditFollowButton()
+        
+    }
+    
+    func setupEditFollowButton(){
+        if hideFollowButton{
+            editProfileButton.setTitle(NSLocalizedString("edit_profile", comment: ""), for: .normal)
+        }else{
+            editProfileButton.setTitle(NSLocalizedString("follow", comment: ""), for: .normal)
         }
     }
 }

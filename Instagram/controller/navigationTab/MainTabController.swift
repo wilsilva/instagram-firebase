@@ -41,6 +41,7 @@ class MainTabController: UITabBarController,UITabBarControllerDelegate {
     
     func getControllersList() -> [MainMenuNavigationController]{
         let userProfileController = UserProfileController(collectionViewLayout: UICollectionViewFlowLayout())
+        userProfileController.hideFollowButton = true
         let homeController = HomeController(collectionViewLayout: UICollectionViewFlowLayout())
         return [
             HomeNavigationController(rootViewController: homeController),
