@@ -35,13 +35,15 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         collectionView?.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: UserProfileHeader.ID)
         collectionView?.register(PostCellCollectionViewCell.self, forCellWithReuseIdentifier: PostCellCollectionViewCell.ID)
         setupNavigationItem(navigationItem)
-
-        do {
-            try fetchUser()
-        }catch FetchUserError.notLoggedIn{
-            Alert.showBasic("User Error", message: "Sorry but you have to log in", viewController: self, handler: nil)
-        }catch{
-            Alert.showBasic("User Info Error", message: error.localizedDescription, viewController: self, handler: nil)
+        
+        if user == nil{
+            do {
+                try fetchUser()
+            }catch FetchUserError.notLoggedIn{
+                Alert.showBasic("User Error", message: "Sorry but you have to log in", viewController: self, handler: nil)
+            }catch{
+                Alert.showBasic("User Info Error", message: error.localizedDescription, viewController: self, handler: nil)
+            }
         }
     }
     

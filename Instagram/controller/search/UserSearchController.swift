@@ -109,7 +109,7 @@ class UserSearchController: UICollectionViewController,UICollectionViewDelegateF
     
     fileprivate func openUserProfile(user: User){
        let userProfileController = UserProfileController(collectionViewLayout: UICollectionViewFlowLayout())
-        userProfileController.userUID = user.uid
+        userProfileController.user = user
         userProfileController.hideFollowButton = false
         navigationController?.pushViewController(userProfileController, animated: true)
     }
