@@ -8,8 +8,16 @@
 
 import UIKit
 
+protocol UserProfileEditButtonDelegate{
+    func editWasHit()
+    func followWasHit()
+    func unfollowWashit()
+}
+
 class UserProfileHeader: UICollectionViewCell {
     static let ID = "userProfileHeaderId"
+    
+    open var delegate: UserProfileEditButtonDelegate?
     
     var user: User?{
         didSet{
@@ -156,7 +164,6 @@ class UserProfileHeader: UICollectionViewCell {
         button.tintColor = UIColor.black
         button.layer.borderColor = UIColor.lightGray.cgColor
         button.layer.borderWidth = 0.5
-        button.setTitle(NSLocalizedString("edit_profile", comment: ""), for: .normal)
         button.layer.cornerRadius = 3
         return button
     }()
@@ -245,16 +252,32 @@ class UserProfileHeader: UICollectionViewCell {
         if let name = user?.name{
             userNameLabel.text = name
         }
-        
-        setupEditFollowButton()
-        
     }
     
-    func setupEditFollowButton(){
-        if hideFollowButton{
-            editProfileButton.setTitle(NSLocalizedString("edit_profile", comment: ""), for: .normal)
-        }else{
-            editProfileButton.setTitle(NSLocalizedString("follow", comment: ""), for: .normal)
-        }
+    @objc func unfollowHandler(){
+        delegate?.unfollowWashit()
+    }
+    
+    @objc func followHandler(){
+        delegate?.followWasHit()
+    }
+    
+    @objc func editHandler(){
+        delegate?.editWasHit()
+    }
+    
+    public func setupFollowButton(){
+        editProfileButton.setTitle(NSLocalizedString("follow", comment: ""), for: .normal)
+        editProfileButton.addTarget(self, action: #selector(followHandler), for: .touchUpInside)
+    }
+    
+    public func setupUnfollowButton(){
+        editProfileButton.setTitle(NSLocalizedString("unfollow", comment: ""), for: .normal)
+        editProfileButton.addTarget(self, action: #selector(unfollowHandler), for: .touchUpInside)
+    }
+    
+    public func setupEditButton(){
+        editProfileButton.setTitle(NSLocalizedString("edit_profile", comment: ""), for: .normal)
+        editProfileButton.addTarget(self, action: #selector(editHandler), for: .touchUpInside)
     }
 }

@@ -9,7 +9,8 @@
 import UIKit
 import Firebase
 
-class UserProfileController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class UserProfileController: UICollectionViewController, UICollectionViewDelegateFlowLayout,UserProfileEditButtonDelegate {
+
     var hideFollowButton: Bool = true
     var posts = [Post]()
     var imageCache = [String:UIImage]()
@@ -125,8 +126,16 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: UserProfileHeader.ID, for: indexPath)
         if let userProfileHeader = header as? UserProfileHeader{
-            userProfileHeader.hideFollowButton = self.hideFollowButton
             userProfileHeader.user = self.user
+            userProfileHeader.delegate = self
+            
+            if (hideFollowButton){
+                userProfileHeader.setupEditButton()
+            }else{
+                userIsFollowing(completion: { (isFollowing) in
+                    (isFollowing) ? userProfileHeader.setupUnfollowButton() : userProfileHeader.setupFollowButton()
+                })
+            }
         }
         return header
     }
@@ -176,5 +185,45 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 1
+    }
+    
+    func editWasHit() {
+        print("edit was hit")
+    }
+    
+    func followWasHit() {
+        guard let userToBeFollowed = user?.uid else{return}
+        guard let currentUserId = Auth.auth().currentUser?.uid else {return}
+        
+        let values = [userToBeFollowed:1]
+        
+        Database.database().reference().child("following").child(currentUserId).updateChildValues(values) { (error, reference) in
+            if let error = error{
+                print(error.localizedDescription)
+                return
+            }
+            self.collectionView?.reloadData()
+        }
+    }
+    
+    func unfollowWashit() {
+        guard let userToBeUnfollowed = user?.uid else{return}
+        guard let currentUserId = Auth.auth().currentUser?.uid else {return}
+
+        Database.database().reference().child("following").child(currentUserId).child(userToBeUnfollowed).removeValue(completionBlock: { (error, reference) in
+            self.collectionView?.reloadData()
+        })
+    }
+    
+    func userIsFollowing(completion: @escaping ((_ isFollowing: Bool) -> Void)){
+        guard let userToBeTested = user?.uid else{return}
+        guard let currentUserId = Auth.auth().currentUser?.uid else {return}
+        Database.database().reference().child("following").child(currentUserId).child(userToBeTested).observeSingleEvent(of: .value) { (snapshot) in
+            if let followId = snapshot.value as? Int, followId == 1{
+                completion(true)
+            }else{
+                completion(false)
+            }
+        }
     }
 }
