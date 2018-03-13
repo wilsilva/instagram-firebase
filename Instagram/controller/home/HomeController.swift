@@ -68,6 +68,9 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     fileprivate func loadPost(post: Post){
         DispatchQueue.main.async { [weak self] in
             self?.posts.insert(post, at: 0)
+            self?.posts.sort(by: { (post1, post2) -> Bool in
+                return post1.creationDate.compare(post2.creationDate) == .orderedDescending
+            })
             self?.collectionView?.numberOfItems(inSection: 0)
             self?.collectionView?.insertItems(at: [IndexPath(row: 0, section: 0)])
         }
