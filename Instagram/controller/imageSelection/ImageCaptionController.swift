@@ -123,7 +123,7 @@ class ImageCaptionController: UIViewController {
                 return
             }
             if let imageURL = metadata?.downloadURL()?.absoluteString {
-                self?.postsInfoDictionary = ["URL":imageURL,"caption": imageCaption,"creationDate":Date.timeIntervalSinceReferenceDate,"imageHeight":image.size.height,"imageWidth":image.size.width]
+                self?.postsInfoDictionary = ["URL":imageURL,"caption": imageCaption,"creationDate":Date().timeIntervalSince1970,"imageHeight":image.size.height,"imageWidth":image.size.width]
                 self?.saveToDatabase(imageURL: imageURL, imageCaption: imageCaption, userUID: userUID, completion: completion)
             }
         }

@@ -12,7 +12,7 @@ import Firebase
 class Post: NSObject{
     var caption: String?
     var url: URL?
-    var creationDate: Double
+    var creationDate: Date
     var uid: String?
     var imageHeight: CGFloat
     var imageWidth: CGFloat
@@ -30,7 +30,7 @@ class Post: NSObject{
         
         self.caption = caption
         self.url = URL(string: url)
-        self.creationDate = creationDate
+        self.creationDate = Date(timeIntervalSince1970: creationDate)
         self.imageHeight = imageHeight
         self.imageWidth = imageWidth
     }
@@ -38,7 +38,7 @@ class Post: NSObject{
     init(caption: String, url: String, creationDate: Double, imageHeight: CGFloat, imageWidth: CGFloat) {
         self.caption = caption
         self.url = URL(string: url)
-        self.creationDate = creationDate
+        self.creationDate = Date(timeIntervalSince1970: creationDate)
         self.imageHeight = imageHeight
         self.imageWidth = imageWidth
     }
