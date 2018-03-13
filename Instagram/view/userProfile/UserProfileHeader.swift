@@ -269,11 +269,15 @@ class UserProfileHeader: UICollectionViewCell {
     public func setupFollowButton(){
         editProfileButton.setTitle(NSLocalizedString("follow", comment: ""), for: .normal)
         editProfileButton.addTarget(self, action: #selector(followHandler), for: .touchUpInside)
+        editProfileButton.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 237)
+        editProfileButton.tintColor = .white
     }
     
     public func setupUnfollowButton(){
         editProfileButton.setTitle(NSLocalizedString("unfollow", comment: ""), for: .normal)
         editProfileButton.addTarget(self, action: #selector(unfollowHandler), for: .touchUpInside)
+        editProfileButton.backgroundColor = .white
+        editProfileButton.tintColor = .black
     }
     
     public func setupEditButton(){

@@ -25,20 +25,37 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     fileprivate func fetchPosts(completion: ((_ post: Post) -> Void)?){
         guard let userID = Auth.auth().currentUser?.uid else {return}
-        Database.fetchUser(with: userID) { (user) in
-            if let user = user{
-                Database.database().reference().child("posts").child(userID).queryOrdered(byChild: "creationDate").observe(.childAdded) {(snapshot) in
-                    if let post = Post(snapshot: snapshot){
-                        post.user = user
-                        if let completion = completion{
-                            completion(post)
+        var usersIdsToFetchPosts = [String]()
+        usersIdsToFetchPosts.append(userID)
+        
+        Database.database().reference().child("following").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
+            if let userIdsDictionary = snapshot.value as? [String:Any]{
+                userIdsDictionary.forEach({ (key,value) in
+                    usersIdsToFetchPosts.append(key)
+                })
+            }
+            
+            self.fetchUsers(usersIds: usersIdsToFetchPosts,completion: completion)
+        })
+    }
+    
+    fileprivate func fetchUsers(usersIds: [String], completion: ((_ post: Post) -> Void)?){
+        usersIds.forEach { (userID) in
+            Database.fetchUser(with: userID) { (user) in
+                if let user = user{
+                    Database.database().reference().child("posts").child(userID).queryOrdered(byChild: "creationDate").observe(.childAdded) {(snapshot) in
+                        if let post = Post(snapshot: snapshot){
+                            post.user = user
+                            if let completion = completion{
+                                completion(post)
+                            }
                         }
                     }
                 }
             }
         }
     }
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView?.backgroundColor = .white
