@@ -119,3 +119,29 @@ extension UIImageView{
             }.resume()
     }
 }
+
+extension Date{
+    func timeAgoDisplay() -> String{
+        let secondsAgo = Int(Date().timeIntervalSince(self))
+
+        if(secondsAgo < TimeInterval.minutes.rawValue){
+            return "\(secondsAgo) seconds ago"
+        }else if(secondsAgo < TimeInterval.hours.rawValue){
+            return "\(secondsAgo / TimeInterval.minutes.rawValue) minutes ago"
+        }else if(secondsAgo < TimeInterval.days.rawValue){
+            return "\(secondsAgo / TimeInterval.hours.rawValue) hours ago"
+        }else if(secondsAgo < TimeInterval.weeks.rawValue){
+            return "\(secondsAgo / TimeInterval.days.rawValue) days ago"
+        }
+        
+        return "\(secondsAgo / TimeInterval.weeks.rawValue) hours ago"
+    }
+    
+    enum TimeInterval: Int{
+        case minutes = 0x3C
+        case hours = 0xE10
+        case days = 0x86400
+        case weeks = 0x93A80
+        case monts = 0x6EBE00
+    }
+}

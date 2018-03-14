@@ -48,13 +48,13 @@ class ImageSelectionController: UIViewController,ImageSelectorControllerProtocol
                 UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
             })
         }else if status == .notDetermined{
-            requestPhotoLibraryAuthorization()
+            requestPhotoLibraryAuthorization(completion: testPhotoLibraryPermission)
         }
     }
     
-    fileprivate func requestPhotoLibraryAuthorization(){
-        PHPhotoLibrary.requestAuthorization({ [weak self] (status) in
-           self?.testPhotoLibraryPermission(status: status)
+    fileprivate func requestPhotoLibraryAuthorization(completion: @escaping ((_ status: PHAuthorizationStatus) ->Void)){
+        PHPhotoLibrary.requestAuthorization({ (status) in
+            completion(status)
         })
     }
     

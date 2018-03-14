@@ -32,7 +32,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
                     let uid = usersnapshot.key
                     Database.fetchUser(with: uid) { (user) in
                         if let user = user{
-                            Database.database().reference().child("posts").child(uid).queryOrdered(byChild: "creationDate").observeSingleEvent(of: .value, with: { (snapshot) in
+                            Database.database().reference().child("posts").child(uid).queryOrdered(byChild: "creationDate").observe(.value, with: { (snapshot) in
                                 snapshot.children.forEach({ (value) in
                                     if let postsSnapshot = value as? DataSnapshot{
                                         if let post = Post(snapshot: postsSnapshot){

@@ -202,8 +202,7 @@ class PostCell: UICollectionViewCell{
                 }
             }
             
-            postDate.text = post.creationDate.description
-            
+            postDate.text = post.creationDate.timeAgoDisplay()
             setupAttributedPostCaption(post: post)
         }
     }
