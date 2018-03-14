@@ -23,56 +23,51 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         return imageView
     }()
     
-    fileprivate func fetchPosts(completion: ((_ post: Post) -> Void)?){
+    fileprivate func fetchPosts(completion: ((_ posts: [Post]) -> Void)?){
         guard let userID = Auth.auth().currentUser?.uid else {return}
-        var usersIdsToFetchPosts = [String]()
-        usersIdsToFetchPosts.append(userID)
-        
-        Database.database().reference().child("following").child(userID).observeSingleEvent(of: .value, with: { (snapshot) in
-            if let userIdsDictionary = snapshot.value as? [String:Any]{
-                userIdsDictionary.forEach({ (key,value) in
-                    usersIdsToFetchPosts.append(key)
-                })
-            }
-            
-            self.fetchUsers(usersIds: usersIdsToFetchPosts,completion: completion)
-        })
-    }
-    
-    fileprivate func fetchUsers(usersIds: [String], completion: ((_ post: Post) -> Void)?){
-        usersIds.forEach { (userID) in
-            Database.fetchUser(with: userID) { (user) in
-                if let user = user{
-                    Database.database().reference().child("posts").child(userID).queryOrdered(byChild: "creationDate").observe(.childAdded) {(snapshot) in
-                        if let post = Post(snapshot: snapshot){
-                            post.user = user
-                            if let completion = completion{
-                                completion(post)
-                            }
+        Database.database().reference().child("following").child(userID).observe(.value, with: { (snapshot) in
+            var posts = [Post]()
+            snapshot.children.forEach({ (value) in
+                if let usersnapshot = value as? DataSnapshot {
+                    let uid = usersnapshot.key
+                    Database.fetchUser(with: uid) { (user) in
+                        if let user = user{
+                            Database.database().reference().child("posts").child(uid).queryOrdered(byChild: "creationDate").observeSingleEvent(of: .value, with: { (snapshot) in
+                                snapshot.children.forEach({ (value) in
+                                    if let postsSnapshot = value as? DataSnapshot{
+                                        if let post = Post(snapshot: postsSnapshot){
+                                            post.user = user
+                                            posts.append(post)
+                                        }
+                                    }
+                                })
+                                if let completion = completion{
+                                    completion(posts)
+                                }
+                            })
                         }
                     }
                 }
-            }
-        }
+            })
+        })
     }
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView?.backgroundColor = .white
         self.collectionView?.numberOfItems(inSection: 0)
         collectionView?.register(PostCell.self, forCellWithReuseIdentifier: PostCell.ID)
-        fetchPosts(completion: loadPost)
+        fetchPosts(completion: loadPosts)
         setupNavigationItems()
     }
     
-    fileprivate func loadPost(post: Post){
+    fileprivate func loadPosts(posts: [Post]){
         DispatchQueue.main.async { [weak self] in
-            self?.posts.insert(post, at: 0)
+            self?.posts = posts
             self?.posts.sort(by: { (post1, post2) -> Bool in
                 return post1.creationDate.compare(post2.creationDate) == .orderedDescending
             })
-            self?.collectionView?.numberOfItems(inSection: 0)
-            self?.collectionView?.insertItems(at: [IndexPath(row: 0, section: 0)])
+            self?.collectionView?.reloadData()
         }
     }
     

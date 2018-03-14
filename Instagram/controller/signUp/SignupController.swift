@@ -206,7 +206,12 @@ class SignupController: UIViewController, UIImagePickerControllerDelegate, UINav
                             return
                         }
                         
-                        self?.present(MainTabController(), animated: true, completion: nil)
+                        let values = [uid:1]
+                        
+                        Database.database().reference().child("following").child(uid).updateChildValues(values) { (error, reference) in
+                            self?.present(MainTabController(), animated: true, completion: nil)
+                        }
+                        
                     })
                 })
             }
