@@ -17,7 +17,7 @@ class PostCell: UICollectionViewCell{
     
     var post: Post?{
         didSet{
-            loadPost()
+            loadPost(post: post)
         }
     }
     
@@ -110,7 +110,6 @@ class PostCell: UICollectionViewCell{
     let postCaption: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.s"
         label.numberOfLines = 0
         return label
     }()
@@ -118,7 +117,6 @@ class PostCell: UICollectionViewCell{
     let postDate: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "5h ago"
         return label
     }()
     
@@ -167,12 +165,10 @@ class PostCell: UICollectionViewCell{
         commentsContainer.insertArrangedSubview(postDate, at: 1)
     }
     
-    func loadPost(){
+    func loadPost(post: Post?){
         if let post = post{
-            
             if let user = post.user{
                 userName.text = user.name
-                
                 if let url = user.profilePictureURL{
                     if let cachedImage = userProfileCache[url.absoluteString]{
                         self.userProfileImage.image = cachedImage
@@ -194,9 +190,7 @@ class PostCell: UICollectionViewCell{
                     self.postImage.loadImageWith(url: url, completion: { [weak self] (data) in
                         imageCache[url.absoluteString] = UIImage(data: data)
                         DispatchQueue.main.async {
-                            if url == post.url{
-                                self?.postImage.image = UIImage(data: data)
-                            }
+                            self?.postImage.image = UIImage(data: data)
                         }
                     })
                 }
