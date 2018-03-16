@@ -237,18 +237,10 @@ class UserProfileHeader: UICollectionViewCell {
     }
     
     func updateUI(){
-        if let url = user?.profilePictureURL{
-            if let cachedImage = userProfileCache[url.absoluteString]{
-                userProfileImage.image = cachedImage
-            }else{
-                self.userProfileImage.loadImageWith(url: url, completion: { (data) in
-                    DispatchQueue.main.async { [weak self] in
-                        self?.userProfileImage.image = UIImage(data: data)
-                    }
-                })
-            }
-        }
         
+        self.userProfileImage.pin_updateWithProgress = true
+        self.userProfileImage.pin_setImage(from: user?.profilePictureURL)
+
         if let name = user?.name{
             userNameLabel.text = name
         }

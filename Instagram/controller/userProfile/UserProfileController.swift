@@ -149,25 +149,8 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCellCollectionViewCell.ID, for: indexPath)
         if let postCell = cell as? PostCellCollectionViewCell{
-            let post = self.posts[indexPath.row]
-            let urlString = post.url?.absoluteString
-
-            if let image = imageCache[urlString!]{
-                postCell.imageView.image = image
-                return cell
-            }
-            
-            self.fetchImages(with: post, completion: { [weak self] (data,post) in
-                DispatchQueue.main.async {
-                    let image = UIImage(data: data)
-                    if urlString! == post.url!.absoluteString, postCell.imageView.image == nil{
-                        postCell.imageView.image = image
-                    }
-                    self?.imageCache[post.url!.absoluteString] = image
-                }
-            })
+            postCell.post = self.posts[indexPath.row]
         }
-        
         return cell
     }
     

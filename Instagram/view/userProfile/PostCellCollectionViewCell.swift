@@ -11,6 +11,12 @@ import UIKit
 class PostCellCollectionViewCell: UICollectionViewCell {
     static let ID = "postCellID"
     
+    var post: Post?{
+        didSet{
+            updateUI(post: post!)
+        }
+    }
+    
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -37,5 +43,10 @@ class PostCellCollectionViewCell: UICollectionViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    fileprivate func updateUI(post: Post){
+       imageView.pin_updateWithProgress = true
+       imageView.pin_setImage(from: post.url)
     }
 }

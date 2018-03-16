@@ -8,9 +8,7 @@
 
 import Foundation
 import UIKit
-
-public var imageCache = [String:UIImage?]()
-public var userProfileCache = [String:UIImage?]()
+import PINRemoteImage
 
 class PostCell: UICollectionViewCell{
     static var ID = "postCell"
@@ -169,32 +167,11 @@ class PostCell: UICollectionViewCell{
         if let post = post{
             if let user = post.user{
                 userName.text = user.name
-                if let url = user.profilePictureURL{
-                    if let cachedImage = userProfileCache[url.absoluteString]{
-                        self.userProfileImage.image = cachedImage
-                    }else{
-                        self.userProfileImage.loadImageWith(url: url, completion: { [weak self] (data) in
-                            DispatchQueue.main.async {
-                                self?.userProfileImage.image = UIImage(data: data)
-                                userProfileCache[url.absoluteString] = UIImage(data: data)
-                            }
-                        })
-                    }
-                }
+                self.userProfileImage.pin_setImage(from: user.profilePictureURL)
             }
             
-            if let url = post.url{
-                if let cachedImage = imageCache[url.absoluteString]{
-                    self.postImage.image = cachedImage
-                }else{
-                    self.postImage.loadImageWith(url: url, completion: { [weak self] (data) in
-                        imageCache[url.absoluteString] = UIImage(data: data)
-                        DispatchQueue.main.async {
-                            self?.postImage.image = UIImage(data: data)
-                        }
-                    })
-                }
-            }
+            self.postImage.pin_updateWithProgress = true
+            self.postImage.pin_setImage(from: post.url)
             
             postDate.text = post.creationDate.timeAgoDisplay()
             setupAttributedPostCaption(post: post)

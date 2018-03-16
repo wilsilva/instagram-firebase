@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PINRemoteImage
 
 class UserSearchCellCollectionViewCell: UICollectionViewCell {
 
@@ -82,22 +83,8 @@ class UserSearchCellCollectionViewCell: UICollectionViewCell {
     fileprivate func loadUser(){
         if let user = user{
             userName.text = user.name
-            
-            if let url = user.profilePictureURL{
-                
-                if let cachedImage = userProfileCache[url.absoluteString]{
-                    self.userProfilePicture.image = cachedImage
-                }else{
-                    self.userProfilePicture.loadImageWith(url: url, completion: { [weak self] (data) in
-                        userProfileCache[url.absoluteString] = UIImage(data: data)
-                        if let image = UIImage(data: data){
-                            DispatchQueue.main.async {
-                                self?.userProfilePicture.image = image
-                            }
-                        }
-                    })
-                }
-            }
+            self.userProfilePicture.pin_updateWithProgress = true
+            self.userProfilePicture.pin_setImage(from: user.profilePictureURL)
         }
     }
 }
