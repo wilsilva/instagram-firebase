@@ -9,8 +9,9 @@
 import UIKit
 import Photos
 import Firebase
-class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    
+
+class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CommentButtonDelegate{
+
     var posts = [Post]()
     
     let titleView: UIImageView = {
@@ -82,6 +83,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostCell.ID, for: indexPath)
         if let postCell = cell as? PostCell{
+            postCell.delegate = self
             postCell.post = posts[indexPath.row]
         }
         return cell
@@ -96,5 +98,11 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "camera3").withRenderingMode(.alwaysOriginal), style: .done, target: self, action: nil)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "send2").withRenderingMode(.alwaysOriginal), style: .done, target: self, action: nil)
         navigationItem.titleView = titleView
+    }
+    
+    func commentsButtonWasHit(post: Post?) {
+        let commentsController = CommentsViewController(collectionViewLayout: UICollectionViewFlowLayout())
+        commentsController.post = post
+        self.navigationController?.pushViewController(commentsController, animated: true)
     }
 }

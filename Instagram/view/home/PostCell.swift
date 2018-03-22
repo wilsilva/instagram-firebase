@@ -10,8 +10,14 @@ import Foundation
 import UIKit
 import PINRemoteImage
 
+protocol CommentButtonDelegate {
+    func commentsButtonWasHit(post: Post?)
+}
+
 class PostCell: UICollectionViewCell{
     static var ID = "postCell"
+    
+    var delegate: CommentButtonDelegate?
     
     var post: Post?{
         didSet{
@@ -84,10 +90,11 @@ class PostCell: UICollectionViewCell{
         return button
     }()
     
-    let postComment: UIButton = {
+    lazy var postComment: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(#imageLiteral(resourceName: "comment").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.addTarget(self, action: #selector(postCommentHandler), for: .touchUpInside)
         return button
     }()
     
@@ -178,6 +185,11 @@ class PostCell: UICollectionViewCell{
         }
     }
     
+    @objc func postCommentHandler(){
+       self.delegate?.commentsButtonWasHit(post: post)
+    }
+    
+
     fileprivate func setupAttributedPostCaption(post: Post){
         guard let user = post.user else {return}
         let attributedText = NSMutableAttributedString(string: user.name!, attributes: [.font: UIFont.boldSystemFont(ofSize: 15)])
