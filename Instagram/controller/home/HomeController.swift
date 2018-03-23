@@ -101,7 +101,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     func commentsButtonWasHit(post: Post?) {
-        let commentsController = CommentsViewController(collectionViewLayout: UICollectionViewFlowLayout())
+        let commentsController = CommentsTableViewController(style: .plain)
         commentsController.post = post
         self.navigationController?.pushViewController(commentsController, animated: true)
     }

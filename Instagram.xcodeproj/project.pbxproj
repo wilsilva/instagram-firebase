@@ -21,7 +21,6 @@
 		482F4E421FB6541200D821F5 /* FavouritesNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482F4E411FB6541200D821F5 /* FavouritesNavigationController.swift */; };
 		483DA76F1FB1119300702266 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483DA76E1FB1119300702266 /* MainTabController.swift */; };
 		483DA7711FB1133900702266 /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483DA7701FB1133900702266 /* UserProfileController.swift */; };
-		48472C872063214D009B9801 /* CommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48472C862063214D009B9801 /* CommentsViewController.swift */; };
 		48472C8A2063229F009B9801 /* CommentsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48472C892063229F009B9801 /* CommentsViewCell.swift */; };
 		48472C8C206333AA009B9801 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48472C8B206333AA009B9801 /* Comment.swift */; };
 		486298371FB7AEB4005EFF69 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486298361FB7AEB4005EFF69 /* LoginView.swift */; };
@@ -36,6 +35,7 @@
 		48920B481FA299D40097986C /* InstagramUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48920B471FA299D40097986C /* InstagramUITests.swift */; };
 		48AAB3951FB11C1E0072771F /* UserProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AAB3941FB11C1E0072771F /* UserProfileHeader.swift */; };
 		48EAAFCE203F850F00C71496 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48EAAFD0203F850F00C71496 /* Localizable.strings */; };
+		48F39FB620647F6300A41AEA /* CommentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F39FB520647F6300A41AEA /* CommentsTableViewController.swift */; };
 		48F9B4AE1FE9C3D100E2CD8D /* ImageSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F9B4AB1FE9C3D000E2CD8D /* ImageSelectionCell.swift */; };
 		48F9B4AF1FE9C3D100E2CD8D /* ImageSelectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F9B4AC1FE9C3D000E2CD8D /* ImageSelectionHeader.swift */; };
 		48F9B4B01FE9C3D100E2CD8D /* ImageSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F9B4AD1FE9C3D100E2CD8D /* ImageSelectorView.swift */; };
@@ -89,7 +89,6 @@
 		482F4E411FB6541200D821F5 /* FavouritesNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesNavigationController.swift; sourceTree = "<group>"; };
 		483DA76E1FB1119300702266 /* MainTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabController.swift; sourceTree = "<group>"; };
 		483DA7701FB1133900702266 /* UserProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileController.swift; sourceTree = "<group>"; };
-		48472C862063214D009B9801 /* CommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewController.swift; sourceTree = "<group>"; };
 		48472C892063229F009B9801 /* CommentsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewCell.swift; sourceTree = "<group>"; };
 		48472C8B206333AA009B9801 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		486298361FB7AEB4005EFF69 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
@@ -112,6 +111,7 @@
 		48EAAFCB203F837D00C71496 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		48EAAFCF203F850F00C71496 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		48EAAFD1203F851200C71496 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		48F39FB520647F6300A41AEA /* CommentsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsTableViewController.swift; sourceTree = "<group>"; };
 		48F9B4AB1FE9C3D000E2CD8D /* ImageSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageSelectionCell.swift; path = Instagram/view/imageSelection/ImageSelectionCell.swift; sourceTree = SOURCE_ROOT; };
 		48F9B4AC1FE9C3D000E2CD8D /* ImageSelectionHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageSelectionHeader.swift; path = Instagram/view/imageSelection/ImageSelectionHeader.swift; sourceTree = SOURCE_ROOT; };
 		48F9B4AD1FE9C3D100E2CD8D /* ImageSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImageSelectorView.swift; path = Instagram/view/imageSelection/ImageSelectorView.swift; sourceTree = SOURCE_ROOT; };
@@ -237,7 +237,7 @@
 		48472C8320631B17009B9801 /* comment */ = {
 			isa = PBXGroup;
 			children = (
-				48472C862063214D009B9801 /* CommentsViewController.swift */,
+				48F39FB520647F6300A41AEA /* CommentsTableViewController.swift */,
 			);
 			path = comment;
 			sourceTree = "<group>";
@@ -757,6 +757,7 @@
 				482F4E3C1FB6532600D821F5 /* HomeNavigationController.swift in Sources */,
 				482F4E3A1FB6521900D821F5 /* UserProfileNavigationController.swift in Sources */,
 				482340EB1FBA54BC00C2B333 /* MainMenuNavigationProtocol.swift in Sources */,
+				48F39FB620647F6300A41AEA /* CommentsTableViewController.swift in Sources */,
 				48F9B4AF1FE9C3D100E2CD8D /* ImageSelectionHeader.swift in Sources */,
 				48920B251FA299D40097986C /* AppDelegate.swift in Sources */,
 				48F9B4B61FE9C7BB00E2CD8D /* PostCell.swift in Sources */,
@@ -765,7 +766,6 @@
 				8C56710A2049D1C100BE7120 /* PostCellCollectionViewCell.swift in Sources */,
 				483DA7711FB1133900702266 /* UserProfileController.swift in Sources */,
 				8CBE5F6B1FB4B68400F227A2 /* LoginNavigationController.swift in Sources */,
-				48472C872063214D009B9801 /* CommentsViewController.swift in Sources */,
 				8CCB514A204DC5FF001CD5D1 /* UserSearchCellCollectionViewCell.swift in Sources */,
 				486298371FB7AEB4005EFF69 /* LoginView.swift in Sources */,
 				48472C8A2063229F009B9801 /* CommentsViewCell.swift in Sources */,
