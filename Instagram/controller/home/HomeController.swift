@@ -103,6 +103,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     func commentsButtonWasHit(post: Post?) {
         let commentsController = CommentsTableViewController(style: .plain)
         commentsController.post = post
+        commentsController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(commentsController, animated: true)
     }
 }

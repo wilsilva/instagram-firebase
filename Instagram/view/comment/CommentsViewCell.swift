@@ -58,7 +58,6 @@ class CommentsViewCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = UIColor(white: 0, alpha: 0.3)
         label.numberOfLines = 0
-        label.text = "Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XV"
         return label
     }()
     
@@ -98,6 +97,7 @@ class CommentsViewCell: UITableViewCell {
             userName.text = user.name
             self.userProfilePicture.pin_updateWithProgress = true
             self.userProfilePicture.pin_setImage(from: user.profilePictureURL)
+            self.commentary.text = comment.comment
         }
     }
 }

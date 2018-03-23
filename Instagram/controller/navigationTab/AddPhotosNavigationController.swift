@@ -9,7 +9,6 @@
 import UIKit
 
 class AddPhotosNavigationController: MainMenuNavigationController {
-    
     override func executeBeforeShowing() -> Bool {
         let imageSelector = UISeparateNavigationController(rootViewController: ImageSelectionController())
         self.parent?.present(imageSelector, animated: true, completion: nil)
