@@ -48,7 +48,7 @@ class CommentsViewCell: UITableViewCell {
     let userName: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 10)
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         return label
     }()
     
@@ -56,7 +56,6 @@ class CommentsViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = UIColor(white: 0, alpha: 0.3)
         label.numberOfLines = 0
         return label
     }()
